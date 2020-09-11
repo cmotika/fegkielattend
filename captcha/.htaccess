@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Restricted Directory"
+AuthUserFile  /kunden/homepages/23/d36455009/htdocs/dop/cgi/abi99/users/.htpasswd
+require valid-user

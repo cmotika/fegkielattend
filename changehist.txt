@@ -1,0 +1,3 @@
+- insert-php-wordpress-plugin installiert
+- "Mitgliederinfo" Seite anlegen
+- Menüpunkt unter Kontaktliste anlegen
