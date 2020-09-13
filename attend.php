@@ -244,8 +244,13 @@ if ($submit != "") {
 		print(DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV);
 		$err = 1;
 	}
-	if ($maxnum-getLines() == 0) {
-		print(DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." . END_DIV);
+	$numpersons = count(explode(",", $name));
+	if (($maxnum-getLines()-$numpersons) < 0) {
+		if ($maxnum-getLines() == 0) {
+			print(DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." . END_DIV);
+		} else {
+			print(DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." . END_DIV);
+		}
 		$err = 1;
 	}
 	if ($codecorrect == 0) {
