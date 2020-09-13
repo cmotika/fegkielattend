@@ -180,6 +180,7 @@ ensureCurrentFileExists();
 
 // Captcha verification of last captcha 
 $codecorrect = verifyCode($code, $verify);
+$oldcode = $code;
  
 // On every loading of the page, create a new captcha and save it in apropriate directory
 $z1 = rand(1, 300);
@@ -254,14 +255,26 @@ if ($submit != "") {
 
 	//$err = 0;
 	if ($err == 0) {
-		// Iff no error was detected, then insert new registration to current file/sunday
-		$regnumber = getLines() + 1;
+		// delete current captcha, prevent re-submission if "reload"/F5
+		unlink("./captcha/".$oldcode.".txt");
+	
+	    $regnumber = "";
+		
 		$myfile = fopen(currentFile(), "a");
-		fwrite($myfile, $regnumber.";".$name."; ".$street."; ".$city."; ".$phone."; ".$email."\n");
-		fclose($myfile);
-
-		// Reset the text fields 
 		$oldname = $name;
+        $names = explode(",", $name);
+		foreach ($names as $name) {
+			// Iff no error was detected, then insert new registration to current file/sunday
+			if (strlen($regnumber) > 0) {
+		 		$regnumber .= ", ";
+			} 
+			$curregnumber = (getLines() + 1);
+			$regnumber .= "#".$curregnumber;
+			fwrite($myfile, $curregnumber.";".$name."; ".$street."; ".$city."; ".$phone."; ".$email."\n");
+		}
+		
+		fclose($myfile);
+		// Reset the text fields 
 		$name = "";
 		$street = "";
 		$city = "";
@@ -275,9 +288,16 @@ if ($submit != "") {
  
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed
  if ($regnumber != "") {
-	 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den ".stringDate(nextSunday(time()))." angemeldet unter der Nummer ");
-	 print("<span class='badge badge-success'>#".$regnumber."</span>. ");
-	 print("Bitte bringe die Nummer mit zum Gottesdienst. Wir freuen uns auf Dich!</h3>");
+ 	 $plural = (strpos($regnumber, ",") > -1);
+	 if (!$plural) {
+		 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den ".stringDate(nextSunday(time()))." angemeldet unter der Nummer ");
+		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
+		 print("Bitte bringe die Nummer mit zum Gottesdienst. Wir freuen uns auf Dich!</h3>");
+	 } else {
+		 print("<h3>Hallo ".$oldname."! Ihr seid nun erfolgreich f&uuml;r den ".stringDate(nextSunday(time()))." angemeldet unter den Nummern ");
+		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
+		 print("Bitte bringt die Nummern mit zum Gottesdienst. Wir freuen uns auf Euch!</h3>");
+	 }
  }
  
 // The following are the raw input fields and the administration pan or password entry (if not logged in as admin)
@@ -285,7 +305,7 @@ if ($submit != "") {
 
 <form id="form1" name="form1" method="post" action="">
 <div class="form-group">
-	<label for="name">Vorname Nachname</label>
+	<label for="name">Vorname Nachname (mehrere Personen durch Komma trennen!)</label>
 	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>"/>
 </div>
 <div class="form-group">
