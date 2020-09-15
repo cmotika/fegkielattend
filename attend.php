@@ -245,8 +245,8 @@ if ($submit != "") {
 		print(DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon angemeldet!" . END_DIV);
 		$err = 1;
 	}
- 	if (strlen(trim($name)) < 5) {
-		print(DIV_ALERT_WARNING . "Gib Deinen Vor- und Nachnamen an." . END_DIV);
+ 	if (!isValidName($name)) {
+		print(DIV_ALERT_WARNING . "Gib Deinen Vor- UND Nachnamen an." . END_DIV);
 		$err = 1;
 	}
  	if (strlen(trim($street)) < 5) {

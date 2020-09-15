@@ -78,6 +78,24 @@ function printTableFooterMobile() {
 	print('</tbody></table>');
 }
 
+// Check if the name(s) are given corrently. Even if comma separated, they have to be full
+function isValidName($name) {
+	$name = trim($name);
+	if (strlen($name) < 5) {	
+		return 0;
+	}
+	$names = explode(",", $name);
+	foreach ($names as $name) {
+		$name =	trim($name);
+		if (strlen($name) < 5) {	
+			return 0;
+		}
+		if (strpos($name, " ") <= 0) {
+			return 0;
+		}		
+	}
+	return 1;
+}
 
  // Check if this is a valid phone number.
  // A phone number is considered valid, iff it contains more than 5 digits.
