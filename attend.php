@@ -35,9 +35,6 @@ $email = $_POST['email'];
  require("attend.cfg.php");
  // Test if we are the admin, i.e., if the entered password corresponds to the admin pw 
  $isAdmin = (md5($pw) == $adminpw) || ($pw == $adminpw && $adminpw == "admin");
- if (!$isAdmin) {	
- 	$pw = "";
- }
  
  
  $ip = $_SERVER['REMOTE_ADDR'];
@@ -56,6 +53,9 @@ $email = $_POST['email'];
  } else if ($isAdmin) {
  	// Reset counter on successfull login
 	resetWrongLogins($ip);
+ }
+ if (!$isAdmin) {	
+ 	$pw = "";
  }
  
  
