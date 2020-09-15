@@ -38,6 +38,27 @@ $email = $_POST['email'];
  if (!$isAdmin) {	
  	$pw = "";
  }
+ 
+ 
+ $ip = $_SERVER['REMOTE_ADDR'];
+ if ($pw == "" || $isAdmin) {
+	 // Cleanup old trials after one hour
+	 cleanupWrongLogins();
+ }
+ // Check if locked
+ if (isLockedIp($ip)) {
+ 	 // If too many wrong logins, lock the server for one hour
+	 lockIPPage();
+ }
+ if ($adminpw != "" && !$isAdmin) {
+ 	// Wrong password => count up for this ip
+	addWrongLogin($ip);
+ } else if ($isAdmin) {
+ 	// Reset counter on successfull login
+	resetWrongLogins($ip);
+ }
+ 
+ 
 
 // Testmail enabled for debugging only
 //sendTestMail($mail_to);
@@ -310,7 +331,7 @@ if ($submit != "") {
 
 <form id="form1" name="form1" method="post" action="">
 <div class="form-group">
-	<label for="name">Vorname Nachname (mehrere Personen durch Komma trennen!)</label>
+	<label for="name">Vorname Nachname <font color =#88CC88>(mehrere Personen durch Komma trennen!)</font></label>
 	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>"/>
 </div>
 <div class="form-group">

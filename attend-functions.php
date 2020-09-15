@@ -6,6 +6,13 @@
 	
 	// Default file name
 	$default_csv_file = "./data/defaults.csv";
+	
+	// Default dir for IP logging
+	$ipfolder = "./admin/";
+	
+	// Lock out IP conditiob
+	$lockip_number_of_wrong_password_trials = 10;
+
 
 
 // Print a file content - header part
@@ -314,6 +321,73 @@ function sendBackupMail($myfile) {
     	$retval = mail($mail_to, $subject, $nmessage, $header );		
 		return $retval;
  }
+
+
+// In case of a wrong password, add IP to monitoring
+function addWrongLogin($ip) {
+	global $ipfolder;
+    $ipfile = fopen($ipfolder.$ip.".txt", "a");
+	$line =	stringDateTime(time());
+	fwrite($ipfile, $line."\n");
+	fclose($ipfile);	
+}
+
+// Count already wrong passwords (within the last hour)
+function countWrongLogins($ip) {
+	global $ipfolder;
+	return getLinesFile($ipfolder.$ip.".txt");
+}
+
+// Reset wrong passwords for this ip after successful login
+function resetWrongLogins($ip) {
+	global $ipfolder;
+	unlink($ipfolder.$ip.".txt");
+}
+
+// Cleanup wrong password counter after one hour
+function cleanupWrongLogins() {
+	global $ipfolder;
+	// Delete all wrong IP files older than 60 minutes (60 minutes * 60 seconds)
+	$olderthanxxxseconds = 60*60; 
+	foreach (glob($ipfolder."*.txt") as $file) {
+ 		$diff = time() - filectime($file);
+		if($diff > $olderthanxxxseconds){
+			unlink($file);
+   			//print("unlink:".$file." : ".$diff."<BR>");
+ 		} else {
+			//print("NOT unlink:".$file." : ".$diff."<BR>");		
+		}
+	}
+}
+
+// Test if the wrong password has been submitted from this IP already too often
+function isLockedIp($ip) {
+ global $lockip_number_of_wrong_password_trials;
+ return (countWrongLogins($ip) >= $lockip_number_of_wrong_password_trials);
+}
+
+// Prints an error message, indicating that the wrong password has been entered too often
+function lockIPPage() {
+   printf("<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
+<html><head>
+<title>500 Internal Server Error</title>
+</head><body>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error or
+misconfiguration and was unable to complete
+your request.</p>
+<p>Please contact the server administrator,
+ [no address given] and inform them of the time the error occurred,
+and anything you might have done that may have
+caused the error.</p>
+<p>More information about this error may be available
+in the server error log.</p>
+<hr>
+<address>Apache/2.2.22 (Debian) Server at www.feg-kiel.de Port 443</address>
+</body></html>
+");
+exit;
+}
 
 
 ?>
