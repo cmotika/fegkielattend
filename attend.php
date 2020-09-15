@@ -50,7 +50,7 @@ $email = $_POST['email'];
  	 // If too many wrong logins, lock the server for one hour
 	 lockIPPage();
  }
- if ($adminpw != "" && !$isAdmin) {
+ if ($pw != "" && !$isAdmin) {
  	// Wrong password => count up for this ip
 	addWrongLogin($ip);
  } else if ($isAdmin) {
@@ -332,28 +332,28 @@ if ($submit != "") {
 <form id="form1" name="form1" method="post" action="">
 <div class="form-group">
 	<label for="name">Vorname Nachname <font color =#88CC88>(mehrere Personen durch Komma trennen!)</font></label>
-	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>"/>
+	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>" placeholder="Lieschen M&uuml;ller, Max M&uuml;ller"/>
 </div>
 <div class="form-group">
 	<label for="street">Stra&szlig;e Hausnummer</label>
-	<input class="form-control" name="street" type="text" id="street" value="<?php print($street);?>"/>
+	<input class="form-control" name="street" type="text" id="street" value="<?php print($street);?>" placeholder="M&uuml;llerstra&szlig;e 42"/>
 </div>
 <div class="form-group">
 	<label for="city">PLZ Ort</label>
-	<input class="form-control" name="city" type="text" id="city" value="<?php print($city);?>"/>
+	<input class="form-control" name="city" type="text" id="city" value="<?php print($city);?>" placeholder="4242 M&uuml;llerstadt"/>
 </div>
 <div class="form-group">
 	<label for="phone">Telefonnummer</label>
-	<input class="form-control" name="phone" type="text" id="phone" value="<?php print($phone);?>"/>
+	<input class="form-control" name="phone" type="text" id="phone" value="<?php print($phone);?>" placeholder="0171424242"/>
 </div>
 <div class="form-group">
 	<label for="email">E-Mail</label>
-	<input class="form-control" name="email" type="text" id="email" value="<?php print($email);?>"/>
+	<input class="form-control" name="email" type="text" id="email" value="<?php print($email);?>" placeholder="lieschenmueller@gmx.de"/>
 </div>
 <div class="form-group">
 	<label for="verify"><img src="attend-code.php?code=<?php print($code);?>"/></label>
 	<input name="code" type="hidden" id="code" value="<?php print($code);?>"/>
-	<input class="form-control" name="verify" type="text" id="verify" />
+	<input class="form-control" name="verify" type="text" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
 <input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
 </form>
