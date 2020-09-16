@@ -210,6 +210,30 @@ function verifyCode($code, $verify) {
 	return $returnValue;
 }
 
+
+// Retrieve the maximum number of all the lines currently already in the file
+function getMaxNum($file) {
+	$maxnum = 0;
+	if (file_exists($file)) {
+		$handle = fopen($file, "r");
+		while(!feof($handle)){
+		  $line = fgets($handle);
+		  print("line=".$line."<BR>");
+		  $cols = explode(";", $line);
+		  $curnum = trim($cols[0]);
+		  print("cols[0]=".$cols[0]."<BR>");
+		  print("curnum=".$curnum."<BR>");
+		  	if ($curnum >= $maxnum) {
+				print("$col[0] > $maxnum<BR>");
+				$maxnum = $curnum;
+		  	}
+		}
+		fclose($handle);
+	}
+	return $maxnum; 
+}
+
+
 // Retrieve the number of lines which corresponds to the number of registered people (for a given file/sunday)
 function getLinesFile($file) {
 	$linecount = 0;	

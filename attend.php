@@ -26,15 +26,13 @@ $phone = $_POST['phone'];
 $email = $_POST['email'];
 
 
-
-
-
  // Load helper functions
  require("attend-functions.php");
  // Load configuration
  require("attend.cfg.php");
  // Test if we are the admin, i.e., if the entered password corresponds to the admin pw 
  $isAdmin = (md5($pw) == $adminpw) || ($pw == $adminpw && $adminpw == "admin");
+ 
  
  
  $ip = $_SERVER['REMOTE_ADDR'];
@@ -225,6 +223,7 @@ if ($save != "" && $isAdmin) {
 }
 
 
+
 // Current (succesffull) registration number
 $regnumber = "";
 // The name of the current (successfull) registration
@@ -285,8 +284,8 @@ if ($submit != "") {
 		unlink("./captcha/".$oldcode.".txt");
 	
 	    $regnumber = "";
+		$curregnumber = getMaxNum(currentFile());
 		
-		$myfile = fopen(currentFile(), "a");
 		$oldname = $name;
         $names = explode(",", $name);
 		foreach ($names as $name) {
@@ -294,12 +293,13 @@ if ($submit != "") {
 			if (strlen($regnumber) > 0) {
 		 		$regnumber .= ", ";
 			} 
-			$curregnumber = (getLines() + 1);
+			$curregnumber = ($curregnumber + 1);
 			$regnumber .= "#".$curregnumber;
+			$myfile = fopen(currentFile(), "a");
 			fwrite($myfile, $curregnumber.";".$name."; ".$street."; ".$city."; ".$phone."; ".$email."\n");
+			fclose($myfile);
 		}
 		
-		fclose($myfile);
 		// Reset the text fields 
 		$name = "";
 		$street = "";
@@ -325,6 +325,9 @@ if ($submit != "") {
 		 print("Bitte bringt die Nummern mit zum Gottesdienst. Wir freuen uns auf Euch!</h3>");
 	 }
  }
+ 
+ 
+
  
 // The following are the raw input fields and the administration pan or password entry (if not logged in as admin)
 ?>
