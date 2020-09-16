@@ -218,13 +218,13 @@ function getMaxNum($file) {
 		$handle = fopen($file, "r");
 		while(!feof($handle)){
 		  $line = fgets($handle);
-		  print("line=".$line."<BR>");
+		  //print("line=".$line."<BR>");
 		  $cols = explode(";", $line);
 		  $curnum = trim($cols[0]);
-		  print("cols[0]=".$cols[0]."<BR>");
-		  print("curnum=".$curnum."<BR>");
+		  //print("cols[0]=".$cols[0]."<BR>");
+		  //print("curnum=".$curnum."<BR>");
 		  	if ($curnum >= $maxnum) {
-				print("$col[0] > $maxnum<BR>");
+				//print("$col[0] > $maxnum<BR>");
 				$maxnum = $curnum;
 		  	}
 		}
