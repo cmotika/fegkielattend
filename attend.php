@@ -265,7 +265,7 @@ if ($submit != "") {
 		$err = 1;
 	}
  	if (!isValidName($name)) {
-		print(DIV_ALERT_WARNING . "Gib DeiXnen Vor- UND Nachnamen an." . END_DIV);
+		print(DIV_ALERT_WARNING . "Gib Deinen Vor- UND Nachnamen an." . END_DIV);
 		$err = 1;
 	}
  	if (strlen(trim($street)) < 5) {
