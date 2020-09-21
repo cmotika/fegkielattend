@@ -13,6 +13,11 @@
 	// Lock out IP conditiob
 	$lockip_number_of_wrong_password_trials = 10;
 
+	// Call site with test_secret to deactivate captcha
+    $test_secret = "97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$";
+                 	
+	// Disable this for production use
+	$test_enabled = true;
 
 
 // Print a file content - header part

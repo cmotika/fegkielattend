@@ -24,7 +24,10 @@ $street = $_POST['street'];
 $city = $_POST['city'];
 $phone = $_POST['phone'];
 $email = $_POST['email'];
-
+$test = $_POST['test'];
+if ($test == "") {
+	$test = $_GET['test'];
+}
 
  // Load helper functions
  require("attend-functions.php");
@@ -33,7 +36,12 @@ $email = $_POST['email'];
  // Test if we are the admin, i.e., if the entered password corresponds to the admin pw 
  $isAdmin = (md5($pw) == $adminpw) || ($pw == $adminpw && $adminpw == "admin");
  
- 
+ $testmode = false;
+ // Notify viewer about test mode
+ if ($test == $test_secret && $test_enabled == 1) {
+ 		$testmode = true;
+ }
+
  
  $ip = $_SERVER['REMOTE_ADDR'];
  if ($pw == "" || $isAdmin) {
@@ -140,8 +148,20 @@ $email = $_POST['email'];
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	<title>Anmelden zum Gottesdienst</title>
+    <style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+    </style>
 </head>
 <body>
+<?php
+if ($testmode) {
+	print('<table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#FF0000"><tr><th scope="col"><span class="style1"><center>TEST MODE ONLY - FOR PRODUCTION USE, DISABLE TEST_ENABLED IN THE CODE  </center></span></th></tr></table>');
+}
+?>
+
+<p>&nbsp;</p>
 <div class="container">
 <h1>Registrierung 
 <?php
@@ -273,7 +293,7 @@ if ($submit != "") {
 		}
 		$err = 1;
 	}
-	if ($codecorrect == 0) {
+	if ($codecorrect == 0 && !$testmode) {
 		print(DIV_ALERT_WARNING . "Bitte Rechenaufgabe korrekt l&ouml;sen!" . END_DIV);
 		$err = 1;
 	}
@@ -354,8 +374,14 @@ if ($submit != "") {
 	<input class="form-control" name="email" type="text" id="email" value="<?php print($email);?>" placeholder="lieschenmueller@gmx.de"/>
 </div>
 <div class="form-group">
-	<label for="verify"><img src="attend-code.php?code=<?php print($code);?>"/></label>
+	<label for="verify"><img src="attend-code.php?code=<?php print($code); if($testmode){print("&test=".$test);}?>"/></label>
 	<input name="code" type="hidden" id="code" value="<?php print($code);?>"/>
+<?php
+if($testmode) {
+	print('<input name="test" type="hidden" id="code" value="'.$test.'"/>');
+}
+?>	
+	
 	<input class="form-control" name="verify" type="text" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
 <input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
