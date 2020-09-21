@@ -1,5 +1,7 @@
 <?php
 
+print("BLA<BR>");
+
 $pw = $_POST['pw'];
 $verify = $_POST['verify'];
 $code = $_POST['code'];
