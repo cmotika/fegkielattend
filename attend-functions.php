@@ -113,11 +113,11 @@ function isValidName($name) {
 	return 1;
 }
 
-// Check if the street consists of a street name and a house number, in total >= 5 characters length.
-// #REQ 019
+// Check if the street consists of a street name and a house number separated by space, in total >= 5 characters length.
+// #REQ019
 function isValidStreet($value) {
 	$value = trim($value);
-	// #REQ19
+	// #REQ019
 	if (strlen($value) < 5) {	
 		return 0;
 	}
@@ -127,6 +127,7 @@ function isValidStreet($value) {
 	}		
 	$parts = explode(" ", $value);
 	$number = preg_replace("/[^0-9]/", '', $parts[1]);
+	// #REQ050
 	if (strlen($number) < 1) {
 		// not a digit house number
 		return 0;
@@ -134,17 +135,71 @@ function isValidStreet($value) {
 	return 1;
 }
 
+// Check if the city entry consists of a digit zip code and a city name, separated by space, with city name at least length 3.
+// #REQ020
 function isValidCity($value) {
+	$value = trim($value);
+	// #REQ020
+	if (strlen($value) < 5) {	
+		return 0;
+	}
+	// At least two parts, #REQ050
+	if (strpos($value, " ") <= 0) {
+		return 0;
+	}		
+	$parts = explode(" ", $value);
+	//#REQ050
+	if (strlen($parts[1]) < 3) {
+		// city name too short
+		return 0;
+	}
+	$number = preg_replace("/[^0-9]/", '', $parts[0]);
+	$number2 = (($number+1)-1);
+	// #REQ050
+	if ((strlen($number) != 5) || ($number2 != $number)) {
+		// no valid zip code
+		return 0;
+	}
 	return 1;
 }
 
+// Check if email consists of name, @ and valid host.
+// #REQ022
 function isValidEmail($value) {
+	$value = trim($value);
+	// #REQ020
+	if (strlen($value) < 5) {	
+		return 0;
+	}
+	// At least an @
+	if (strpos($value, "@") <= 0) {
+		return 0;
+	}		
+	// At least a .
+	if (strpos($value, ".") <= 0) {
+		return 0;
+	}		
+	// Explore host
+	$parts = explode("@", $value);
+	$name = $parts[0];
+	$host = $parts[1];
+	// Host must contain .
+	if (strpos($host, ".") <= 0) {
+		return 0;
+	}		
+	$hostparts = explode(".", $host);
+	if (strlen(trim($hostparts[0])) < 1) {
+		return 0;
+	}
+	if (strlen(trim($hostparts[1])) < 2) {
+		return 0;
+	}
 	return 1;
 }
 
 
  // Check if this is a valid phone number.
- // A phone number is considered valid, iff it contains more than 5 digits.
+ // A phone number is considered valid, iff it contains at least 5 digits.
  // #REQ 021
 function isValidPhoneNumnber($phone) {
 	 $phone = preg_replace("/[^0-9]/", '', $phone);
@@ -152,7 +207,7 @@ function isValidPhoneNumnber($phone) {
 	 $phone2 = $phone2 - 1;
 	 if ($phone == $phone2) {
 	  	// #REQ49
-	    if (strlen($phone2) > 5) {
+	    if (strlen($phone2) >= 5) {
 			return 1;
 		}
 	 }
