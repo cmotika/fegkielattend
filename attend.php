@@ -389,7 +389,7 @@ if ($submit != "") {
 
 <form id="form1" name="form1" method="post" action="">
 <div class="form-group">
-	<label for="name">Vorname Nachname <font color =#88CC88>(mehrere Personen durch Komma trennen!)</font></label>
+	<label for="name">Vorname Nachname <font color =#88CC88>(mehrere Personen durch <b>Komma</b> trennen!)</font></label>
 	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>" placeholder="Lieschen M&uuml;ller, Max M&uuml;ller"/>
 </div>
 <div class="form-group">
