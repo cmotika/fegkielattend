@@ -58,12 +58,13 @@ if ($test == "") {
 	 // #REQ005
 	 lockIPPage();
  }
+ $wrongadminpassword = false;
  if ($pw != "" && !$isAdmin) {
  	// Wrong password => count up for this ip
 	// #REQ005
 	addWrongLogin($ip);
 	// #REQ055
-	lockIPPage();
+	 $wrongadminpassword = true;
  } else if ($isAdmin) {
  	// Reset counter on successfull login
 	 // #REQ005
@@ -442,6 +443,10 @@ function adminvisible() {
 <div id="admin">
 <?php 
 	if (!$isAdmin) { 
+		// #REQ055
+		if ($wrongadminpassword) {
+			print("<BR>unimplemented<BR>");
+		}
 		// If not logged in as admin, display login password field
 		// #REQ033
 		require("attend-login.php");
