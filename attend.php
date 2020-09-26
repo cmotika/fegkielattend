@@ -185,7 +185,7 @@ else {
 }
 ?>
 </h1>
-<p>Registriere Dich (bis sp&auml;testens sonntags um <b>10:00 Uhr</b>) mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den <?php print(stringDate(nextSunday(time()))); ?></b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.
+<p>Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den <?php print(stringDate(nextSunday(time()))); ?></b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
 <p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, dass Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung für vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
 
