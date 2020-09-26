@@ -1,154 +1,156 @@
-001
+#REQ001
 Default Password
 The default password shall be admin.
 
-002
+#REQ002
 Password Encryption
 All user defined passwords shall be saved encrypted only.
 
-003
+#REQ003
 Locked-out 1
 After one hour, a locked-out user shall be able to login again.
 
-004
+#REQ004
 Locked-out 2
 If a user is locked-out, then an error page shall load instead.
 
-005
+#REQ005
 Locked-out 3
 If a user submitted the wrong admin password subsequently too often, then the user shall be locked-out.
 
-006
+#REQ006
 CSV Download
 If logged in as admin and selected download to download a certain CSV file f, then f shall be returned in raw file format.
 
-007
+#REQ007
 CSV Print
 If logged in as an admin and selected to print a certain CSV file f, then f shall be displayed in form of a table with appropriate header and footer and the print dialog shall be prompted.
 
-008
+#REQ008
 CSV Mobile Print
 If logged in as an admin and selected to mobile print a certain CSV file f, then f shall be displayed in form of a table for mobile devices with appropriate header and footer.
 
-009
+#REQ009
 Captcha Expire
 A captcha shall expire after 5 minutes.
 
-010
+#REQ010
 CSV Expire
 A CSV file shall expire and be deleted after 5 weeks (to hold them at least 4 full weeks).
 
-011
+#REQ011
 CSV Current Existance
 There shall always be a current CSV file corresponding to the next week's sunday.
 
-012
+#REQ012
 Captcha Verification
 A submitted entry shall only be accepted, if the captcha passed verification.
 
-013
+#REQ013
 Captcha Renewal
 Each load of the page shall result in a new captcha to be generated and displayed.
 
-014 
+#REQ014 
 Save Config
 If logged in as an admin and selected save, then the configuration data (a changed password, maxnum, and switchtime) shall be saved.
 
-015
+#REQ015
 Load Config
 If logged in as an admin the last saved configuration data shall be loaded (max num and switch time).
 
-016
+#REQ016
 Validate Disruptive Characters
 If a submitted entry contains disuptive characters, the program shall remove them.
 
-017
+#REQ017
 Validate Already Registered
 If a user is already registered with the same list entry for the same date, then the program shall prompt this to the user and prevent (double) list entry.
 
-018
+#REQ018
 Validate User Name
 Each valid user name must consist of a forename and a surname separated by space. Optionally several names an be entered devided by comma. If any given name is not valid, the program shall prevent the new list entry and prompt the user accordingly.
 
-019
+#REQ019
 Valid Street
 A valid street entry contains of a street name and a house number separated by space. If the street entry is not valid, the program shall prevent the new list entry and prompt the user accordingly.
 
-020
+#REQ020
 Valid City
 A valid city entry contains of a zip code and a city name separated by space. If the city entry is not valid, then the program shall prevent the new list entry and prompt this to the user accordingly.
 
-021
+#REQ021
 Valid Phone
 A valid phone number consists of a minimal number of digits. If the phone number entry is not valid, then the program shall prevent the new list entry and prompt this to the user accordingly.
 
-022
+#REQ022
 Valid E-Mail
 A valid e-mail consist of a name, an @ symbol, and a host name with a dot (.) symbol. If the e-mail entry is not valid, then the program shall prevent the new list entry and prompt this to the user accordingly.
 
-023
+#REQ023
 No space for all users
 If there are any number s of seats left but more users u are entered (u > s), then the program shall prevent new list entries and prompt this to the user accordingly.
 
-024
+#REQ024
 No seats left
 If there are no seats left, the program shall prevent any new list enty and prompt this to the user accordingly.
 
-025
+#REQ025
 Captcha Invalidation
 The program shall invalidate a captcha on successfull use.
 
-026
+#REQ026
 New List Entry
 If no validation errors occurred, then the program shall append the new list entry to the current list.
 
-027
+#REQ027
 Multiregistration
 Each name (separated by comma) shall result in a single new list entry, where all such entries share the information of the other fields.
 
-027
+#REQ027
 New Registration Numbers
 Each new list entry shall result in a separate new and unique registration number which shall be part of the entry and prompted to the user.
 
-028
+#REQ028
 Clear Inputs
 On successfull submission of a new list entry, the input fields (name, street, city, phone, email) shall be cleared.
 
-030
+#REQ030
 Backup E-Mail
 On successfull submission of a new list entry, the program shall send this enty and the current complete list to a backup email address.
 
-031
+#REQ031
 Preseve Inputs
 On unsuccessfull submission of a new list entry, the content of the input fiels shall be preserved.
 
-032
+#REQ032
 Admin View
 If logged in as admin, then the program shall display the admin content.
 
-033
+#REQ033
 Non-Admin View
 If not logged in as admin, then the program shall display the admin login dialog but not any other admin content.
 
-034
+#REQ034
 Hide Admin Login
 If not logged in as admin, the login dialog shall not be visible upfront but only after clicking on an appropriate admin link.
 
-035
+#REQ035
 Invalid Name 1
 Valid names shall be at least 5 characters long each.
 
-036
+#REQ036
 Invalid Name 2
 Valid names shall consist of a fore and a surname, separated by space.
 
-047
+#REQ047
 Invalid Name 3
 The character "+" shall be forbidden for names (separator for multiple names is comma).
 
-048
+#REQ048
 Invalid Name 4
 The characters " und " shall, in any case, be forbidden for names (separator for multiple names is comma).
 
-
+#REQ049
+Invalid Phone
+Valid phone numbers shall contain at least 5 digits.
 
