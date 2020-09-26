@@ -160,7 +160,7 @@ Valid street entry consists of a street name and a house number of digits.
 
 #REQ051
 Invalid City
-Valid city entry consists of a zip code only 5 digits and a city name separated by space and at least length 3.
+Valid city entry consists of a zip code of exctly 5 digits and a city name separated by space and at least length 3.
 
 
 
