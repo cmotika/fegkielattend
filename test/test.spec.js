@@ -513,9 +513,24 @@ context('Admin functions', () => {
 
 
   // Print list
-  it('Print list', () => {
-    cy.get('[name="print"]').click()
-    cy.contains('Anmeldeliste für den GoDi am')
+  //it('Print list', () => {
+  //  cy.get('[name="print"]').click()
+  //  cy.contains('Anmeldeliste für den GoDi am')
+  //})
+
+
+  // Wrong admin password
+  // #REQ055
+  it('Wrong admin password', () => {
+    cy.visit('http://www.delphino.net/feg')
+
+    cy.get('.btn-outline-secondary').click()
+    cy.get('#pw').clear()
+    cy.get('#pw').type('wrongpassword')
+    cy.get('label > .btn').click()
+
+    cy.get('.btn-outline-secondary').click()
+    cy.contains('unimplemented')
   })
 
 })
