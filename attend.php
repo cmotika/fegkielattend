@@ -112,7 +112,10 @@ if ($test == "") {
    }
    printTableFooter();
    print("</center>");
-   print("<script>window.print()</script>");
+   // Do not call print dialog in test mode to prevent hang of cypress (not closing the native print window)
+   if (!$testmode) {
+     	print("<script>window.print()</script>");
+   }
    exit;
  }	
 ?>
