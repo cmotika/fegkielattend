@@ -113,6 +113,36 @@ function isValidName($name) {
 	return 1;
 }
 
+// Check if the street consists of a street name and a house number, in total >= 5 characters length.
+// #REQ 019
+function isValidStreet($value) {
+	$value = trim($value);
+	// #REQ19
+	if (strlen($value) < 5) {	
+		return 0;
+	}
+	// At least two parts, #REQ050
+	if (strpos($value, " ") <= 0) {
+		return 0;
+	}		
+	$parts = explode(" ", $value);
+	$number = preg_replace("/[^0-9]/", '', $parts[1]);
+	if (strlen($number) < 1) {
+		// not a digit house number
+		return 0;
+	}
+	return 1;
+}
+
+function isValidCity($value) {
+	return 1;
+}
+
+function isValidEmail($value) {
+	return 1;
+}
+
+
  // Check if this is a valid phone number.
  // A phone number is considered valid, iff it contains more than 5 digits.
  // #REQ 021

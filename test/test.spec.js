@@ -60,6 +60,24 @@ context('Input field tests', () => {
     cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
   })
 
+
+  it('Street field', () => {
+    // Street too short
+    // #REQ019
+    cy.get('#street').clear()
+    cy.get('#street').type('Stree')
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Gib Deinen Vor- UND Nachnamen an.')
+
+    // Name correct 2
+    cy.get('#name').clear()
+    cy.get('#name').type('Forename Middlename Surname')
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
+  })
+
+
+
 })
 
 

@@ -154,3 +154,8 @@ The characters " und " shall, in any case, be forbidden for names (separator for
 Invalid Phone
 Valid phone numbers shall contain at least 5 digits.
 
+#REQ050
+Invalid Street
+Valid street entry consists of a street name and a house number of digits.
+
+

@@ -287,12 +287,12 @@ if ($submit != "") {
 		$err = 1;
 	}
 	// #REQ019
- 	if (strlen(trim($street)) < 5) {
+ 	if (isValidStreet($street)) {
 		print(DIV_ALERT_WARNING . "Gib Deine Stra&szlig;e und Hausnummer an." . END_DIV);
 		$err = 1;
 	}
 	// #REQ020
- 	if (strlen(trim($city)) < 5) {
+ 	if (isValidCity($city)) {
 		print(DIV_ALERT_WARNING . "Gib Deine Postleitzahl und Stadt an." . END_DIV);
 		$err = 1;
 	}
@@ -302,7 +302,7 @@ if ($submit != "") {
 		$err = 1;
 	}
 	// #REQ022
- 	if (strlen(trim($email)) < 5) {
+ 	if (isValidEmail($email)) {
 		print(DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV);
 		$err = 1;
 	}
