@@ -172,7 +172,7 @@ if ($testmode) {
 
 <p>&nbsp;</p>
 <div class="container">
-<h1>Anmeldung f&uuml;r <?php print(stringDate(nextSunday(time()))); ?>
+<h1>Anmeldung f&uuml;r <b><?php print(stringDate(nextSunday(time()))); ?></b> 
 <?php
 $num = $maxnum-getLines();
 if ($num > 1) {
