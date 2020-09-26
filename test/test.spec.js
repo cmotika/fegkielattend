@@ -4,6 +4,7 @@ context('Input field tests', () => {
   beforeEach(() => {
     cy.visit('http://www.delphino.net/feg' )
   })
+
   it('Name field', () => {
     // Name too short (No surname)
     // #REQ035
@@ -213,19 +214,185 @@ context('Input field tests', () => {
 })
 
 
-context('Waiting', () => {
-  beforeEach(() => {
-    cy.visit('http://www.delphino.net/feg' )
-  })
-  // BE CAREFUL of adding unnecessary wait times.
-  // https://on.cypress.io/best-practices#Unnecessary-Waiting
 
-  // https://on.cypress.io/wait
-  it('cy.wait() - wait for a specific amount of time', () => {
-    cy.get('#name').type('Name1')
-    cy.get('[name="form1"] > .btn').click()
-    //cy.wait(1000)
-    cy.contains('Gib Deinen Vor- UND Nachnamen an.')
+
+context('New list entry submission', () => {
+  beforeEach(() => {
+    // Set one default entry with number #5
+    cy.visit('http://www.delphino.net/feg' )
+    cy.get('.btn-outline-secondary').click()
+
+    cy.get('#pw').clear()
+    cy.get('#pw').type('admin')
+    cy.get('label > .btn').click()
+
+    // set maximum of 3 people
+    cy.get('#nmaxnum').clear()
+    cy.get('#nmaxnum').type('3')
+    cy.get('label > input').click()
+
+    cy.get('textarea').clear()
+    cy.get('textarea').type('5;ab cd;ab 1;12345 abc;12345;a@b.de{enter}')
+    cy.get('[name="savefile"]').click()
   })
+
+  // Wrong code
+   it('Submit code wrong', () => {
+    cy.get('#name').clear()
+    cy.get('#name').type('Na me1')
+    cy.get('#street').clear()
+    cy.get('#street').type('Street 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 Abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('012345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Bitte Rechenaufgabe korrekt')
+  })
+
+  // Correct entry
+  it('Correct entry', () => {
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+    cy.get('#name').clear()
+    cy.get('#name').type('Na me1')
+    cy.get('#street').clear()
+    cy.get('#street').type('Street 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 Abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('012345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Bitte Rechenaufgabe korrekt').should('not.exist')
+    cy.contains('Du bist nun erfolgreich f')
+    cy.contains('#6')
+  })
+
+
+  // Correct multi-entry
+  it('Correct multi-entry', () => {
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+    cy.get('#name').clear()
+    cy.get('#name').type('Na me1, Na me2')
+    cy.get('#street').clear()
+    cy.get('#street').type('Street 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 Abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('012345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Bitte Rechenaufgabe korrekt').should('not.exist')
+    cy.contains('Ihr seid nun erfolgreich f')
+    cy.contains('#6')
+    cy.contains('#7')
+  })
+
+  // No double entry
+  it('Double entry', () => {
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+    cy.get('#name').clear()
+    cy.get('#name').type('Na me1')
+    cy.get('#street').clear()
+    cy.get('#street').type('Street 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 Abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('012345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+    cy.get('[name="form1"] > .btn').click()
+
+    cy.get('#name').clear()
+    cy.get('#name').type('Na me1')
+    cy.get('#street').clear()
+    cy.get('#street').type('Street 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 Abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('012345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+    cy.get('[name="form1"] > .btn').click()
+
+    cy.contains('schon angemeldet!')
+  })
+
+
+    // Not enough seats
+    it('Not enough seats', () => {
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Name 2, Name 3')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="form1"] > .btn').click()
+
+      cy.contains('Es sind leider nicht gen')
+    })
+
+    // No seats left after submission
+    it('No seats left after submission', () => {
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Na me2')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="form1"] > .btn').click()
+
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.contains('Keine freien Pl')
+    })
+
+    // No seats left for next submission
+    it('No seats left for next submission', () => {
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Na me2')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="form1"] > .btn').click()
+
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Na me2')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="form1"] > .btn').click()
+
+      cy.contains('Es sind leider schon alle Pl')
+    })
+
 
 })
