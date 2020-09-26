@@ -399,7 +399,6 @@ context('New list entry submission', () => {
   })
 })
 
-
 context('Admin functions', () => {
   beforeEach(() => {
     // Set one default entry with number #5
@@ -435,32 +434,28 @@ context('Admin functions', () => {
       cy.get('label > .btn').click()
 
       cy.get('textarea').contains('Na me1; Street 1; 12345 Abc; 012345; a@b.de')
-//      cy.contains('Es sind leider schon alle Pl')
   })
 
   // Change the password (not working, because not equal)
+  // #REQ014
   it('Change password - wrong', () => {
       cy.get(':nth-child(2) > :nth-child(3) > #pw').clear()
       cy.get(':nth-child(2) > :nth-child(3) > #pw').type('admin')
-
       cy.get(':nth-child(3) > :nth-child(3) > #pw').clear()
       cy.get(':nth-child(3) > :nth-child(3) > #pw').type('admin2')
-
       cy.get('label > input').click()
 
       // Check if NOT changed (due to errr)
-
       cy.visit('http://www.delphino.net/feg')
       cy.get('.btn-outline-secondary').click()
       cy.get('#pw').clear()
       cy.get('#pw').type('admin')
       cy.get('label > .btn').click()
-
       cy.get('textarea').contains('5;ab cd')
-//      cy.contains('Es sind leider schon alle Pl')
   })
 
   // Change the password (working, because equal) and change it back
+  // #REQ014
   it('Change password - correct', () => {
       cy.get(':nth-child(2) > :nth-child(3) > #pw').clear()
       cy.get(':nth-child(2) > :nth-child(3) > #pw').type('admin2')
@@ -474,7 +469,6 @@ context('Admin functions', () => {
       cy.get('#pw').clear()
       cy.get('#pw').type('admin2')
       cy.get('label > .btn').click()
-
       cy.get('textarea').contains('5;ab cd')
 
       // Now change back
@@ -486,6 +480,7 @@ context('Admin functions', () => {
   })
 
   // Change the settings (and change back)
+  // #REQ014
   it('Change settings', () => {
       cy.get('#nmaxnum').clear()
       cy.get('#nmaxnum').type('444')
@@ -512,6 +507,7 @@ context('Admin functions', () => {
   })
 
   // Print list
+  // #REQ007
   it('Print list', () => {
     cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
     cy.get('.btn-outline-secondary').click()
