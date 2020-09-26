@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+/// Regressions tests for append.php
 
 context('Input field tests', () => {
   beforeEach(() => {
@@ -210,33 +210,32 @@ context('Input field tests', () => {
     cy.contains('Gib Deine E-Mail-Adresse an.').should('not.exist')
   })
 
-
 })
-
-
 
 
 context('New list entry submission', () => {
   beforeEach(() => {
-    // Set one default entry with number #5
     cy.visit('http://www.delphino.net/feg' )
     cy.get('.btn-outline-secondary').click()
 
+	// Login as admin
     cy.get('#pw').clear()
     cy.get('#pw').type('admin')
     cy.get('label > .btn').click()
 
-    // set maximum of 3 people
+    // Set maximum of 3 people
     cy.get('#nmaxnum').clear()
     cy.get('#nmaxnum').type('3')
     cy.get('label > input').click()
 
+    // Set one default entry with number #5
     cy.get('textarea').clear()
     cy.get('textarea').type('5;ab cd;ab 1;12345 abc;12345;a@b.de{enter}')
     cy.get('[name="savefile"]').click()
   })
 
   // Wrong code
+  // #REQ012
    it('Submit code wrong', () => {
     cy.get('#name').clear()
     cy.get('#name').type('Na me1')
@@ -254,6 +253,7 @@ context('New list entry submission', () => {
   })
 
   // Correct entry
+  // #REQ026
   it('Correct entry', () => {
     cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
     cy.get('#name').clear()
@@ -273,8 +273,8 @@ context('New list entry submission', () => {
     cy.contains('#6')
   })
 
-
   // Correct multi-entry
+  // #REQ027
   it('Correct multi-entry', () => {
     cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
     cy.get('#name').clear()
@@ -296,6 +296,7 @@ context('New list entry submission', () => {
   })
 
   // No double entry
+  // #REQ017
   it('Double entry', () => {
     cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
     cy.get('#name').clear()
@@ -326,8 +327,9 @@ context('New list entry submission', () => {
   })
 
 
-    // Not enough seats
-    it('Not enough seats', () => {
+  // Not enough seats
+  // #REQ053
+  it('Not enough seats', () => {
       cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
       cy.get('#name').clear()
       cy.get('#name').type('Na me1, Name 2, Name 3')
@@ -342,10 +344,11 @@ context('New list entry submission', () => {
       cy.get('[name="form1"] > .btn').click()
 
       cy.contains('Es sind leider nicht gen')
-    })
+  })
 
-    // No seats left after submission
-    it('No seats left after submission', () => {
+ // No seats left after submission
+ // #REQ053
+ it('No seats left after submission', () => {
       cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
       cy.get('#name').clear()
       cy.get('#name').type('Na me1, Na me2')
@@ -361,10 +364,11 @@ context('New list entry submission', () => {
 
       cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
       cy.contains('Keine freien Pl')
-    })
+})
 
-    // No seats left for next submission
-    it('No seats left for next submission', () => {
+  // No seats left for next submission
+  // #REQ052
+  it('No seats left for next submission', () => {
       cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
       cy.get('#name').clear()
       cy.get('#name').type('Na me1, Na me2')
@@ -392,7 +396,6 @@ context('New list entry submission', () => {
       cy.get('[name="form1"] > .btn').click()
 
       cy.contains('Es sind leider schon alle Pl')
-    })
-
+  })
 
 })

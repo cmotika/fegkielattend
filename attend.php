@@ -181,6 +181,7 @@ if ($num > 1) {
 	print('<span class="badge badge-success">Noch '.$num.' Platz frei</span>');
 }
 else {
+	// #REQ052
 	print('<span class="badge badge-danger">Keine freien Pl&auml;tze</span>');
 }
 ?>

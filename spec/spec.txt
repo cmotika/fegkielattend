@@ -1,3 +1,5 @@
+// REQUIREMENTS for append.php 
+
 #REQ001
 Default Password
 The default password shall be admin.
@@ -162,6 +164,16 @@ Valid street entry shall consist of a street name and a house number of digits.
 Invalid City
 Valid city entry shall consist of a zip code of exctly 5 digits and a city name separated by space and at least length 3.
 
+#REQ052
+Max number reached prompt
+If the maximum number of registration for the current sunday is reached, the program shall prompt this to the user accordingly.
 
+#REQ053 
+Max number reached no new entry
+If the maximum number of registration for the current sunday is reached and the user submits a new entry, then the program shall prevent new list entries and prompt this to the user accordingly.
+
+#REQ054
+Num of availble seats
+The number of available seats shall always be displayed on the page.
 
 
