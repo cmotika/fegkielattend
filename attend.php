@@ -60,8 +60,10 @@ if ($test == "") {
  }
  if ($pw != "" && !$isAdmin) {
  	// Wrong password => count up for this ip
-	 // #REQ005
+	// #REQ005
 	addWrongLogin($ip);
+	// #REQ055
+	lockIPPage();
  } else if ($isAdmin) {
  	// Reset counter on successfull login
 	 // #REQ005

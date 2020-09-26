@@ -398,4 +398,127 @@ context('New list entry submission', () => {
       cy.contains('Es sind leider schon alle Pl')
   })
 
+
+
+context('Admin functions', () => {
+  beforeEach(() => {
+    // Set one default entry with number #5
+    cy.visit('http://www.delphino.net/feg')
+    cy.get('.btn-outline-secondary').click()
+    cy.get('#pw').clear()
+    cy.get('#pw').type('admin')
+    cy.get('label > .btn').click()
+    cy.get('textarea').clear()
+    cy.get('textarea').type('5;ab cd;ab 1;12345 abc;12345;a@b.de{enter}')
+    cy.get('[name="savefile"]').click()
+  })
+
+  // Submit and find entry in text field
+  it('Submit entry and find in text field', () => {
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Na me2')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="form1"] > .btn').click()
+
+      cy.visit('http://www.delphino.net/feg')
+      cy.get('.btn-outline-secondary').click()
+      cy.get('#pw').clear()
+      cy.get('#pw').type('admin')
+      cy.get('label > .btn').click()
+
+      cy.get('textarea').contains('Na me1; Street 1; 12345 Abc; 012345; a@b.de')
+//      cy.contains('Es sind leider schon alle Pl')
+    })
+
+  // Change the password (not working, because not equal)
+  it('Change password - wrong', () => {
+      cy.get(':nth-child(2) > :nth-child(3) > #pw').clear()
+      cy.get(':nth-child(2) > :nth-child(3) > #pw').type('admin')
+
+      cy.get(':nth-child(3) > :nth-child(3) > #pw').clear()
+      cy.get(':nth-child(3) > :nth-child(3) > #pw').type('admin2')
+
+      cy.get('label > input').click()
+
+      // Check if NOT changed (due to errr)
+
+      cy.visit('http://www.delphino.net/feg')
+      cy.get('.btn-outline-secondary').click()
+      cy.get('#pw').clear()
+      cy.get('#pw').type('admin')
+      cy.get('label > .btn').click()
+
+      cy.get('textarea').contains('5;ab cd')
+//      cy.contains('Es sind leider schon alle Pl')
+    })
+
+  // Change the password (working, because equal) and change it back
+  it('Change password - correct', () => {
+      cy.get(':nth-child(2) > :nth-child(3) > #pw').clear()
+      cy.get(':nth-child(2) > :nth-child(3) > #pw').type('admin2')
+      cy.get(':nth-child(3) > :nth-child(3) > #pw').clear()
+      cy.get(':nth-child(3) > :nth-child(3) > #pw').type('admin2')
+      cy.get('label > input').click()
+
+      // Check if changed
+      cy.visit('http://www.delphino.net/feg')
+      cy.get('.btn-outline-secondary').click()
+      cy.get('#pw').clear()
+      cy.get('#pw').type('admin2')
+      cy.get('label > .btn').click()
+
+      cy.get('textarea').contains('5;ab cd')
+
+      // Now change back
+      cy.get(':nth-child(2) > :nth-child(3) > #pw').clear()
+      cy.get(':nth-child(2) > :nth-child(3) > #pw').type('admin')
+      cy.get(':nth-child(3) > :nth-child(3) > #pw').clear()
+      cy.get(':nth-child(3) > :nth-child(3) > #pw').type('admin')
+      cy.get('label > input').click()
+    })
+
+  // Change the settings (and change back)
+  it('Change settings', () => {
+      cy.get('#nmaxnum').clear()
+      cy.get('#nmaxnum').type('444')
+      cy.get('#nswitchtime').clear()
+      cy.get('#nswitchtime').type('2')
+      cy.get('label > input').click()
+
+      // Check if changed
+      cy.visit('http://www.delphino.net/feg')
+      cy.get('.btn-outline-secondary').click()
+      cy.get('#pw').clear()
+      cy.get('#pw').type('admin')
+      cy.get('label > .btn').click()
+
+      cy.get('#nmaxnum').should('have.value', '444')
+      cy.get('#nswitchtime').should('have.value', '2')
+
+      // Change back
+      cy.get('#nmaxnum').clear()
+      cy.get('#nmaxnum').type('4')
+      cy.get('#nswitchtime').clear()
+      cy.get('#nswitchtime').type('10')
+      cy.get('label > input').click()
+    })
+
+
+  // Print list
+  it('Print list', () => {
+    cy.get('[name="print"]').click()
+    cy.contains('Anmeldeliste für den GoDi am')
+  })
+
+})
+
+
 })

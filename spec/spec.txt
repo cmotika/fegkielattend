@@ -176,4 +176,6 @@ If the maximum number of registration for the current sunday is reached and the 
 Num of availble seats
 Always, the program shall display the number of available seats on the page.
 
-
+#REQ055
+Prompt wrong password
+If the worng admin password is entered, then the program shall prompt this to the user.
