@@ -4,6 +4,7 @@
 	
 	// Load helper functions
 	require("attend-functions.php");
+	require("attend.cfg.php");	
 	
 	// Load a captcha calculation and display it as an image
     $codefile = "./captcha/".$code.".txt";
