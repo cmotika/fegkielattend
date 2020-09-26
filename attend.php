@@ -176,11 +176,14 @@ if ($testmode) {
 <?php
 $num = $maxnum-getLines();
 if ($num > 1) {
+	// #REQ054
 	print('<span class="badge badge-success">Noch '.$num.' Pl&auml;tze frei</span>');
 } else if ($num == 1) {
+	// #REQ054
 	print('<span class="badge badge-success">Noch '.$num.' Platz frei</span>');
 }
 else {
+	// #REQ054
 	// #REQ052
 	print('<span class="badge badge-danger">Keine freien Pl&auml;tze</span>');
 }
@@ -318,6 +321,7 @@ if ($submit != "") {
 			// #REQ023
 			print(DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." . END_DIV);
 		}
+		// #REQ053 
 		$err = 1;
 	}
 	if ($codecorrect == 0 && !$testmode) {
