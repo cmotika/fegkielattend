@@ -33,13 +33,6 @@ context('Input field tests', () => {
     cy.get('[name="form1"] > .btn').click()
     cy.contains('Gib Deinen Vor- UND Nachnamen an.')
 
-    // Name too short
-    // #REQ035
-    cy.get('#name').clear()
-    cy.get('#name').type('Forename Surname')
-    cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
-
     // Name contains plus
     // #REQ047
     cy.get('#name').clear()
@@ -54,6 +47,17 @@ context('Input field tests', () => {
     cy.get('[name="form1"] > .btn').click()
     cy.contains('Gib Deinen Vor- UND Nachnamen an.')
 
+    // Name correct 1
+    cy.get('#name').clear()
+    cy.get('#name').type('Forename Surname')
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
+
+    // Name correct 2
+    cy.get('#name').clear()
+    cy.get('#name').type('Forename Middlename Surname')
+    cy.get('[name="form1"] > .btn').click()
+    cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
   })
 
 })
