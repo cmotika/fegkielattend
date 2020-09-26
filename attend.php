@@ -48,7 +48,7 @@ if ($test == "") {
  $ip = $_SERVER['REMOTE_ADDR'];
  if ($pw == "" || $isAdmin) {
 	 // Cleanup old trials after one hour
-	 // #REQ00
+	 // #REQ003
 	 cleanupWrongLogins();
  }
  // Check if locked
@@ -112,7 +112,7 @@ if ($test == "") {
    }
    printTableFooter();
    print("</center>");
-   // Do not call print dialog in test mode to prevent hang of cypress (not closing the native print window)
+   // Do not call print dialog 	in test mode to prevent hang of cypress (not closing the native print window)
    if (!$testmode) {
      	print("<script>window.print()</script>");
    }
