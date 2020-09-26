@@ -16,7 +16,6 @@ $filecontent = $_POST['filecontent'];
 $nmaxnum = $_POST['nmaxnum'];
 $nswitchtime = $_POST['nswitchtime'];
 
-
 $save = $_POST['save'];
 $savefile = $_POST['savefile'];
 $name = $_POST['name'];
@@ -32,8 +31,11 @@ if ($test == "") {
  // Load helper functions
  require("attend-functions.php");
  // Load configuration
+ // #REQ015
  require("attend.cfg.php");
- // Test if we are the admin, i.e., if the entered password corresponds to the admin pw 
+ // Test if we are the admin, i.e., if the entered password corresponds to the admin pw
+ // #REQ001 
+ // #REQ002
  $isAdmin = (md5($pw) == $adminpw) || ($pw == $adminpw && $adminpw == "admin");
  
  $testmode = false;
@@ -46,30 +48,35 @@ if ($test == "") {
  $ip = $_SERVER['REMOTE_ADDR'];
  if ($pw == "" || $isAdmin) {
 	 // Cleanup old trials after one hour
+	 // #REQ00
 	 cleanupWrongLogins();
  }
  // Check if locked
  if (isLockedIp($ip)) {
  	 // If too many wrong logins, lock the server for one hour
+	 // #REQ004
+	 // #REQ005
 	 lockIPPage();
  }
  if ($pw != "" && !$isAdmin) {
  	// Wrong password => count up for this ip
+	 // #REQ005
 	addWrongLogin($ip);
  } else if ($isAdmin) {
  	// Reset counter on successfull login
+	 // #REQ005
+	 // #REQ006
 	resetWrongLogins($ip);
  }
  if (!$isAdmin) {	
  	$pw = "";
  }
  
- 
-
 // Testmail enabled for debugging only
 //sendTestMail($mail_to);
 
  // If download mode: Then return the requested csv file. Do this only for admins.
+ // #REQ006
  if ($isAdmin && $download != "") {
 	header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename='.basename($csvfile));
@@ -82,6 +89,7 @@ if ($test == "") {
  }
  
  // If print mode: Print the requested csv file. Do this only for admins.
+ // #REQ007
  if ($isAdmin && $print != "") {
    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
    print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
@@ -108,6 +116,7 @@ if ($test == "") {
 
 <?php
  // If mobile print mode: Print the requested csv file. Do this only for admins.
+ // #REQ008
  if ($isAdmin && $mobile != "") {
 	print('<!doctype html>');
 	print('<html lang="de">');
@@ -190,6 +199,7 @@ define("DIV_ALERT_INFO", "<div class='alert alert-info' role='alert'>");
 define("END_DIV", "</div>");
 
 // Delete all captcha files older than 5 minutes (5 minutes * 60 seconds)
+// #REQ009
 $olderthanxxxseconds = 60*5;
 foreach (glob("./captcha/*.txt") as $file) {
  	$diff = time() - filectime($file);
@@ -200,6 +210,7 @@ foreach (glob("./captcha/*.txt") as $file) {
 }
 
 // Delete all CSV files that are older than 5 weeks (5 weeks * 7 days * 24 hours * 60 minutes * 60 seconds
+// #REQ010
 $olderthanxxxweeks = 60*60*24*7*5;
 foreach (glob("./data/*.csv") as $file) {
  	$diff = time() - filectime($file);
@@ -215,13 +226,16 @@ foreach (glob("./data/*.csv") as $file) {
 }
 
 // Make sure current file exists
+// #REQ011
 ensureCurrentFileExists();
 
 // Captcha verification of last captcha 
+// #REQ012
 $codecorrect = verifyCode($code, $verify);
 $oldcode = $code;
  
 // On every loading of the page, create a new captcha and save it in apropriate directory
+// #REQ013
 $z1 = rand(1, 300);
 $z2 = rand(1, 100);
 $code = rand(10000, 99999);
@@ -231,6 +245,7 @@ fwrite($myfile, ($z1+$z2)."\n");
 fclose($myfile);
 
 // Save configuration if admin
+// #REQ014
 if ($save != "" && $isAdmin) {
     if ($npw1 != "" && $npw1 == $npw2) {
 		// Change password if np1 and np2 are present and equal
@@ -252,6 +267,7 @@ $oldname = "";
 // If the sumbit button was pressed
 if ($submit != "") {
 	// Prevent any attacks by fixing the fields
+	// #REQ016
     $name = fix($name);
     $street = fix($street);
     $city = fix($city);
@@ -260,60 +276,75 @@ if ($submit != "") {
 	// Display any errors in red to the user, so he or she can correct it
     $err = 0;
 	
+	// #REQ017
 	if (isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email)) { 
 		print(DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon angemeldet!" . END_DIV);
 		$err = 1;
 	}
+	// #REQ018
  	if (!isValidName($name)) {
 		print(DIV_ALERT_WARNING . "Gib Deinen Vor- UND Nachnamen an." . END_DIV);
 		$err = 1;
 	}
+	// #REQ019
  	if (strlen(trim($street)) < 5) {
 		print(DIV_ALERT_WARNING . "Gib Deine Stra&szlig;e und Hausnummer an." . END_DIV);
 		$err = 1;
 	}
+	// #REQ020
  	if (strlen(trim($city)) < 5) {
 		print(DIV_ALERT_WARNING . "Gib Deine Postleitzahl und Stadt an." . END_DIV);
 		$err = 1;
 	}
+	// #REQ021
  	if (!isValidPhoneNumnber($phone)) {
 		print(DIV_ALERT_WARNING . "Gib Deine Telefonnummer an." . END_DIV);
 		$err = 1;
 	}
+	// #REQ022
  	if (strlen(trim($email)) < 5) {
 		print(DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV);
 		$err = 1;
 	}
+	// #REQ023
+	// #REQ024
 	$numpersons = count(explode(",", $name));
 	if (($maxnum-getLines()-$numpersons) < 0) {
 		if ($maxnum-getLines() == 0) {
+			// #REQ024
 			print(DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." . END_DIV);
 		} else {
+			// #REQ023
 			print(DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." . END_DIV);
 		}
 		$err = 1;
 	}
 	if ($codecorrect == 0 && !$testmode) {
+		// #REQ012
 		print(DIV_ALERT_WARNING . "Bitte Rechenaufgabe korrekt l&ouml;sen!" . END_DIV);
 		$err = 1;
 	}
 
 	//$err = 0;
+	// #REQ026
 	if ($err == 0) {
+			// Iff no error was detected, then insert new registration to current file/sunday
+
 		// delete current captcha, prevent re-submission if "reload"/F5
+		// #REQ025
 		unlink("./captcha/".$oldcode.".txt");
-	
+
 	    $regnumber = "";
 		$curregnumber = getMaxNum(currentFile());
-		
 		$oldname = $name;
+		// #REQ027
         $names = explode(",", $name);
 		foreach ($names as $name) {
-			// Iff no error was detected, then insert new registration to current file/sunday
 			if (strlen($regnumber) > 0) {
 		 		$regnumber .= ", ";
 			} 
 			$curregnumber = ($curregnumber + 1);
+			// #REQ027
 			$regnumber .= "#".$curregnumber;
 			$myfile = fopen(currentFile(), "a");
 			fwrite($myfile, $curregnumber.";".$name."; ".$street."; ".$city."; ".$phone."; ".$email."\n");
@@ -321,6 +352,8 @@ if ($submit != "") {
 		}
 		
 		// Reset the text fields 
+		// #REQ028
+		// #REQ031
 		$name = "";
 		$street = "";
 		$city = "";
@@ -328,11 +361,13 @@ if ($submit != "") {
 		$email = "";
 		
 		// Send a backup mail with the just updated file
+		// #REQ030
     	sendBackupMail(currentFile());
 	}
  }
  
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed
+ // #REQ027
  if ($regnumber != "") {
  	 $plural = (strpos($regnumber, ",") > -1);
 	 if (!$plural) {
@@ -346,10 +381,10 @@ if ($submit != "") {
 	 }
  }
  
- 
-
- 
+  
 // The following are the raw input fields and the administration pan or password entry (if not logged in as admin)
+// #REQ031
+// Old entries are printed if not cleared
 ?>
 
 <form id="form1" name="form1" method="post" action="">
@@ -401,9 +436,11 @@ function adminvisible() {
 <?php 
 	if (!$isAdmin) { 
 		// If not logged in as admin, display login password field
+		// #REQ033
 		require("attend-login.php");
     } else {
 		// If logged in as admin, display all admin options
+		// #REQ032
 		require("attend-admin.php");
 	}
 ?>
@@ -411,7 +448,9 @@ function adminvisible() {
 </div>
 
 <p>
-  <?php if (!$isAdmin) { print("<script>var x = document.getElementById(\"admin\");x.style.visibility = \"hidden\";</script>"); } ?>
+  <?php 
+  // #REQ034
+  if (!$isAdmin) { print("<script>var x = document.getElementById(\"admin\");x.style.visibility = \"hidden\";</script>"); } ?>
 </p>
 
 </div>

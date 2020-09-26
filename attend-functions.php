@@ -84,14 +84,25 @@ function printTableFooterMobile() {
 }
 
 // Check if the name(s) are given corrently. Even if comma separated, they have to be full
+// #REQ 018
 function isValidName($name) {
 	$name = trim($name);
+	// #REQ47
+	if (strpos($name, "+") > -1) {
+		return 0;
+	}	
+	// #REQ48
+	if (strpos(strtoupper($name), " UND ") > -1) {
+		return 0;
+	}	
+	// #REQ035
 	if (strlen($name) < 5) {	
 		return 0;
 	}
 	$names = explode(",", $name);
 	foreach ($names as $name) {
 		$name =	trim($name);
+ 		// #REQ036
 		if (strlen($name) < 5) {	
 			return 0;
 		}
@@ -104,11 +115,13 @@ function isValidName($name) {
 
  // Check if this is a valid phone number.
  // A phone number is considered valid, iff it contains more than 5 digits.
+ // #REQ 021
 function isValidPhoneNumnber($phone) {
 	 $phone = preg_replace("/[^0-9]/", '', $phone);
 	 $phone2 = $phone + 1;
 	 $phone2 = $phone2 - 1;
 	 if ($phone == $phone2) {
+	  	// #REQ49
 	    if (strlen($phone2) > 5) {
 			return 1;
 		}
@@ -141,9 +154,7 @@ function fix($text) {
  	$text = trim($text);
 	return $text;
 }
- 
-
- 
+  
 // From a file name get the timestamp in order to dispay it e.g. in print mode 
 function getDateFromFile($csvfile) {
 	$text = basename ($csvfile);
