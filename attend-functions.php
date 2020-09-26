@@ -17,7 +17,7 @@
     $test_secret = "97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$";
                  	
 	// Disable this for production use
-	$test_enabled = true;
+	$test_enabled = false;
 
 
 // Print a file content - header part
@@ -196,13 +196,15 @@ function currentFile() {
 function writeConfig() {
  	global $adminpw;
  	global $maxnum;
- 	global $switchtime ;
+ 	global $switchtime;
+	global $test_enabled;
 	
 	$myfile = fopen("attend.cfg.php", "w");
 	fwrite($myfile, "<?php\n");
 	fwrite($myfile, "$"."adminpw = \"".$adminpw."\";\n");
 	fwrite($myfile, "$"."maxnum = ".$maxnum.";\n");
 	fwrite($myfile, "$"."switchtime  = ".$switchtime .";\n");
+	fwrite($myfile, "$"."test_enabled  = ".$test_enabled .";\n");
 	fwrite($myfile, "?>\n");
 	fclose($myfile);
 }
