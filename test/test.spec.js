@@ -397,7 +397,7 @@ context('New list entry submission', () => {
 
       cy.contains('Es sind leider schon alle Pl')
   })
-
+})
 
 
 context('Admin functions', () => {
@@ -436,7 +436,7 @@ context('Admin functions', () => {
 
       cy.get('textarea').contains('Na me1; Street 1; 12345 Abc; 012345; a@b.de')
 //      cy.contains('Es sind leider schon alle Pl')
-    })
+  })
 
   // Change the password (not working, because not equal)
   it('Change password - wrong', () => {
@@ -458,7 +458,7 @@ context('Admin functions', () => {
 
       cy.get('textarea').contains('5;ab cd')
 //      cy.contains('Es sind leider schon alle Pl')
-    })
+  })
 
   // Change the password (working, because equal) and change it back
   it('Change password - correct', () => {
@@ -483,7 +483,7 @@ context('Admin functions', () => {
       cy.get(':nth-child(3) > :nth-child(3) > #pw').clear()
       cy.get(':nth-child(3) > :nth-child(3) > #pw').type('admin')
       cy.get('label > input').click()
-    })
+  })
 
   // Change the settings (and change back)
   it('Change settings', () => {
@@ -509,7 +509,7 @@ context('Admin functions', () => {
       cy.get('#nswitchtime').clear()
       cy.get('#nswitchtime').type('10')
       cy.get('label > input').click()
-    })
+  })
 
   // Print list
   it('Print list', () => {
@@ -536,8 +536,6 @@ context('Admin functions', () => {
     cy.get('.btn-outline-secondary').click()
     cy.contains('unimplemented')
   })
-
-})
 
 
 })
