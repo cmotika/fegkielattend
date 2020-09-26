@@ -398,7 +398,7 @@ if ($submit != "") {
 </div>
 <div class="form-group">
 	<label for="city">PLZ Ort</label>
-	<input class="form-control" name="city" type="text" id="city" value="<?php print($city);?>" placeholder="4242 M&uuml;llerstadt"/>
+	<input class="form-control" name="city" type="text" id="city" value="<?php print($city);?>" placeholder="42424 M&uuml;llerstadt"/>
 </div>
 <div class="form-group">
 	<label for="phone">Telefonnummer</label>
