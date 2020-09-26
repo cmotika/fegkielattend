@@ -156,11 +156,11 @@ Valid phone numbers shall contain at least 5 digits.
 
 #REQ050
 Invalid Street
-Valid street entry consists of a street name and a house number of digits.
+Valid street entry shall consist of a street name and a house number of digits.
 
 #REQ051
 Invalid City
-Valid city entry consists of a zip code of exctly 5 digits and a city name separated by space and at least length 3.
+Valid city entry shall consist of a zip code of exctly 5 digits and a city name separated by space and at least length 3.
 
 
 
