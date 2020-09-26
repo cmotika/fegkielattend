@@ -519,7 +519,8 @@ context('Admin functions', () => {
     cy.get('#pw').type('admin')
     cy.get('label > .btn').click()
     cy.get('[name="print"]').click()
-    cy.contains('Anmeldeliste für den GoDi am')
+    cy.contains('Anmeldeliste f')
+    cy.contains('r den GoDi am')
   })
 
   // Wrong admin password
