@@ -166,7 +166,7 @@ if ($test == "") {
 <body>
 <?php
 if ($testmode) {
-	print('<table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#FF0000"><tr><th scope="col"><span class="style1"><center>TEST MODE ONLY - FOR PRODUCTION USE, DISABLE TEST_ENABLED IN THE CODE  </center></span></th></tr></table>');
+	print('<table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#FF0000"><tr><th scope="col"><span class="style1"><center>TEST MODE ONLY - FOR PRODUCTION USE, DISABLE TEST_ENABLED IN THE CONFIG  </center></span></th></tr></table>');
 }
 ?>
 
