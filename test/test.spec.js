@@ -45,14 +45,14 @@ context('Input field tests', () => {
     cy.get('#name').clear()
     cy.get('#name').type('Forename Surname+Forename Surname')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
+    cy.contains('Gib Deinen Vor- UND Nachnamen an.')
 
     // Name contains UND
     // #REQ048
     cy.get('#name').clear()
     cy.get('#name').type('Forename Surname und Forename Surname')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deinen Vor- UND Nachnamen an.').should('not.exist')
+    cy.contains('Gib Deinen Vor- UND Nachnamen an.')
 
   })
 
