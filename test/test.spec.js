@@ -66,35 +66,35 @@ context('Input field tests', () => {
     cy.get('#street').clear()
     cy.get('#street').type('Stre')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deine Straﬂe und Hausnummer an.')
+    cy.contains('e und Hausnummer an.')
 
     // Street no house number
     // #REQ050
     cy.get('#street').clear()
     cy.get('#street').type('Street')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deine Straﬂe und Hausnummer an.')
+    cy.contains('e und Hausnummer an.')
 
     // Incorrect house number
     // #REQ050
     cy.get('#street').clear()
     cy.get('#street').type('Street a')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deine Straﬂe und Hausnummer an.')
+    cy.contains('e und Hausnummer an.')
 
     // Street correct 1
     // #REQ019
     cy.get('#street').clear()
     cy.get('#street').type('Street 1')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deine Straﬂe und Hausnummer an.').should('not.exist')
+    cy.contains('e und Hausnummer an.').should('not.exist')
 
     // Street correct 2
     // #REQ019
     cy.get('#street').clear()
     cy.get('#street').type('Street 1a')
     cy.get('[name="form1"] > .btn').click()
-    cy.contains('Gib Deine Straﬂe und Hausnummer an.').should('not.exist')
+    cy.contains('e und Hausnummer an.').should('not.exist')
   })
 
 
