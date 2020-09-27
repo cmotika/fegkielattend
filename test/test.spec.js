@@ -591,7 +591,7 @@ context('Unregister', () => {
 
     cy.get('#number').clear()
     cy.get('#signoffdiv > table > tbody > :nth-child(2) > :nth-child(2) > label > .btn').click()
-    cy.contains('Deine Abmeldung gib bitte Deine Registrirungsnummer an')
+    cy.contains('Zur Abmeldung gib bitte Deine Registrirungsnummer an!')
   })
 
 
