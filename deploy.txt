@@ -1,9 +1,8 @@
-0. Ensure all tests pass under for the latest version in the GIT.
+0. Verify that all tests pass for the latest version in the GIT.
 
 http://delphino.net:8888/job/FeG/
 
 1. Make a local copy of the subdomain reg.feg-kiel.de-Server.
-
 
 2. Copy the following files (from GIT) to the feg-kiel.de-Server (reg.-Subdomain):
 
@@ -36,10 +35,11 @@ deployed-YYYY-MM-DDx
 where 	YYYY is the year, e.g., 20202
 	MM is the month, e.g., 09
 	DD is the day, e.g., 02
-	x is an optional identifier for several deployments on one day. The first deployment x is omitted, for the second x=a, the third x=b, the fourth x=c, and so on.
+	x is an optional identifier for several deployments of one day. For the first deployment x is omitted, for the second x=a, the third x=b, the fourth x=c, and so on.
 
-6. You successfully deployed!
+6. Inform the others of the technical team of the FeG by email.
 
-7. Inform the others of the technical team of the FeG.
+7. Once you have verified, everything works as expected, delete the local copy (from 1.).
 
-8. Once you have verified, everything works as expected, delete the local copy.
+8. You successfully deployed!
+
