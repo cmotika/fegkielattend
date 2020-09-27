@@ -1,3 +1,7 @@
 - insert-php-wordpress-plugin installiert
 - "Mitgliederinfo" Seite anlegen
 - Menüpunkt unter Kontaktliste anlegen
+
+- Abmelden möglich
+- Rechenaufgabefeld ohne cache
+- Anzeige der nummer

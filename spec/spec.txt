@@ -179,3 +179,19 @@ Always, the program shall display the number of available seats on the page.
 #REQ055
 Prompt wrong password
 If the user enters the wrong admin password, then the program shall prompt this to the user.
+
+#REQ056
+Sign off
+If the user enters its data plus registration number and chooses signoff, the program shall remove him from the registration list and prompt this accordingly.
+
+#REQ057
+Sign off succeed
+If the user is signed off, an email shall be sent to the configured address stating this.
+
+#REQ058
+Sign off failed
+If the user is not signed off because the data and/or registration number cannot be found, the program shall prompt this accordingy to the user.
+
+#REQ059
+Sign off no number
+If the user tries to sign off but does not provide a registration number, the program shall prevent a sign off and prompt the use to enter a number.

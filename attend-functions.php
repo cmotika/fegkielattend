@@ -361,11 +361,17 @@ function getLines() {
 // This test only succeeeds, iff the name, street, city, phone, and email is the same
 function isAlreadyRegistered($file, $name, $street, $city, $phone, $email) {
 	$found = 0;	
+	$num = 0;
 	if (file_exists($file)) {
 		$handle = fopen($file, "r");
 		while(!feof($handle) && $found <= 4){
 		  $found = 0;
 		  $line = fgets($handle);
+ 		  $num  = strpos($line, ";");
+		  if ($num > 0) {
+			  $num = substr($line, 0, $num);
+		  }
+
 		  if (strpos($line, trim($name)) > -1) {
 		  	  $found++;
 		  }
@@ -384,7 +390,12 @@ function isAlreadyRegistered($file, $name, $street, $city, $phone, $email) {
 		}
 		fclose($handle);
 	}
-	return $found; 
+	if ($found > 4) {
+		return $num; 
+	}
+	else {
+		return -1;
+	}
 }
 
 // Ensure the current file exits, if not create it and possibly immediately add the defaults
@@ -473,6 +484,10 @@ function sendBackupMail($myfile, $onoff) {
 function signOff($file, $name, $street, $city, $phone, $email, $number) {
 	$content = "";
 	$globalfound = 0;
+	
+	if (strlen(trim($number)) == 0) {
+		return 0;
+	}
 
 	// Create a backup here	(will be overridden and expires)
 	copy($file, $file.".BACKUP.csv");

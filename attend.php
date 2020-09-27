@@ -201,7 +201,7 @@ else {
 </h1>
 <p>Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den <?php print(stringDate(nextSunday(time()))); ?></b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
-<p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, dass Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung für vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
+<p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung für vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
 
 <?php  
 
@@ -293,9 +293,12 @@ if ($submit != "" || $signoff != "") {
     $err = 0;
 	
 	// #REQ017
-	if (($submit != "") && (isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email))) { 
-		print(DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon angemeldet!" . END_DIV);
-		$err = 1;
+	if ($submit != "") { 
+		$num = isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email);
+		if ($num > 0) {
+			print(DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon unter #".$num." angemeldet!" . END_DIV);
+			$err = 1;
+		}
 	}
 	// #REQ018
  	if (!isValidName($name)) {
@@ -346,23 +349,32 @@ if ($submit != "" || $signoff != "") {
 	}
 }
 
+// #REQ056
 if ($signoff != "" && $err == 0) {
-	$success = signOff(currentFile(), $name, $street, $city, $phone, $email, $number);
-	if ($success) {
-		$oldname = $name;
-	   	sendBackupMail(currentFile(), "ABMELDUNG ");
-		print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
-		
-		// Reset the text fields 
-		// #REQXXX
-		$name = "";
-		$street = "";
-		$city = "";
-		$phone = "";
-		$email = "";
+	if (strlen(trim($number)) == 0) {
+		// #REQ059
+		print(DIV_ALERT_WARNING . "F&uuml;r Deine Abmeldung gib bitte Deine Registrirungsnummer an!" . END_DIV);
 	}
 	else {
-		print(DIV_ALERT_WARNING . "Anmeldung f&uuml;r ".$name." mit #".$number." nicht gefunden." . END_DIV);
+		$success = signOff(currentFile(), $name, $street, $city, $phone, $email, $number);
+		if ($success) {
+			$oldname = $name;
+			// #REQ057
+		   	sendBackupMail(currentFile(), "ABMELDUNG ");
+			print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
+		
+			// Reset the text fields 
+			// #REQXXX
+			$name = "";
+			$street = "";
+			$city = "";
+			$phone = "";
+			$email = "";
+		}
+		else {
+	    	// #REQ058
+			print(DIV_ALERT_WARNING . "Anmeldung f&uuml;r ".$name." mit #".$number." nicht gefunden." . END_DIV);
+	  	}
 	}
 }
 
@@ -429,7 +441,7 @@ if ($submit != "" && $err == 0) {
 
 <form id="form1" name="form1" method="post" action="">
 <div class="form-group">
-	<label for="name">Vorname Nachname <font color =#88CC88>(mehrere Personen durch <b>Komma</b> trennen!)</font></label>
+	<label for="name">Vorname Nachname <font color =#55BB55>(mehrere Personen durch <b>Komma</b> trennen!)</font></label>
 	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>" placeholder="Lieschen M&uuml;ller, Max M&uuml;ller"/>
 </div>
 <div class="form-group">
@@ -465,13 +477,13 @@ if($testmode) {
 <script>
 function signoffvisible() {
 	var y = document.getElementById("signoffdiv"); 
-	y.style.visibility="visible";
+	y.style.display="inline";
 }
 </script>
 <BR>
 <a class="btn btn-outline-secondary mt-5" href='javascript:signoffvisible();'>Abmelden</a>
 <div id="signoffdiv">
-  Um Dich wieder abzumelden, gib alle Angaben von oben an und zus&auml;tzlich Deine Registrierungsnummer.<br>
+  <br><br>Falls Du Dich doch leider wieder abmelden mu&szlig;t, gib alle Angaben von oben an und zus&auml;tzlich Deine Registrierungsnummer.<br>
   Jede Person mu&szlig; sich einzeln abmelden!
   <table width="344" border="0" cellspacing="0" cellpadding="0">
     <tr>
@@ -486,13 +498,13 @@ function signoffvisible() {
     </tr>
   </table>
 </div>
-<script>var x = document.getElementById("signoffdiv");x.style.visibility = "hidden";</script>
+<script>var x = document.getElementById("signoffdiv");x.style.display = "none";</script>
 </form>
 
 <script>
 function adminvisible() {
 	var y = document.getElementById("admin"); 
-	y.style.visibility="visible";
+	y.style.display="inline";
 }
 </script>
 <a class="btn btn-outline-secondary mt-5" href='javascript:adminvisible();'>Admin</a>
@@ -518,7 +530,7 @@ function adminvisible() {
 <p>
   <?php 
   // #REQ034
-  if (!$isAdmin) { print("<script>var x = document.getElementById(\"admin\");x.style.visibility = \"hidden\";</script>"); } ?>
+  if (!$isAdmin) { print("<script>var x = document.getElementById(\"admin\");x.style.display = \"none\";</script>"); } ?>
 </p>
 
 </div>
