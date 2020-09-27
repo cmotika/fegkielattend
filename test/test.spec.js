@@ -598,7 +598,7 @@ context('Unregister', () => {
    // Sign off - success
    // #REQ056
    // #REQ057
-   it('Sing sign off', () => {
+   it('Sing off - success', () => {
     cy.get('#name').clear()
     cy.get('#name').type('ab cd')
     cy.get('#street').clear()
