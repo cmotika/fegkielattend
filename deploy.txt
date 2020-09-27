@@ -1,0 +1,28 @@
+0. Ensure all tests pass under for the latest version in the GIT.
+
+http://delphino.net:8888/job/FeG/
+
+
+1. Copy the following files (from GIT) to the feg-kiel.de-Server (reg.-Subdomain):
+
+attend.php
+attend-admin.php
+attend-code.php
+attend-functions.php
+attend-login.php
+index.php
+
+Do NOT copy the following file:
+
+attend.cfg.php
+
+... as it contains the configuration.
+
+
+2. Ensure the following directories exist:
+admin
+captcha
+data
+
+
+
