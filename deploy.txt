@@ -2,8 +2,10 @@
 
 http://delphino.net:8888/job/FeG/
 
+1. Make a local copy of the subdomain reg.feg-kiel.de-Server.
 
-1. Copy the following files (from GIT) to the feg-kiel.de-Server (reg.-Subdomain):
+
+2. Copy the following files (from GIT) to the feg-kiel.de-Server (reg.-Subdomain):
 
 attend.php
 attend-admin.php
@@ -19,10 +21,25 @@ attend.cfg.php
 ... as it contains the configuration.
 
 
-2. Ensure the following directories exist:
+3. Ensure the following directories exist:
 admin
 captcha
 data
 
+4. Verify that in the attend.cfg.php file of the prod server, the following entries exist:
+$test_enabled = false;
+$mail_to = "fegkiel@mailde";
 
+5. Set the following TAG in the GIT:
+deployed-YYYY-MM-DDx
 
+where 	YYYY is the year, e.g., 20202
+	MM is the month, e.g., 09
+	DD is the day, e.g., 02
+	x is an optional identifier for several deployments on one day. The first deployment x is omitted, for the second x=a, the third x=b, the fourth x=c, and so on.
+
+6. You successfully deployed!
+
+7. Inform the others of the technical team of the FeG.
+
+8. Once you have verified, everything works as expected, delete the local copy.
