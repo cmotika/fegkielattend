@@ -166,7 +166,7 @@ Valid city entry shall consist of a zip code of exctly 5 digits and a city name 
 
 #REQ052
 Max number reached prompt
-If the maximum number of registration for the current sunday is reached, the program shall prompt this to the user accordingly.
+If the maximum number of registration for the current sunday is reached, then the program shall prompt this to the user accordingly.
 
 #REQ053 
 Max number reached no new entry
@@ -182,16 +182,16 @@ If the user enters the wrong admin password, then the program shall prompt this 
 
 #REQ056
 Sign off
-If the user enters its data plus registration number and chooses signoff, the program shall remove him from the registration list and prompt this accordingly.
+If the user enters its data plus registration number and chooses signoff, then the program shall remove him from the registration list and prompt this accordingly.
 
 #REQ057
 Sign off succeed
-If the user is signed off, an email shall be sent to the configured address stating this.
+If the user is signed off, then an email shall be sent to the configured address stating this.
 
 #REQ058
 Sign off failed
-If the user is not signed off because the data and/or registration number cannot be found, the program shall prompt this accordingy to the user.
+If the user is not signed off because the data and/or registration number cannot be found, then the program shall prompt this accordingy to the user.
 
 #REQ059
 Sign off no number
-If the user tries to sign off but does not provide a registration number, the program shall prevent a sign off and prompt the use to enter a number.
+If the user tries to sign off but does not provide a registration number, then the program shall prevent a sign off and prompt the user to enter a number.
