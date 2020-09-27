@@ -474,12 +474,15 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 	$content = "";
 	$globalfound = 0;
 
+	// Create a backup here	(will be overridden and expires)
+	copy($file, $file.".BACKUP.csv");
+
 	if (file_exists($file)) {
 		$handle = fopen($file, "r");
 		while(!feof($handle)) {
 		  $found = 0;
 		  $line = fgets($handle);
-		  if (strpos($line, trim($number)) > -1) {
+		  if (strpos($line, trim($number.";")) > -1) {
 		  	  $found++;
 		  }
 		  if (strpos($line, trim($name)) > -1) {
@@ -509,7 +512,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 		fclose($handle);
 
 		// Write back content without found line
-		$myfile = fopen($file."cpy.csv", "w");
+		$myfile = fopen($file, "w");
 		fwrite($myfile, $content);
 		fclose($myfile);
 	}

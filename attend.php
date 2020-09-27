@@ -293,7 +293,7 @@ if ($submit != "" || $signoff != "") {
     $err = 0;
 	
 	// #REQ017
-	if (isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email)) { 
+	if (($submit != "") && (isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email))) { 
 		print(DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon angemeldet!" . END_DIV);
 		$err = 1;
 	}
@@ -346,15 +346,23 @@ if ($submit != "" || $signoff != "") {
 	}
 }
 
-if ($signoff != "" && $err = 0) {
- 	$success = signOff((currentFile(), $name, $street, $city, $phone, $email, $number);
+if ($signoff != "" && $err == 0) {
+	$success = signOff(currentFile(), $name, $street, $city, $phone, $email, $number);
 	if ($success) {
 		$oldname = $name;
 	   	sendBackupMail(currentFile(), "ABMELDUNG ");
 		print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
+		
+		// Reset the text fields 
+		// #REQXXX
+		$name = "";
+		$street = "";
+		$city = "";
+		$phone = "";
+		$email = "";
 	}
 	else {
-		print(DIV_ALERT_WARNING . "Nicht gefunden." . END_DIV);
+		print(DIV_ALERT_WARNING . "Anmeldung f&uuml;r ".$name." mit #".$number." nicht gefunden." . END_DIV);
 	}
 }
 
@@ -449,23 +457,26 @@ if($testmode) {
 }
 ?>	
 	
-	<input class="form-control" name="verify" type="text" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
+	<input class="form-control" name="verify" type="text" autocomplete="off" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
 <input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
 
 
 <script>
 function signoffvisible() {
-	var y = document.getElementById("signoff"); 
+	var y = document.getElementById("signoffdiv"); 
 	y.style.visibility="visible";
 }
 </script>
+<BR>
 <a class="btn btn-outline-secondary mt-5" href='javascript:signoffvisible();'>Abmelden</a>
-<div id="signoff">
+<div id="signoffdiv">
+  Um Dich wieder abzumelden, gib alle Angaben von oben an und zus&auml;tzlich Deine Registrierungsnummer.<br>
+  Jede Person mu&szlig; sich einzeln abmelden!
   <table width="344" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td>Nummer</td>
-      <td><input class="form-control" name="number" type="text" id="number" value="<?php print($pw);?>"/></td>
+      <td><input class="form-control" name="number" autocomplete="off" type="text" id="number" value=""/></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -475,9 +486,8 @@ function signoffvisible() {
     </tr>
   </table>
 </div>
-
+<script>var x = document.getElementById("signoffdiv");x.style.visibility = "hidden";</script>
 </form>
-
 
 <script>
 function adminvisible() {
@@ -485,9 +495,7 @@ function adminvisible() {
 	y.style.visibility="visible";
 }
 </script>
-
 <a class="btn btn-outline-secondary mt-5" href='javascript:adminvisible();'>Admin</a>
-
 <div id="admin">
 <?php 
 	if (!$isAdmin) { 
