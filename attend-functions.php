@@ -123,9 +123,16 @@ function isValidStreet($value) {
 		return 0;
 	}		
 	$parts = explode(" ", $value);
-	$number = preg_replace("/[^0-9]/", '', $parts[1]);
+	$foundnumber = 0;
+	
+	for ($c = 0; $c < count($parts); $c++)  {
+		$number = preg_replace("/[^0-9]/", '', $parts[$c]);
+		if (strlen($number) > 0) {
+			$foundnumber = 1;
+		}
+	}
 	// #REQ050
-	if (strlen($number) < 1) {
+	if (!$foundnumber) {
 		// not a digit house number
 		return 0;
 	}
@@ -521,7 +528,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 				$globalfound = 1;
 		  } else {
 		  		// Copy
-				$content = $content.$line."\n";
+				$content = $content.$line;
 		  }
 		}
 		fclose($handle);
