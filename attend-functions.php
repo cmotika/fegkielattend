@@ -1,9 +1,6 @@
 <?php
 
 // Static configuration
-	// Backup mail configuration
-	$mail_to = "fegkiel@mail.de";
-	
 	// Default file name
 	$default_csv_file = "./data/defaults.csv";
 	
@@ -283,6 +280,7 @@ function writeConfig() {
  	global $maxnum;
  	global $switchtime;
 	global $test_enabled;
+	global $mail_to;
 	
 	$myfile = fopen("attend.cfg.php", "w");
 	fwrite($myfile, "<?php\n");
@@ -290,6 +288,7 @@ function writeConfig() {
 	fwrite($myfile, "$"."maxnum = ".$maxnum.";\n");
 	fwrite($myfile, "$"."switchtime  = ".$switchtime .";\n");
 	fwrite($myfile, "$"."test_enabled  = ".$test_enabled .";\n");
+	fwrite($myfile, "$"."mail_to = \"".$mail_to."\";\n");
 	fwrite($myfile, "?>\n");
 	fclose($myfile);
 }
@@ -435,11 +434,11 @@ function tabit($text) {
 }
 
 // Send a backup of the current registrations PLUS the current new registration. Use this function after every new registration (see below)
-function sendBackupMail($myfile) {
+function sendBackupMail($myfile, $onoff) {
  		global $mail_to;
 		global $oldname;
 		
-  		$subject = "Neue Anmeldung für ".stringDate(nextSunday(time()))." - ".$oldname;
+  		$subject = $onoff." für ".stringDate(nextSunday(time()))." - ".$oldname;
 		
 		// header
 		$header = "From: FeG Anmeldung <feg@delphino.net>\r\n";
@@ -465,7 +464,59 @@ function sendBackupMail($myfile) {
   	   	$nmessage .= "\n\n\n\n\nCSV File (raw):\n\n".$content;
     	$retval = mail($mail_to, $subject, $nmessage, $header );		
 		return $retval;
- }
+}
+
+
+
+// Remove a person from the file.
+// Do this only if all information matches, including the registration number.
+function signOff($file, $name, $street, $city, $phone, $email, $number) {
+	$content = "";
+	$globalfound = 0;
+
+	if (file_exists($file)) {
+		$handle = fopen($file, "r");
+		while(!feof($handle)) {
+		  $found = 0;
+		  $line = fgets($handle);
+		  if (strpos($line, trim($number)) > -1) {
+		  	  $found++;
+		  }
+		  if (strpos($line, trim($name)) > -1) {
+		  	  $found++;
+		  }
+		  if (strpos($line, trim($street)) > -1) {
+		  	  $found++;
+		  }
+		  if (strpos($line, trim($city)) > -1) {
+		  	  $found++;
+		  }
+		  if (strpos($line, trim($phone)) > -1) {
+		  	  $found++;
+		  }
+		  if (strpos($line, trim($email)) > -1) {
+		  	  $found++;
+		  }
+		  
+		  if ($found == 6) {
+		  		// Remove
+				$globalfound = 1;
+		  } else {
+		  		// Copy
+				$content = $content.$line."\n";
+		  }
+		}
+		fclose($handle);
+
+		// Write back content without found line
+		$myfile = fopen($file."cpy.csv", "w");
+		fwrite($myfile, $content);
+		fclose($myfile);
+	}
+
+	return $globalfound; 
+}
+
 
 
 // In case of a wrong password, add IP to monitoring

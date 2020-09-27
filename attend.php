@@ -16,6 +16,10 @@ $filecontent = $_POST['filecontent'];
 $nmaxnum = $_POST['nmaxnum'];
 $nswitchtime = $_POST['nswitchtime'];
 
+$signoff = $_POST['signoff'];
+$number = $_POST['number'];
+
+
 $save = $_POST['save'];
 $savefile = $_POST['savefile'];
 $name = $_POST['name'];
@@ -274,8 +278,10 @@ $regnumber = "";
 // The name of the current (successfull) registration
 $oldname = "";
 
-// If the sumbit button was pressed
-if ($submit != "") {
+
+$err = 0;
+// If the sumbit or signoff button was pressed
+if ($submit != "" || $signoff != "") {
 	// Prevent any attacks by fixing the fields
 	// #REQ016
     $name = fix($name);
@@ -316,29 +322,45 @@ if ($submit != "") {
 		print(DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV);
 		$err = 1;
 	}
-	// #REQ023
-	// #REQ024
-	$numpersons = count(explode(",", $name));
-	if (($maxnum-getLines()-$numpersons) < 0) {
-		if ($maxnum-getLines() == 0) {
-			// #REQ024
-			print(DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." . END_DIV);
-		} else {
-			// #REQ023
-			print(DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." . END_DIV);
+	// Only in submit mode test, if enough seats are available
+	if ($submit != "") {
+		// #REQ023
+		// #REQ024
+		$numpersons = count(explode(",", $name));
+		if (($maxnum-getLines()-$numpersons) < 0) {
+			if ($maxnum-getLines() == 0) {
+				// #REQ024
+				print(DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." . END_DIV);
+			} else {
+				// #REQ023
+				print(DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." . END_DIV);
+			}
+			// #REQ053 
+			$err = 1;
 		}
-		// #REQ053 
-		$err = 1;
 	}
 	if ($codecorrect == 0 && !$testmode) {
 		// #REQ012
 		print(DIV_ALERT_WARNING . "Bitte Rechenaufgabe korrekt l&ouml;sen!" . END_DIV);
 		$err = 1;
 	}
+}
 
+if ($signoff != "" && $err = 0) {
+ 	$success = signOff((currentFile(), $name, $street, $city, $phone, $email, $number);
+	if ($success) {
+		$oldname = $name;
+	   	sendBackupMail(currentFile(), "ABMELDUNG ");
+		print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
+	}
+	else {
+		print(DIV_ALERT_WARNING . "Nicht gefunden." . END_DIV);
+	}
+}
+
+if ($submit != "" && $err == 0) {
 	//$err = 0;
 	// #REQ026
-	if ($err == 0) {
 			// Iff no error was detected, then insert new registration to current file/sunday
 
 		// delete current captcha, prevent re-submission if "reload"/F5
@@ -373,8 +395,7 @@ if ($submit != "") {
 		
 		// Send a backup mail with the just updated file
 		// #REQ030
-    	sendBackupMail(currentFile());
-	}
+    	sendBackupMail(currentFile(), "Neue Anmeldung ");
  }
  
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed
@@ -431,6 +452,30 @@ if($testmode) {
 	<input class="form-control" name="verify" type="text" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
 <input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
+
+
+<script>
+function signoffvisible() {
+	var y = document.getElementById("signoff"); 
+	y.style.visibility="visible";
+}
+</script>
+<a class="btn btn-outline-secondary mt-5" href='javascript:signoffvisible();'>Abmelden</a>
+<div id="signoff">
+  <table width="344" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td>Nummer</td>
+      <td><input class="form-control" name="number" type="text" id="number" value="<?php print($pw);?>"/></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><label>
+        <input class="btn btn-primary" type="submit" name="signoff" value="Abmelden" />
+      </label></td>
+    </tr>
+  </table>
+</div>
+
 </form>
 
 
