@@ -353,7 +353,7 @@ if ($submit != "" || $signoff != "") {
 if ($signoff != "" && $err == 0) {
 	if (strlen(trim($number)) == 0) {
 		// #REQ059
-		print(DIV_ALERT_WARNING . "F&uuml;r Deine Abmeldung gib bitte Deine Registrirungsnummer an!" . END_DIV);
+		print(DIV_ALERT_WARNING . "Zur Abmeldung gib bitte Deine Registrirungsnummer an!" . END_DIV);
 	}
 	else {
 		$success = signOff(currentFile(), $name, $street, $city, $phone, $email, $number);
@@ -483,17 +483,17 @@ function signoffvisible() {
 <BR>
 <a class="btn btn-outline-secondary mt-5" href='javascript:signoffvisible();'>Abmelden</a>
 <div id="signoffdiv">
-  <br><br>Falls Du Dich doch leider wieder abmelden mu&szlig;t, gib alle Angaben von oben an und zus&auml;tzlich Deine Registrierungsnummer.<br>
-  Jede Person mu&szlig; sich einzeln abmelden!
+  <br><br>Falls Du Dich doch leider wieder abmelden mu&szlig;t: Gib alle Angaben <b>oben</b> und zus&auml;tzlich <b>hier</b> Deine Registrierungsnummer an.<br>
+  Jede Person mu&szlig; sich einzeln abmelden!<br>
   <table width="344" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td>Nummer</td>
+      <td>Nummer&nbsp;&nbsp;</td>
       <td><input class="form-control" name="number" autocomplete="off" type="text" id="number" value=""/></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
       <td><label>
-        <input class="btn btn-primary" type="submit" name="signoff" value="Abmelden" />
+        <input class="btn btn-primary" type="submit" name="signoff" value="Abmelden vom Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
       </label></td>
     </tr>
   </table>
