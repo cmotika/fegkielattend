@@ -96,6 +96,21 @@ context('Input field tests', () => {
     cy.get('#street').type('Street 1a')
     cy.get('[name="submit"]').click()
     cy.contains('e und Hausnummer an.').should('not.exist')
+
+    // Street correct 3
+    // #REQ019
+    cy.get('#street').clear()
+    cy.get('#street').type('Street Str 1')
+    cy.get('[name="submit"]').click()
+    cy.contains('e und Hausnummer an.').should('not.exist')
+
+    // Street correct 4
+    // #REQ019
+    cy.get('#street').clear()
+    cy.get('#street').type('Street Str 1a')
+    cy.get('[name="submit"]').click()
+    cy.contains('e und Hausnummer an.').should('not.exist')
+
   })
 
 
