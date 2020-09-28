@@ -589,6 +589,7 @@ function isLockedIp($ip) {
 
 // Prints an error message, indicating that the wrong password has been entered too often
 function lockIPPage() {
+   header('HTTP/1.1 500 Internal Server Error');
    printf("<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">
 <html><head>
 <title>500 Internal Server Error</title>
