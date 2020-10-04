@@ -394,37 +394,27 @@ context('Register', () => {
       cy.contains('Keine freien Pl')
 })
 
-  // No seats left for next submission
+ // No seats left for next submission
   // #REQ052
   it('No seats left for next submission', () => {
-      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
-      cy.get('#name').clear()
-      cy.get('#name').type('Na me1, Na me2')
-      cy.get('#street').clear()
-      cy.get('#street').type('Street 1')
-      cy.get('#city').clear()
-      cy.get('#city').type('12345 Abc')
-      cy.get('#phone').clear()
-      cy.get('#phone').type('012345')
-      cy.get('#email').clear()
-      cy.get('#email').type('a@b.de')
-      cy.get('[name="submit"]').click()
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+    cy.get('#name').clear()
+    cy.get('#name').type('Na me1, Na me2')
+    cy.get('#street').clear()
+    cy.get('#street').type('Street 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 Abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('012345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+    cy.get('[name="submit"]').click()
 
-      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
-      cy.get('#name').clear()
-      cy.get('#name').type('Na me1, Na me2')
-      cy.get('#street').clear()
-      cy.get('#street').type('Street 1')
-      cy.get('#city').clear()
-      cy.get('#city').type('12345 Abc')
-      cy.get('#phone').clear()
-      cy.get('#phone').type('012345')
-      cy.get('#email').clear()
-      cy.get('#email').type('a@b.de')
-      cy.get('[name="submit"]').click()
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
 
-      cy.contains('Es sind leider schon alle Pl')
-  })
+    cy.get('.badge').contains('Keine freien Pl')
+})
+
 
   // No seats left - waiinglist
   // #REQ060
@@ -446,7 +436,7 @@ context('Register', () => {
   })
 
 
-  // No seats left - waiinglist
+  // Waiinglist - submit
   // #REQ061
   it('Waitinglist - submit', () => {
       cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
@@ -463,7 +453,8 @@ context('Register', () => {
       cy.get('[name="submit"]').click()
       cy.get('[name="waitinglist"]').click()
 
-      cy.contains('erfolgreich auf der Warteliste eingetragen') // entry on waitinglist
+      cy.contains('erfolgreich auf der Warteliste f') // entry on waitinglist
+      cy.contains('Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf') // entry on waitinglist
   })
 
 
