@@ -345,7 +345,7 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 	if ($submit != "" || $waitinglist != "") {
 		// Waitinglist
 		// #REQ060
-		$waitinglistbutton = "<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichten\">";
+		$waitinglistbutton = "<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichtigen\">";
 	}
 	if ($submit != "") {
 		// #REQ060
