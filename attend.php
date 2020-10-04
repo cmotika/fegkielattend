@@ -411,7 +411,11 @@ if ($waitinglist != "" && $err == 0) {
 	$myfile = fopen(waitingListFile(), "a");
 	fwrite($myfile, $email."\n");
 	fclose($myfile);	
-	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste eingetragen!" . END_DIV);
+	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste  f&uuml;r den ".stringDate(nextSunday(time()))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach. Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
+	
+	//send test mail
+	// #REQ064
+	sendWaitingListTestMail($email);
 	
 	// delete current captcha, prevent re-submission if "reload"/F5
 	// #REQ025

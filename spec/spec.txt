@@ -210,4 +210,8 @@ If a new list is created, them the program shall clear the old waiting list.
 
 #REQ063
 Waiting list notification
-If a user unregistres for the current sunday, the program shall notify all members of the waiting list and shall erase the waiting list afterwards.
+If a user unregistres for the current sunday, the program shall notify all members of the waiting list.
+
+#REQ064
+Waiting list test
+If a user registers for the waiting list, then the program shall send a notification about this as a test of the email-sending-process and the program shall prompt a message informing about this test.

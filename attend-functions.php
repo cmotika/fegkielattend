@@ -299,6 +299,22 @@ function sendWaitingListMail($receipient) {
 		return $retval;
 }
 
+function sendWaitingListTestMail($receipient) {
+  		$subject = "FeG Kiel - Warteliste für den ".stringDate(nextSunday(time()))."!";
+		// header
+		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
+		$header .= "MIME-Version: 1.0\r\n";
+		$header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+
+		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
+		$nmessage = "Diese Mail bestaetigt nur, dass Du fuer die Warteliste f&uuml;r den ".stringDate(nextSunday(time()))." eingetragen bist.\n\nSobald es (wieder) freie Plaetze geben sollte, wirst Du per E-Mail benachrichtigt. Du musst Dich dann aber noch fuer den Gottesdienst anmelden! \n\nSollte es keine freien Plaetze geben, hoffen wir, dass wir mit Dir ueber  http://youtube.feg-kiel.de zusammen online Gottesdienst feiern koennen und dass Du bald an einem der naechsten Sonntage wieder live vorort bist!";		
+    	$retval = mail($receipient, $subject, $nmessage, $header );		
+		return $retval;
+}
+
+
+
 // Send a mail to each waiting list member and delete the waitin list file
 // #REQ063
 function sendWaitingListMails() {
@@ -311,7 +327,7 @@ function sendWaitingListMails() {
 		  }//end if
 		}//end while
 		fclose($handle);
-		unlink(waitinglistFile());
+		//unlink(waitinglistFile());
    }
 }
 
