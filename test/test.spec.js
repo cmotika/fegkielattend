@@ -430,7 +430,6 @@ context('Register', () => {
       cy.get('[name="submit"]').click()
 
       cy.contains('chtest Du bei einem freien Platz benachrichtigt werden') // check waitinglist link
-      cy.contains('tzen per E-Mail benachrichten') // check waitinglist button
   })
 
 
@@ -448,6 +447,7 @@ context('Register', () => {
       cy.get('#phone').type('012345')
       cy.get('#email').clear()
       cy.get('#email').type('a@b.de')
+      cy.get('[name="submit"]').click()
       cy.get('[name="waitinglist"]').click()
 
       cy.contains('erfolgreich auf der Warteliste eingetragen') // entry on waitinglist
