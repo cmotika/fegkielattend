@@ -197,6 +197,7 @@ else {
 	// #REQ054
 	// #REQ052
 	print('<span class="badge badge-danger">Keine freien Pl&auml;tze</span>');
+	$waitinglist = "active";
 }
 ?>
 </h1>
@@ -488,22 +489,22 @@ if ($submit != "" && $err == 0) {
 <form id="form1" name="form1" method="post" action="">
 
 <?php print($errTextGeneral); ?>
-<div class="form-group">
+<div id="secname" class="form-group">
 	<label for="name">Vorname Nachname <font color =#55BB55>(mehrere Personen durch <b>Komma</b> trennen!)</font></label>
 	<?php print($errTextName); ?>
 	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>" placeholder="Lieschen M&uuml;ller, Max M&uuml;ller"/>
 </div>
-<div class="form-group">
+<div id="secstreet" class="form-group">
 	<label for="street">Stra&szlig;e Hausnummer</label>
 <?php print($errTextStreet); ?>
 	<input class="form-control" name="street" type="text" id="street" value="<?php print($street);?>" placeholder="M&uuml;llerstra&szlig;e 42"/>
 </div>
-<div class="form-group">
+<div id="seccity" class="form-group">
 	<label for="city">PLZ Ort</label>
 <?php print($errTextCity); ?>
 	<input class="form-control" name="city" type="text" id="city" value="<?php print($city);?>" placeholder="42424 M&uuml;llerstadt"/>
 </div>
-<div class="form-group">
+<div id="secphone" class="form-group">
 	<label for="phone">Telefonnummer</label>
 <?php print($errTextPhone); ?>
 	<input class="form-control" name="phone" type="text" id="phone" value="<?php print($phone);?>" placeholder="0171424242"/>
@@ -526,6 +527,15 @@ if($testmode) {
 	<input class="form-control" name="verify" type="text" autocomplete="off" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
 
+<script>
+function waitinglistvisibility() {
+ document.getElementById("secname").style.display="none"; 
+ document.getElementById("secstreet").style.display="none"; 
+ document.getElementById("seccity").style.display="none"; 
+ document.getElementById("secphone").style.display="none"; 
+}
+</script>
+
 
 <?php 
 if ($waitinglistbutton == "") {
@@ -533,6 +543,7 @@ if ($waitinglistbutton == "") {
 }
 else {
 	print("<div id='waitinglistsection'></div>");
+	print ('<script> waitinglistvisibility()</script>');
 	print($waitinglistbutton);
 }
 ?>
