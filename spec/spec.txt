@@ -195,3 +195,19 @@ If the user is not signed off because the data and/or registration number cannot
 #REQ059
 Sign off no number
 If the user tries to sign off but does not provide a registration number, then the program shall prevent a sign off and prompt the user to enter a number.
+
+#REQ060
+Waiting list hint
+If not enought seats are left for the current user, then the program shall display a waitinglist section and button and link to the waitinglist section in the error message.
+
+#REQ061
+Waiting list entry
+If waitinglist button is visible due to space limitations and a valid email is provided by the user, then the program shall append the email to the waitinglist and clear the fields and inform the user upon successfull entry.
+
+#REQ062
+Waiting list clear
+If a new list is created, them the program shall clear the old waiting list.
+
+#REQ063
+Waiting list notification
+If a user unregistres for the current sunday, the program shall notify all members of the waiting list and shall erase the waiting list afterwards.

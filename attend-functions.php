@@ -275,10 +275,46 @@ function nextSunday($timestamp) {
 	 return $timestamp;
 }
 
-// Retriebe the current file to write to (for adding new registrations or as a default for loading the current list) 
+// Retrieve the current file to write to (for adding new registrations or as a default for loading the current list) 
 function currentFile() {
 	return "./data/attend".fileDate(nextSunday(time())).".csv";
 }
+
+// Retrieve the current waiting list 
+function waitingListFile() {
+	return "./data/waiting.csv";
+}
+
+function sendWaitingListMail($receipient) {
+  		$subject = "FeG Kiel - Freie GoDi Plätze für den ".stringDate(nextSunday(time()))."!";
+		// header
+		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
+		$header .= "MIME-Version: 1.0\r\n";
+		$header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+
+		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
+		$nmessage = "Hallo, \n\nes gibt gute Neuigkeiten fuer Dich!\nDurch eine Abmeldung sind neue Sitzplaetze frei geworden.\n\nSei schnell und melde Dich unter\n\n    http://reg.feg-kiel.de \n\nfuer den Gottesdiest vorort an :-).";		
+    	$retval = mail($receipient, $subject, $nmessage, $header );		
+		return $retval;
+}
+
+// Send a mail to each waiting list member and delete the waitin list file
+// #REQ063
+function sendWaitingListMails() {
+   if (file_exists(waitingListFile())) {
+		$handle = fopen(waitingListFile(), "r");
+		while(!feof($handle) && $found == 0){
+		  $line = fgets($handle);
+		  if (trim($line) != "") {
+				sendWaitingListMail($line);
+		  }//end if
+		}//end while
+		fclose($handle);
+		unlink(waitinglistFile());
+   }
+}
+
 
 // Write the configuration file (php).
 // It is "read" by just including it
@@ -418,6 +454,9 @@ function ensureCurrentFileExists() {
 		}
 		//fwrite($myfile, "\n");
 		fclose($myfile);
+		//Waive current waiting list
+		// #REQ062
+		unlink(waitinglistFile());		
 	}
 }
 

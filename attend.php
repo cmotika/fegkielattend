@@ -5,6 +5,7 @@ $verify = $_POST['verify'];
 $code = $_POST['code'];
 $val = $_POST['val'];
 $submit = $_POST['submit'];
+$waitinglist = $_POST['waitinglist'];
 $download = $_POST['download'];
 $print = $_POST['print'];
 $mobile = $_POST['mobile'];
@@ -241,6 +242,7 @@ foreach (glob("./data/*.csv") as $file) {
 
 // Make sure current file exists
 // #REQ011
+// #REQ062
 ensureCurrentFileExists();
 
 // Captcha verification of last captcha 
@@ -280,8 +282,19 @@ $oldname = "";
 
 
 $err = 0;
+
+// Error text fields to be positions at the corresponding fields
+$errTextGeneral = "";
+$errTextName = "";
+$errTextStreet = "";
+$errTextCity = "";
+$errTextPhone = "";
+$errTextEmail = "";
+$errTextCaptcha = "";
+$waitinglistbutton = ""; // if != "" then display this instead of submit button
+
 // If the sumbit or signoff button was pressed
-if ($submit != "" || $signoff != "") {
+if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 	// Prevent any attacks by fixing the fields
 	// #REQ016
     $name = fix($name);
@@ -296,55 +309,66 @@ if ($submit != "" || $signoff != "") {
 	if ($submit != "") { 
 		$num = isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email);
 		if ($num > 0) {
-			print(DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon unter #".$num." angemeldet!" . END_DIV);
+			$errTextGeneral .= DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon unter #".$num." angemeldet!" . END_DIV;
 			$err = 1;
 		}
 	}
-	// #REQ018
- 	if (!isValidName($name)) {
-		print(DIV_ALERT_WARNING . "Gib Deinen Vor- UND Nachnamen an." . END_DIV);
-		$err = 1;
-	}
-	// #REQ019
- 	if (!isValidStreet($street)) {
-		print(DIV_ALERT_WARNING . "Gib Deine Stra&szlig;e und Hausnummer an." . END_DIV);
-		$err = 1;
-	}
-	// #REQ020
- 	if (!isValidCity($city)) {
-		print(DIV_ALERT_WARNING . "Gib Deine Postleitzahl und Stadt an." . END_DIV);
-		$err = 1;
-	}
-	// #REQ021
- 	if (!isValidPhoneNumnber($phone)) {
-		print(DIV_ALERT_WARNING . "Gib Deine Telefonnummer an." . END_DIV);
-		$err = 1;
+	if ($waitinglist == "") {
+		// #REQ018
+	 	if (!isValidName($name)) {
+			$errTextName .= DIV_ALERT_WARNING . "Gib Deinen Vor- UND Nachnamen an." . END_DIV;
+			$err = 1;
+		}
+		// #REQ019
+	 	if (!isValidStreet($street)) {
+			$errTextStreet .= DIV_ALERT_WARNING . "Gib Deine Stra&szlig;e und Hausnummer an." . END_DIV;
+			$err = 1;
+		}
+		// #REQ020
+	 	if (!isValidCity($city)) {
+			$errTextCity .=  DIV_ALERT_WARNING . "Gib Deine Postleitzahl und Stadt an." . END_DIV;
+			$err = 1;
+		}
+		// #REQ021
+	 	if (!isValidPhoneNumnber($phone)) {
+			$errTextPhone .= DIV_ALERT_WARNING . "Gib Deine Telefonnummer an." . END_DIV;
+			$err = 1;
+		}
 	}
 	// #REQ022
  	if (!isValidEmail($email)) {
-		print(DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV);
+		$errTextEmail .= DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV;
 		$err = 1;
 	}
 	// Only in submit mode test, if enough seats are available
+	if ($submit != "" || $waitinglist != "") {
+		// Waitinglist
+		// #REQ060
+		$waitinglistbutton = "<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichten\">";
+	}
 	if ($submit != "") {
+		// #REQ060
+		$waitinglistlink = " <a href=\"#waitinglistsection\"> M&ouml;chtest Du bei einem freien Platz benachrichtigt werden?</a>";
 		// #REQ023
 		// #REQ024
 		$numpersons = count(explode(",", $name));
 		if (($maxnum-getLines()-$numpersons) < 0) {
 			if ($maxnum-getLines() == 0) {
 				// #REQ024
-				print(DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." . END_DIV);
+				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." .$waitinglistlink. END_DIV;
 			} else {
 				// #REQ023
-				print(DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." . END_DIV);
+				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." .$waitinglistlink. END_DIV;
 			}
 			// #REQ053 
 			$err = 1;
+		}  else {
+			$waitinglistbutton = "";
 		}
 	}
 	if ($codecorrect == 0 && !$testmode) {
 		// #REQ012
-		print(DIV_ALERT_WARNING . "Bitte Rechenaufgabe korrekt l&ouml;sen!" . END_DIV);
+		$errTextCaptcha .= DIV_ALERT_WARNING . "Bitte Rechenaufgabe korrekt l&ouml;sen!" . END_DIV;
 		$err = 1;
 	}
 }
@@ -362,6 +386,9 @@ if ($signoff != "" && $err == 0) {
 			// #REQ057
 		   	sendBackupMail(currentFile(), "ABMELDUNG ");
 			print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
+			
+			// #REQ063
+			sendWaitingListMails();
 		
 			// Reset the text fields 
 			// #REQXXX
@@ -376,6 +403,25 @@ if ($signoff != "" && $err == 0) {
 			print(DIV_ALERT_WARNING . "Anmeldung f&uuml;r ".$name." mit #".$number." nicht gefunden." . END_DIV);
 	  	}
 	}
+}
+
+if ($waitinglist != "" && $err == 0) {
+	// #REQ061
+	$myfile = fopen(waitingListFile(), "a");
+	fwrite($myfile, $email."\n");
+	fclose($myfile);	
+	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste eingetragen!" . END_DIV);
+	
+	// delete current captcha, prevent re-submission if "reload"/F5
+	// #REQ025
+	unlink("./captcha/".$oldcode.".txt");
+			
+	// Reset the text fields 
+	$name = "";
+	$street = "";
+	$city = "";
+	$phone = "";
+	$email = "";
 }
 
 if ($submit != "" && $err == 0) {
@@ -423,11 +469,11 @@ if ($submit != "" && $err == 0) {
  if ($regnumber != "") {
  	 $plural = (strpos($regnumber, ",") > -1);
 	 if (!$plural) {
-		 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den ".stringDate(nextSunday(time()))." angemeldet unter der Nummer ");
+		 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time()))." angemeldet und zwar unter der Nummer ");
 		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
 		 print("Bitte bringe die Nummer mit zum Gottesdienst. Wir freuen uns auf Dich!</h3>");
 	 } else {
-		 print("<h3>Hallo ".$oldname."! Ihr seid nun erfolgreich f&uuml;r den ".stringDate(nextSunday(time()))." angemeldet unter den Nummern ");
+		 print("<h3>Hallo ".$oldname."! Ihr seid nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time()))." angemeldet und zwar unter den Nummern ");
 		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
 		 print("Bitte bringt die Nummern mit zum Gottesdienst. Wir freuen uns auf Euch!</h3>");
 	 }
@@ -440,28 +486,36 @@ if ($submit != "" && $err == 0) {
 ?>
 
 <form id="form1" name="form1" method="post" action="">
+
+<?php print($errTextGeneral); ?>
 <div class="form-group">
 	<label for="name">Vorname Nachname <font color =#55BB55>(mehrere Personen durch <b>Komma</b> trennen!)</font></label>
+	<?php print($errTextName); ?>
 	<input class="form-control" name="name" type="text" id="name" value="<?php print($name);?>" placeholder="Lieschen M&uuml;ller, Max M&uuml;ller"/>
 </div>
 <div class="form-group">
 	<label for="street">Stra&szlig;e Hausnummer</label>
+<?php print($errTextStreet); ?>
 	<input class="form-control" name="street" type="text" id="street" value="<?php print($street);?>" placeholder="M&uuml;llerstra&szlig;e 42"/>
 </div>
 <div class="form-group">
 	<label for="city">PLZ Ort</label>
+<?php print($errTextCity); ?>
 	<input class="form-control" name="city" type="text" id="city" value="<?php print($city);?>" placeholder="42424 M&uuml;llerstadt"/>
 </div>
 <div class="form-group">
 	<label for="phone">Telefonnummer</label>
+<?php print($errTextPhone); ?>
 	<input class="form-control" name="phone" type="text" id="phone" value="<?php print($phone);?>" placeholder="0171424242"/>
 </div>
 <div class="form-group">
 	<label for="email">E-Mail</label>
+<?php print($errTextEmail); ?>
 	<input class="form-control" name="email" type="text" id="email" value="<?php print($email);?>" placeholder="lieschenmueller@gmx.de"/>
 </div>
 <div class="form-group">
 	<label for="verify"><img src="attend-code.php?code=<?php print($code); if($testmode){print("&test=".$test);}?>"/></label>
+<?php print($errTextCaptcha); ?>
 	<input name="code" type="hidden" id="code" value="<?php print($code);?>"/>
 <?php
 if($testmode) {
@@ -471,7 +525,17 @@ if($testmode) {
 	
 	<input class="form-control" name="verify" type="text" autocomplete="off" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
-<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
+
+
+<?php 
+if ($waitinglistbutton == "") {
+	print ('<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am '.stringDate(nextSunday(time())).'" />');
+}
+else {
+	print("<div id='waitinglistsection'></div>");
+	print($waitinglistbutton);
+}
+?>
 
 
 <script>

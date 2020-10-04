@@ -412,6 +412,48 @@ context('Register', () => {
 
       cy.contains('Es sind leider schon alle Pl')
   })
+
+  // No seats left - waiinglist
+  // #REQ060
+  it('Waitinglist - suggestion', () => {
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Name 2, Name 3')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="submit"]').click()
+
+      cy.contains('chtest Du bei einem freien Platz benachrichtigt werden') // check waitinglist link
+      cy.contains('tzen per E-Mail benachrichten') // check waitinglist button
+  })
+
+
+  // No seats left - waiinglist
+  // #REQ061
+  it('Waitinglist - submit', () => {
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('#name').clear()
+      cy.get('#name').type('Na me1, Name 2, Name 3')
+      cy.get('#street').clear()
+      cy.get('#street').type('Street 1')
+      cy.get('#city').clear()
+      cy.get('#city').type('12345 Abc')
+      cy.get('#phone').clear()
+      cy.get('#phone').type('012345')
+      cy.get('#email').clear()
+      cy.get('#email').type('a@b.de')
+      cy.get('[name="waitinglist"]').click()
+
+      cy.contains('erfolgreich auf der Warteliste eingetragen') // entry on waitinglist
+  })
+
+
 })
 
 context('Admin functions', () => {
