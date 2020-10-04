@@ -197,7 +197,6 @@ else {
 	// #REQ054
 	// #REQ052
 	print('<span class="badge badge-danger">Keine freien Pl&auml;tze</span>');
-	$waitinglist = "active";
 }
 ?>
 </h1>
@@ -293,6 +292,12 @@ $errTextPhone = "";
 $errTextEmail = "";
 $errTextCaptcha = "";
 $waitinglistbutton = ""; // if != "" then display this instead of submit button
+if ($submit != "" || $waitinglist != "" || $num == 0) {
+		// Waitinglist
+		// #REQ060
+		$waitinglistbutton = "<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichtigen\">";
+}
+
 
 // If the sumbit or signoff button was pressed
 if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
@@ -342,11 +347,6 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 		$err = 1;
 	}
 	// Only in submit mode test, if enough seats are available
-	if ($submit != "" || $waitinglist != "") {
-		// Waitinglist
-		// #REQ060
-		$waitinglistbutton = "<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichtigen\">";
-	}
 	if ($submit != "") {
 		// #REQ060
 		$waitinglistlink = " <a href=\"#waitinglistsection\"> M&ouml;chtest Du bei einem freien Platz benachrichtigt werden?</a>";
@@ -538,7 +538,7 @@ function waitinglistvisibility() {
 
 
 <?php 
-if ($waitinglistbutton == "") {
+if ($waitinglistbutton == "" && $num > 0) {
 	print ('<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am '.stringDate(nextSunday(time())).'" />');
 }
 else {
