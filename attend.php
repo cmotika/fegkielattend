@@ -185,13 +185,13 @@ if ($testmode) {
 <div class="container">
 <h1>Anmeldung f&uuml;r <b><?php print(stringDate(nextSunday(time()))); ?></b> 
 <?php
-$num = $maxnum-getLines();
-if ($num > 1) {
+$freeseats = $maxnum-getLines();
+if ($freeseats > 1) {
 	// #REQ054
-	print('<span class="badge badge-success">Noch '.$num.' Pl&auml;tze frei</span>');
-} else if ($num == 1) {
+	print('<span class="badge badge-success">Noch '.$freeseats.' Pl&auml;tze frei</span>');
+} else if ($freeseats == 1) {
 	// #REQ054
-	print('<span class="badge badge-success">Noch '.$num.' Platz frei</span>');
+	print('<span class="badge badge-success">Noch '.$freeseats.' Platz frei</span>');
 }
 else {
 	// #REQ054
@@ -291,12 +291,7 @@ $errTextCity = "";
 $errTextPhone = "";
 $errTextEmail = "";
 $errTextCaptcha = "";
-$waitinglistbutton = ""; // if != "" then display this instead of submit button
-if ($submit != "" || $waitinglist != "" || $num == 0) {
-		// Waitinglist
-		// #REQ060
-		$waitinglistbutton = "<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichtigen\">";
-}
+$waitinglistbutton = 0; // if != 0 then display this instead of submit button
 
 
 // If the sumbit or signoff button was pressed
@@ -357,14 +352,14 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 			if ($maxnum-getLines() == 0) {
 				// #REQ024
 				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." .$waitinglistlink. END_DIV;
+				$waitinglistbutton = 1;
 			} else {
 				// #REQ023
 				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." .$waitinglistlink. END_DIV;
+				$waitinglistbutton = 1;
 			}
 			// #REQ053 
 			$err = 1;
-		}  else {
-			$waitinglistbutton = "";
 		}
 	}
 	if ($codecorrect == 0 && !$testmode) {
@@ -542,13 +537,13 @@ function waitinglistvisibility() {
 
 
 <?php 
-if ($waitinglistbutton == "" && $num > 0) {
+if ($waitinglistbutton == 0 && $freeseats > 0) {
 	print ('<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am '.stringDate(nextSunday(time())).'" />');
 }
 else {
 	print("<div id='waitinglistsection'></div>");
 	print ('<script> waitinglistvisibility()</script>');
-	print($waitinglistbutton);
+	print("<input class=\"btn btn-primary\" type=\"submit\" name=\"waitinglist\" value=\"Bei freien Plätzen per E-Mail benachrichtigen\">");
 }
 ?>
 

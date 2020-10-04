@@ -3,6 +3,19 @@
 context('Input field tests', () => {
   beforeEach(() => {
     cy.visit('http://www.delphino.net/feg' )
+    cy.get('[href="javascript:adminvisible();"]').click()
+
+	// Login as admin
+    cy.get('#pw').clear()
+    cy.get('#pw').type('admin')
+    cy.get('[name="login"]').click()
+
+    // Set maximum of 3 people
+    cy.get('#nmaxnum').clear()
+    cy.get('#nmaxnum').type('30')
+    cy.get('[name="save"]').click()
+
+    cy.visit('http://www.delphino.net/feg' )
   })
 
   it('Name field', () => {
