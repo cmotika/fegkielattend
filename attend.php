@@ -1,6 +1,9 @@
 <?php
 
 $pw = $_POST['pw'];
+if ($pw == "") {
+	$pw = $_GET['pw'];
+}
 $verify = $_POST['verify'];
 $code = $_POST['code'];
 $val = $_POST['val'];
@@ -9,6 +12,11 @@ $waitinglist = $_POST['waitinglist'];
 $download = $_POST['download'];
 $print = $_POST['print'];
 $mobile = $_POST['mobile'];
+$mobilecmd = $_POST['mobilecmd'];
+$mobileval = $_POST['mobileval'];
+$mobileedit = $_POST['mobileedit'];
+$mobiletext = $_POST['mobiletext'];
+$mobileattend = $_POST['mobileattend'];
 $csvfile = $_POST['csvfile'];
 $npw1 = $_POST['npw1'];
 $npw2 = $_POST['npw2'];
@@ -38,6 +46,17 @@ if ($test == "") {
  // Load configuration
  // #REQ015
  require("attend.cfg.php");
+ 
+ // Test if we have a correct mobile password
+ // #REQ067
+ // #REQ068
+ $mobileFile = getMobilePasswordFile($pw);
+ $isMobilePrint = ($mobileFile != "");
+ if ($isMobilePrint) {
+	$mobileCode = $pw; // save this for FORM POST
+ 	$pw = ""; // clear pw so that we do not run into locking us up ... it has not been the admin mode
+ }
+ 
  // Test if we are the admin, i.e., if the entered password corresponds to the admin pw
  // #REQ001 
  // #REQ002
@@ -126,9 +145,31 @@ if ($test == "") {
 ?>
 
 <?php
+ // If mobile button from admin is pressed, a mobile admin code is created
+ // #REQ066
+ if ($isAdmin && $mobile != "") {
+	$mobilePW = createMobilePassword($csvfile);
+	print("<a href='".$baseurl."?pw=".$mobilePW."'>".$baseurl."?pw=".$mobilePW."</a>");
+	print("<BR><BR><BR><H1>Mobile Password: <b>".$mobilePW."</b></H1>");
+	exit;
+ }
+
+// #REQ071
+ if ($isMobilePrint && $mobileedit != "") {
+ 	// save changed
+	//setValue($file, $number, $col, $val) 
+	setValue($mobileFile, $mobileval, $mobilecmd, $mobiletext);
+ }
+
+ // #REQ069
+ // #REQ070
+ if ($isMobilePrint && $mobileattend != "") {
+	setAttendance($mobileFile, $mobileval, $mobilecmd);
+ }
+
  // If mobile print mode: Print the requested csv file. Do this only for admins.
  // #REQ008
- if ($isAdmin && $mobile != "") {
+ if ($isMobilePrint) {
 	print('<!doctype html>');
 	print('<html lang="de">');
 	print('<head>');
@@ -136,25 +177,26 @@ if ($test == "") {
 	print('    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">');
 	print('	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">');
 	print('	<title>Anmelden zum Gottesdienst</title>');
+	print('<meta name="viewport" content="width=1024">');
 	print('</head>');
 	print('<body>');
    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
-   print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
-   print(getLinesFile($csvfile)." Personen angemeldet.<BR>Stand vom ".stringDateTime(time()).".");
+   print("<font size=7>".stringDateFull(getDateFromFile($mobileFile))."</font><br>");
+   print(getLinesFile($mobileFile)." Personen angemeldet.<BR>Stand vom ".stringDateTime(time()).".");
    print("<br><br></center>");
    printTableHeaderMobile();
-   if (file_exists($csvfile)) {
-		$handle = fopen($csvfile, "r");
+   if (file_exists($mobileFile)) {
+		$handle = fopen($mobileFile, "r");
 		while(!feof($handle) && $found == 0){
 		  $line = fgets($handle);
 		  if (trim($line) != "") {
 			  $cols = explode(";", $line);
-			  printTableRowMobile($cols[0], $cols[1], $cols[2], $cols[3], $cols[4], $cols[5]);
+			  printTableRowMobile($cols[0], $cols[1], $cols[2], $cols[3], $cols[4], $cols[5], $cols[6], $mobileCode);
 		  }
 		}
 		fclose($handle);
    }
-   printTableFooterMobile();
+   printTableFooterMobile($mobileval); // $mobileval is the num element to scroll to
    print("</body>");
    exit;
  }	
@@ -217,6 +259,11 @@ define("DIV_ALERT_WARNING", "<div class='alert alert-warning' role='alert'>");
 define("DIV_ALERT_INFO", "<div class='alert alert-info' role='alert'>");
 define("END_DIV", "</div>");
 
+
+// Delete all old mobile passwords
+// #REQ065
+cleanupMobilePassword();
+
 // Delete all captcha files older than 5 minutes (5 minutes * 60 seconds)
 // #REQ009
 $olderthanxxxseconds = 60*5;
@@ -277,13 +324,10 @@ if ($save != "" && $isAdmin) {
 	print("Saved");
 }
 
-
-
 // Current (succesffull) registration number
 $regnumber = "";
 // The name of the current (successfull) registration
 $oldname = "";
-
 
 $err = 0;
 

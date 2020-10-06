@@ -6,6 +6,12 @@
 	
 	// Default dir for IP logging
 	$ipfolder = "./admin/";
+
+	// Default dir for mobile passwords
+	$mobilefolder = "./mobile/";
+	
+	// Default time out for mobile passwords is three hours
+	$mobiletimeout = 3;
 	
 	// Lock out IP conditiob
 	$lockip_number_of_wrong_password_trials = 10;
@@ -50,7 +56,22 @@ function printTableFooter() {
 
 // Mobile Print a file content - header part
 function printTableHeaderMobile() {
-print('<table width="100%" class="table">
+print('
+  <script>
+  
+  function edit(val) {
+  	 document.getElementById("edit"+val).style.display="inline"; 
+  	 document.getElementById("view"+val).style.display="none"; 
+  }
+
+  function view(val) {
+  	 document.getElementById("edit"+val).style.display="none"; 
+  	 document.getElementById("view"+val).style.display="inline"; 
+  }
+  
+  </script>
+
+  <table width="100%" class="table">
   <thead>
   <tr>
     <th width="62" scope="col"><div align="left">#</div></th>
@@ -63,21 +84,59 @@ print('<table width="100%" class="table">
   </thead><tbody>');
 }
 
+
+// Helper function to display a mobile view entry of a cell with edit & save functionality
+// #REQ071
+function printValMobileHelper($mobileCode, $num, $col, $value) {
+		$returnvalue =  '<div id="view'.$num.'-'.$col.'">';
+		$returnvalue .= '<button class="btn btn-light" type="button"  onclick="edit(\''.$num.'-'.$col.'\')" />'.$value.'</button>';
+		$returnvalue .= '</div>';
+		$returnvalue .= '<div id="edit'.$num.'-'.$col.'" style="display:none">';
+		$returnvalue .= '<form id="form1" name="form1" method="post" action="">';
+		$returnvalue .= '<input name="pw" type="hidden" id="pw"" value="'.$mobileCode.'"/>';
+		$returnvalue .= '<input name="mobileval" type="hidden" id="mobileval" value="'.$num.'"/>';
+		$returnvalue .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="'.$col.'"/>'; 
+		$returnvalue .= '<input name="mobiletext" type="text" id="mobiletext'.$num.'-'.$col.'" value="'.$value.'"/>';
+		$returnvalue .= '<div class="btn-group"><input class="btn btn-primary" type="submit" name="mobileedit" value="Speichern" />'; 
+		$returnvalue .= '<button class="btn btn-warning" type="button" onclick="view(\''.$num.'-'.$col.'\')" />Abbrechen</button></div>';
+		$returnvalue .= '</form></div>';
+		$returnvalue .= '<script>';
+		$returnvalue .= 'document.getElementById("edit'.$num.'-'.$col.'").style.display="none"; ';
+		$returnvalue .= '</script>';
+		return $returnvalue;
+}
+
 // Mobile Print a file content - row part (repeated), this is the main content
-function printTableRowMobile($num, $name, $street, $city, $phone, $email) {
-print('<tr>
-    <td><font size=6> '.$num.'</font></td>
-    <td><b>'.$name.'</b></td>
-    <td>'.$street.'</td>
-    <td>'.$city.'</td>
-    <td>'.$phone.'</td>
-    <td>'.$email.'</td>
+function printTableRowMobile($num, $name, $street, $city, $phone, $email, $attended, $mobileCode) {
+
+// #REQ069
+$nametr =  "<input class=\"btn btn-danger\" type=\"submit\" name=\"mobileattend\" value=\"".$name."\" />"; // red button if not present
+$nametr .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="1"/>';   // action: attend, make green
+if ($attended == 1) {
+	// #REQ070
+	$nametr =  "<input class=\"btn btn-success\" type=\"submit\" name=\"mobileattend\" value=\"".$name."\" />"; // green button if preset
+	$nametr .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="0"/>';   // action:  notattend, make red
+}
+
+print('
+    <tr>
+    <td><font size=6>	<div id="'.$num.'"> '.$num.'</div></font></td>
+	<form id="form1" name="form1" method="post" action="">
+	<input name="pw" type="hidden" id="pw"" value="'.$mobileCode.'"/>
+	<input name="mobileval" type="hidden" id="mobileval" value="'.$num.'"/>
+    <td><b>'.$nametr.'</b></td>
+	</form>
+    <td>'.printValMobileHelper($mobileCode, $num, 2, $street).'</td>
+    <td>'.printValMobileHelper($mobileCode, $num, 3, $city).'</td>
+    <td>'.printValMobileHelper($mobileCode, $num, 4, $phone).'</td>
+    <td>'.printValMobileHelper($mobileCode, $num, 5, $email).'</td>
   </tr>');
 }
 
 // Mobile Print a file content - footer part
-function printTableFooterMobile() {
+function printTableFooterMobile($num) {
 	print('</tbody></table>');
+	print('<script>location.hash = "#'.($num-1).'"</script>');
 }
 
 // Check if the name(s) are given corrently. Even if comma separated, they have to be full
@@ -237,8 +296,8 @@ function stringDateTime($timestamp) {
 // Thise prevents false-injection and coding corrpuption due to additional unwanted columns.
 function fix($text) {
 	$text = str_replace(";", "", $text);
-	$text = str_replace("\n", "", $text);
 	$text = str_replace("\t", "", $text);
+	$text = str_replace("\n", "", $text);
 	$text = str_replace("\r", "", $text);
  	$text = trim($text);
 	return $text;
@@ -340,9 +399,11 @@ function writeConfig() {
  	global $switchtime;
 	global $test_enabled;
 	global $mail_to;
+	global $baseurl;
 	
 	$myfile = fopen("attend.cfg.php", "w");
 	fwrite($myfile, "<?php\n");
+	fwrite($myfile, "$"."baseurl = \"".$baseurl."\";\n");
 	fwrite($myfile, "$"."adminpw = \"".$adminpw."\";\n");
 	fwrite($myfile, "$"."maxnum = ".$maxnum.";\n");
 	fwrite($myfile, "$"."switchtime  = ".$switchtime .";\n");
@@ -552,6 +613,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 	}
 
 	// Create a backup here	(will be overridden and expires)
+	unlink($file.".BACKUP.csv");
 	copy($file, $file.".BACKUP.csv");
 
 	if (file_exists($file)) {
@@ -597,6 +659,97 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 	return $globalfound; 
 }
 
+
+// Cleans up mobile passwords older than defined hours
+function cleanupMobilePassword() {
+	global $mobiletimeout; // hours 
+	global $mobilefolder;
+	$olderthanxxxweeks = 60*$mobiletimeout;
+	foreach (glob($mobilefolder) as $file) {
+ 		$diff = time() - filectime($file);
+		if($diff > $olderthanxxxweeks){
+			unlink($file);
+		}
+	}
+}
+
+// Create a new mobile password to editing attendance list
+function createMobilePassword($file) {
+ 	global $mobilefolder;
+	$mobilePW = rand(1000, 9999);
+    $ipfile = fopen($mobilefolder.$mobilePW.".txt", "w");
+	fwrite($ipfile, $file."\n");
+	fclose($ipfile);	
+	return $mobilePW;
+}
+
+// Return the file or "" if a wrong password is used
+function getMobilePasswordFile($pw) {
+ 	global $mobilefolder;
+    $mobilefile = $mobilefolder.$pw.".txt";
+	if (file_exists($mobilefile)) {
+		$file = "";
+		$handle = fopen($mobilefile, "r");
+  	    $file = trim(fgets($handle));
+		fclose($handle);
+		return $file;
+	} else {
+		// Not found / wrong password
+		return "";
+	}
+}
+
+
+function setValue($file, $number, $col, $val) {
+	$content = "";
+	$globalfound = 0;
+
+	// Create a backup here	(will be overridden and expires)
+	unlink($file.".BACKUP.csv");
+	copy($file, $file.".BACKUP.csv");
+
+	if (file_exists($file)) {
+		$handle = fopen($file, "r");
+		while(!feof($handle)) {
+		  $found = 0;
+		  $line = trim(fgets($handle));
+		  // Remove line break
+		  $line = str_replace("\n", "", $line);
+ 		  $line = str_replace("\r", "", $line);
+		  
+		  $cols = explode(";", $line);
+		  
+		  if (trim($cols[0]) == $number && $line != "") {
+			   	$globalfound = 1;
+		  		// number found, edit entry
+				
+				// Fill up, if additional columns are needed
+				while(count($cols) < $col) {
+					$line .= ";";
+  				    $cols = explode(";", $line);
+				}
+				// Edit entry
+				$cols[$col] = $val;
+				// Rebuild line and add line break again
+				$line = implode(";",$cols);
+		  } // end if number found
+		  // Build new content
+		  $content = $content.$line."\n";
+		} // end while
+		fclose($handle);
+
+		// Write back content without found line
+		$myfile = fopen($file, "w");
+		fwrite($myfile, $content);
+		fclose($myfile);
+		
+	}
+	return $globalfound;
+}
+
+function setAttendance($file, $number, $there) {
+	return setValue($file, $number, 6, $there);
+}
 
 
 // In case of a wrong password, add IP to monitoring
