@@ -182,7 +182,10 @@ if ($test == "") {
 	print('<body>');
    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
    print("<font size=7>".stringDateFull(getDateFromFile($mobileFile))."</font><br>");
-   print(getLinesFile($mobileFile)." Personen angemeldet.<BR>Stand vom ".stringDateTime(time()).".");
+   print(getLinesFile($mobileFile)." Personen angemeldet.<BR>");
+   print(getAttendeesFile($mobileFile)." Personen erschienen.<BR>Stand vom ".stringDateTime(time()).".");
+
+   
    print("<br><br></center>");
    printTableHeaderMobile();
    if (file_exists($mobileFile)) {

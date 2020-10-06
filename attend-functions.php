@@ -64,9 +64,11 @@ print('
   	 document.getElementById("view"+val).style.display="none"; 
   }
 
-  function view(val) {
+  function view(val, defaultval) {
   	 document.getElementById("edit"+val).style.display="none"; 
   	 document.getElementById("view"+val).style.display="inline"; 
+
+  	 document.getElementById("mobiletext"+val).value = defaultval;
   }
   
   </script>
@@ -98,7 +100,7 @@ function printValMobileHelper($mobileCode, $num, $col, $value) {
 		$returnvalue .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="'.$col.'"/>'; 
 		$returnvalue .= '<input name="mobiletext" type="text" id="mobiletext'.$num.'-'.$col.'" value="'.$value.'"/>';
 		$returnvalue .= '<div class="btn-group"><input class="btn btn-primary" type="submit" name="mobileedit" value="Speichern" />'; 
-		$returnvalue .= '<button class="btn btn-warning" type="button" onclick="view(\''.$num.'-'.$col.'\')" />Abbrechen</button></div>';
+		$returnvalue .= '<button class="btn btn-warning" type="button" onclick="view(\''.$num.'-'.$col.'\', \''.$value.'\')" />Abbrechen</button></div>';
 		$returnvalue .= '</form></div>';
 		$returnvalue .= '<script>';
 		$returnvalue .= 'document.getElementById("edit'.$num.'-'.$col.'").style.display="none"; ';
@@ -471,6 +473,26 @@ function getLinesFile($file) {
 	}
 	return $linecount; 
 }
+
+
+// Retrieve the number of lines corresponding to persons which attended
+function getAttendeesFile($file) {
+	$linecount = 0;	
+	if (file_exists($file)) {
+		$handle = fopen($file, "r");
+		while(!feof($handle)){
+		  $line = fgets($handle);
+     	  $cols = explode(";", $line);
+		  if (count($cols) >= 7 && $cols[6] == 1) {
+			  $linecount++;
+		  }
+		}
+		fclose($handle);
+	}
+	return $linecount; 
+}
+
+
 
 // Retrieve the number of lines/number of registred people of the current file/sunday
 function getLines() {
