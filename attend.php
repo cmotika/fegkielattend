@@ -206,6 +206,10 @@ Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Die
 
 <?php  
 
+if ($waitinglist == "") {
+	print("<p><b>MOMENTAN NUR WARTELISTE</b></p><p>Momentan sind keine oder nicht ausreichend Sitzpl&auml;tze vor Ort verf&uuml;gbar. Du kannst Dich deshalb momentan nur mit Deiner E-Mail-Adresse auf die Warteliste eintragen. Falls sich jemand wieder vom Live-GoDi abmeldet, wirst Du per E-Mail informiert und kannst Dich dann hier ggf. noch anmelden. <BR><i>Achtung: Ein Platz auf der Warteliste reicht <u>nicht</u> aus, um vor Ort zum GoDi zu kommen!</i></p>");
+}
+
 // Bootstrap styles
 define("DIV_ALERT_DANGER", "<div class='alert alert-danger' role='alert'>");
 define("DIV_ALERT_SUCCESS", "<div class='alert alert-success' role='alert'>");
