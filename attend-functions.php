@@ -60,6 +60,18 @@ function printTableFooter() {
 
 // Mobile Print a file content - header part
 function printTableHeaderMobile() {
+global $mobileCode;
+global $mobilehide;
+
+// #REQ073
+$button =  "<button name=\"btnmobilehide\" class=\"btn btn-primary\" type=\"button\" onclick=\"submit()\"  >Anwesende ausblenden</button>"; 
+$button .= '<input name="mobilehide" type="hidden" id="mobilehide" value="1"/>';  
+if ($mobilehide == 1) {
+	$button =  "<button name=\"btnmobilehide\" class=\"btn btn-primary\" type=\"button\" onclick=\"submit()\"  >Alle einblenden</button>"; 
+	$button .= '<input name="mobilehide" type="hidden" id="mobilehide" value="0"/>';  
+}
+
+
 print('
   <script>
   
@@ -77,15 +89,22 @@ print('
   
   </script>
 
-  <table width="100%" class="table">
-  <thead>
+
+<div class="text-center">
+<form id="form1" name="form1" method="post" action="">
+<input name="pw" type="hidden" id="pw"" value="'.$mobileCode.'"/>
+'.$button.'
+</form>
+</div>
+</BR>
+
+  <table width="1" class="table">
+  <thead class="thead-dark">
   <tr>
     <th width="62" scope="col"><div align="left">#</div></th>
-    <th width="150" scope="col"><div align="left">Name</div></th>
-    <th width="150" scope="col"><div align="left">Anschrift</div></th>
-    <th width="150" scope="col"><div align="left">Ort</div></th>
-    <th width="150" scope="col"><div align="left">Telefon</div></th>
-    <th width="200" scope="col"><div align="left">E-Mail</div></th>
+    <th width="1" scope="col"><div align="left">Name</div></th>
+    <th width="1" scope="col"><div align="left">Strasse und Ort</div></th>
+    <th width="1" scope="col"><div align="left">Telefon und E-Mail</div></th>
   </tr>
   </thead><tbody>');
 }
@@ -94,16 +113,18 @@ print('
 // Helper function to display a mobile view entry of a cell with edit & save functionality
 // #REQ071
 function printValMobileHelper($mobileCode, $num, $col, $value) {
+global $mobilehide;
 		$returnvalue =  '<div id="view'.$num.'-'.$col.'">';
-		$returnvalue .= '<button class="btn btn-light" type="button"  onclick="edit(\''.$num.'-'.$col.'\')" />'.$value.'</button>';
+		$returnvalue .= '<button class="btn btn-light" type="button" name="btnedit'.$num.'-'.$col.'" onclick="edit(\''.$num.'-'.$col.'\')" />'.$value.'</button>';
 		$returnvalue .= '</div>';
 		$returnvalue .= '<div id="edit'.$num.'-'.$col.'" style="display:none">';
 		$returnvalue .= '<form id="form1" name="form1" method="post" action="">';
 		$returnvalue .= '<input name="pw" type="hidden" id="pw"" value="'.$mobileCode.'"/>';
 		$returnvalue .= '<input name="mobileval" type="hidden" id="mobileval" value="'.$num.'"/>';
+		$returnvalue .= '<input name="mobilehide" type="hidden" id="mobilehide" value="'.$mobilehide.'"/>';
 		$returnvalue .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="'.$col.'"/>'; 
 		$returnvalue .= '<input name="mobiletext" type="text" id="mobiletext'.$num.'-'.$col.'" value="'.$value.'"/>';
-		$returnvalue .= '<div class="btn-group"><input class="btn btn-primary" type="submit" name="mobileedit" value="Speichern" />'; 
+		$returnvalue .= '<div class="btn-group"><button class="btn btn-primary" type="button" name="mobileedit'.$num.'-'.$col.'" onclick="submit()" value="" />Speichern</button>'; 
 		$returnvalue .= '<button class="btn btn-warning" type="button" onclick="view(\''.$num.'-'.$col.'\', \''.$value.'\')" />Abbrechen</button></div>';
 		$returnvalue .= '</form></div>';
 		$returnvalue .= '<script>';
@@ -113,36 +134,53 @@ function printValMobileHelper($mobileCode, $num, $col, $value) {
 }
 
 // Mobile Print a file content - row part (repeated), this is the main content
-function printTableRowMobile($num, $name, $street, $city, $phone, $email, $attended, $mobileCode) {
+function printTableRowMobile($num, $name, $street, $city, $phone, $email, $attended, $mobileCode, $mobileval) {
+global $mobilehide;
 
 // #REQ069
-$nametr =  "<input class=\"btn btn-danger\" type=\"submit\" name=\"mobileattend\" value=\"".$name."\" />"; // red button if not present
+$nametr =  "<button name=\"btnred".$num."\" class=\"btn btn-danger\" type=\"button\" onclick=\"submit()\"  >".$name."</button>"; // red button if not present
 $nametr .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="1"/>';   // action: attend, make green
+$nametr .= '<input name="mobileattend" type="hidden" id="mobileattend" value="1"/>';   
+$nametr .= '<input name="mobilehide" type="hidden" id="mobilehide" value="'.$mobilehide.'"/>';
 if ($attended == 1) {
 	// #REQ070
-	$nametr =  "<input class=\"btn btn-success\" type=\"submit\" name=\"mobileattend\" value=\"".$name."\" />"; // green button if preset
+	$nametr =  "<button name=\"btngreen".$num."\" class=\"btn btn-success\" type=\"button\" onclick=\"submit()\"  >".$name."</button>"; // green button if preset
 	$nametr .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="0"/>';   // action:  notattend, make red
+	$nametr .= '<input name="mobileattend" type="hidden" id="mobileattend" value="1"/>';   
+	$nametr .= '<input name="mobilehide" type="hidden" id="mobilehide" value="'.$mobilehide.'"/>';
 }
 
+
+$info = "";
+if ($num == $mobileval) {
+	$info = 'class="table-active"';
+}
+
+if ($mobilehide != 1 || $attended != 1) {
 print('
-    <tr>
+    <tr '.$info.'>
     <td><font size=6>	<div id="'.$num.'"> '.$num.'</div></font></td>
 	<form id="form1" name="form1" method="post" action="">
 	<input name="pw" type="hidden" id="pw"" value="'.$mobileCode.'"/>
 	<input name="mobileval" type="hidden" id="mobileval" value="'.$num.'"/>
     <td><b>'.$nametr.'</b></td>
 	</form>
-    <td>'.printValMobileHelper($mobileCode, $num, 2, $street).'</td>
-    <td>'.printValMobileHelper($mobileCode, $num, 3, $city).'</td>
-    <td>'.printValMobileHelper($mobileCode, $num, 4, $phone).'</td>
-    <td>'.printValMobileHelper($mobileCode, $num, 5, $email).'</td>
+    <td>'.printValMobileHelper($mobileCode, $num, 2, $street).'
+        '.printValMobileHelper($mobileCode, $num, 3, $city).'</td>
+    <td>'.printValMobileHelper($mobileCode, $num, 4, $phone).'
+        '.printValMobileHelper($mobileCode, $num, 5, $email).'</td>
   </tr>');
 }
+
+
+}
+
+
 
 // Mobile Print a file content - footer part
 function printTableFooterMobile($num) {
 	print('</tbody></table>');
-	print('<script>location.hash = "#'.($num-1).'"</script>');
+	print('<script>location.hash = "#'.($num).'"</script>');
 }
 
 // Check if the name(s) are given corrently. Even if comma separated, they have to be full

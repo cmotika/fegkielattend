@@ -204,19 +204,19 @@ If not enought seats are left for the current user, then the program shall displ
 Waiting list entry
 If waitinglist button is visible due to space limitations and a valid email is provided by the user, then the program shall append the email to the waitinglist and clear the fields and inform the user upon successfull entry.
 
-#REQ062
+#REQ062 -- not tested
 Waiting list clear
 If a new list is created, them the program shall clear the old waiting list.
 
-#REQ063
+#REQ063 -- not tested
 Waiting list notification
-If a user unregistres for the current sunday, the program shall notify all members of the waiting list.
+If a user unregisters for the current sunday, the program shall notify all members of the waiting list.
 
-#REQ064
+#REQ064 -- partly tested
 Waiting list test
 If a user registers for the waiting list, then the program shall send a notification about this as a test of the email-sending-process and the program shall prompt a message informing about this test.
 
-#REQ065
+#REQ065 -- not tested
 Cleanup mobile passwords
 If a mobile password is older than some defined number of hours, the program shall invalidate it.
 
@@ -244,6 +244,10 @@ In the mobile view, if the user clicks a green name, the program shall update th
 Mobile View Correct
 In the mobile view, if the user clicks an entry, the user shall be able to edit the entry and save it.
 
-#REQ072
+#REQ072 -- not tested
 Mobile View Backup
 Every time a mobile password expires, then the program shall send the current (updated) attendance list to the backup e-mail address.
+
+#REQ073
+Mobile View Hide Attending
+In the mobile view, if the user clicks to hide attending entries, then the program shall only display people which have not yet appeared.

@@ -678,3 +678,221 @@ context('Unregister', () => {
     cy.contains(' erfolgreich abgemeldet.')
   })
 })
+
+
+
+context('Waitinglist', () => {
+  beforeEach(() => {
+    // Set one default entry with number #5
+    cy.visit('http://www.delphino.net/feg')
+
+    cy.get('[href="javascript:adminvisible();"]').click()
+    cy.get('#pw').clear()
+    cy.get('#pw').type('admin')
+    cy.get('[name="login"]').click()
+
+    cy.get('#nmaxnum').type('2')
+    cy.get('[name="save"]').click()
+
+    cy.get('textarea').clear()
+    cy.get('textarea').type('5;ab cd;abc 1;12345 abc;12345;a@b.de{enter}')
+    cy.get('[name="savefile"]').click()
+
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+    cy.get('[name="form1"] > .btn-outline-secondary').click()
+ })
+
+
+   // #REQ060
+   // #REQ061
+   // #REQ064
+  it('Not enought space - change button to waitinglist and entry success', () => {
+    cy.get('#name').clear()
+    cy.get('#name').type('ab cd, ef gh')
+    cy.get('#street').clear()
+    cy.get('#street').type('abc 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('12345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+
+    cy.get('[name="submit"]').click()
+
+    cy.contains('Es sind leider nicht gen')
+
+    cy.get('[name="waitinglist"]').click()
+
+    cy.contains('erfolgreich auf der Warteliste')
+  })
+
+   // #REQ060
+   // #REQ061
+  it('No seats left - waitinglist entry no email', () => {
+    cy.get('#name').clear()
+    cy.get('#name').type('ab cd')
+    cy.get('#street').clear()
+    cy.get('#street').type('abc 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('12345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+    cy.get('[name="submit"]').click()
+
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+
+    cy.contains('Momentan sind keine oder nicht ausreichend')
+
+    cy.get('[name="waitinglist"]').click()
+
+    cy.contains('Gib Deine E-Mail-Adresse')
+  })
+
+   // #REQ060
+   // #REQ061
+   // #REQ064
+  it('No seats left - waitinglist entry success', () => {
+    cy.get('#name').clear()
+    cy.get('#name').type('ab cd')
+    cy.get('#street').clear()
+    cy.get('#street').type('abc 1')
+    cy.get('#city').clear()
+    cy.get('#city').type('12345 abc')
+    cy.get('#phone').clear()
+    cy.get('#phone').type('12345')
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+    cy.get('[name="submit"]').click()
+
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+
+    cy.contains('Momentan sind keine oder nicht ausreichend')
+
+    cy.get('#email').clear()
+    cy.get('#email').type('a@b.de')
+    cy.get('[name="waitinglist"]').click()
+
+    cy.contains('erfolgreich auf der Warteliste')
+  })
+
+
+})
+
+
+
+
+
+
+
+
+
+context('Mobile View', () => {
+   // #REQ066
+   beforeEach(() => {
+    // Set some default entries
+    cy.visit('http://www.delphino.net/feg')
+
+    cy.get('[href="javascript:adminvisible();"]').click()
+    cy.get('#pw').clear()
+    cy.get('#pw').type('admin')
+    cy.get('[name="login"]').click()
+
+    cy.get('textarea').clear()
+    cy.get('textarea').type('2;ab cd;abc 1;12345 abc;12345;a@b.de{enter}')
+    cy.get('textarea').type('3;ef gh;abc 1;54321 abc;12345;e@b.de{enter}')
+    cy.get('textarea').type('8;ij kl;abc 1;12345 abc;54321;i@b.de{enter}')
+    cy.get('textarea').type('9;mn op;abc 1;54321 abc;54321;m@b.de{enter}')
+    cy.get('[name="savefile"]').click()
+
+    cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+    cy.get('[name="form1"] > .btn-outline-secondary').click()
+
+    cy.get('[href="javascript:adminvisible();"]').click()
+    cy.get('#pw').clear()
+    cy.get('#pw').type('admin')
+    cy.get('[name="login"]').click()
+
+    cy.get('[name="mobile"]').click()
+
+    cy.contains('Mobile Password:')
+    //var code = cy.get('[name="mobilepw"]').invoke("text")
+
+    cy.get('[name="mobilepw"]').then((theElement) => {
+      var code = theElement.text() // this returns a string with the element's InnerHTML
+
+      cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
+      cy.get('[name="form1"] > .btn-outline-secondary').click()
+      cy.get('[href="javascript:adminvisible();"]').click()
+      cy.get('#pw').clear()
+      cy.get('#pw').type(code)
+      cy.get('[name="login"]').click()
+    });
+
+  })
+
+
+  it('Mobile password login', () => {
+    cy.contains('Anmeldeliste für den GoDi am')
+  })
+
+
+  // #REQ069
+  it('Mobile click red to green', () => {
+    cy.get('[name="btngreen2"]').should('not.exist');
+    cy.get('[name="btnred2"]').click()
+    cy.get('[name="btngreen2"]').should('exist');
+  })
+
+  // #REQ070
+  it('Mobile click green to red', () => {
+    cy.get('[name="btnred2"]').click()
+
+    cy.get('[name="btnred2"]').should('not.exist');
+    cy.get('[name="btngreen2"]').click()
+    cy.get('[name="btnred2"]').should('exist');
+  })
+
+
+
+  // #REQ072
+  it('Mobile fix', () => {
+    cy.get('[name="btnedit2-2"]').click()
+
+    cy.get('#mobiletext2-2').should('have.value', 'abc 1')
+    cy.get('#mobiletext2-2').clear()
+    cy.get('#mobiletext2-2').type('aabbcc 11')
+
+    cy.get('[name="mobileedit2-2"]').click()
+
+    cy.get('[name="btnedit2-2"]').click()
+    cy.get('#mobiletext2-2').should('have.value', 'aabbcc 11')
+
+  })
+
+
+
+  // #REQ073
+  it('Mobile hide attending', () => {
+    cy.get('[name="btnmobilehide"]').click()
+
+    cy.get('[name="btnred2"]').should('exist');
+    cy.get('[name="btngreen2"]').should('not.exist');
+    cy.get('[name="btnred2"]').click()
+    cy.get('[name="btngreen2"]').should('not.exist');
+    cy.get('[name="btnred2"]').should('not.exist');
+  })
+
+
+
+})
+
+
+})
+
+
+
+
+

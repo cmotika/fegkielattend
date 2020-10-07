@@ -13,6 +13,7 @@ $download = $_POST['download'];
 $print = $_POST['print'];
 $mobile = $_POST['mobile'];
 $mobilecmd = $_POST['mobilecmd'];
+$mobilehide = $_POST['mobilehide'];
 $mobileval = $_POST['mobileval'];
 $mobileedit = $_POST['mobileedit'];
 $mobiletext = $_POST['mobiletext'];
@@ -166,12 +167,12 @@ if ($mobileFileCleanedUp != "") {
 
 
 	print("<a href='".$baseurl."?pw=".$mobilePW."'>".$baseurl."?pw=".$mobilePW."</a>");
-	print("<BR><BR><BR><H1>Mobile Password: <b>".$mobilePW."</b></H1></center>");
+	print("<BR><BR><BR><H1>Mobile Password: <b><div name='mobilepw'>".$mobilePW."</div></b></H1></center>");
 	exit;
  }
 
 // #REQ071
- if ($isMobilePrint && $mobileedit != "") {
+ if ($isMobilePrint && $mobiletext != "") {
  	// save changed
 	//setValue($file, $number, $col, $val) 
 	setValue($mobileFile, $mobileval, $mobilecmd, $mobiletext);
@@ -193,16 +194,16 @@ if ($mobileFileCleanedUp != "") {
 	print('    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">');
 	print('	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">');
 	print('	<title>Anmelden zum Gottesdienst</title>');
-	print('<meta name="viewport" content="width=1024">');
+	print('<meta name="viewport" content="width=600">');
 	print('</head>');
 	print('<body>');
-   print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
+   print("<div class=\"text-center\">FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
    print("<font size=7>".stringDateFull(getDateFromFile($mobileFile))."</font><br>");
    print(getLinesFile($mobileFile)." Personen angemeldet.<BR>");
    print(getAttendeesFile($mobileFile)." Personen erschienen.<BR>Stand vom ".stringDateTime(time()).".");
 
    
-   print("<br><br></center>");
+   print("<br><br></div>");
    printTableHeaderMobile();
    if (file_exists($mobileFile)) {
 		$handle = fopen($mobileFile, "r");
@@ -210,7 +211,7 @@ if ($mobileFileCleanedUp != "") {
 		  $line = fgets($handle);
 		  if (trim($line) != "") {
 			  $cols = explode(";", $line);
-			  printTableRowMobile($cols[0], $cols[1], $cols[2], $cols[3], $cols[4], $cols[5], $cols[6], $mobileCode);
+			  printTableRowMobile($cols[0], $cols[1], $cols[2], $cols[3], $cols[4], $cols[5], $cols[6], $mobileCode, $mobileval);
 		  }
 		}
 		fclose($handle);
