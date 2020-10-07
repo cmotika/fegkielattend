@@ -49,10 +49,12 @@ if ($test == "") {
  
  // Delete all old mobile passwords
 // #REQ065
-if (cleanupMobilePassword()) {
+$mobileFileCleanedUp = cleanupMobilePassword();
+if ($mobileFileCleanedUp != "") {
 	// #REQ072
-	$oldname = "ANWESENHEITSLISTE";
-	sendBackupMail(currentFile(), "BACKUP ");
+	$mobiledate = stringDateFull(getDateFromFile($mobileFileCleanedUp));
+	$oldname = "ANWESENHEITSLISTE ".$mobiledate;
+	sendBackupMail($mobileFileCleanedUp, "BACKUP ");
 }
 
  // Test if we have a correct mobile password
@@ -442,7 +444,7 @@ if ($signoff != "" && $err == 0) {
 		if ($success) {
 			$oldname = $name;
 			// #REQ057
-		   	sendBackupMail(currentFile(), "ABMELDUNG ");
+		   	sendBackupMail(currentFile(), "ABMELDUNG für ".stringDate(nextSunday(time())));
 			print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
 			
 			// #REQ063
@@ -523,7 +525,7 @@ if ($submit != "" && $err == 0) {
 		
 		// Send a backup mail with the just updated file
 		// #REQ030
-    	sendBackupMail(currentFile(), "Neue Anmeldung ");
+    	sendBackupMail(currentFile(), "Neue Anmeldung für".stringDate(nextSunday(time())));
  }
  
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed

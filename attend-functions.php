@@ -10,8 +10,8 @@
 	// Default dir for mobile passwords
 	$mobilefolder = "./mobile/";
 	
-	// Default time out for mobile passwords is three hours
-	$mobiletimeout = 3;
+	// Default time out for mobile passwords in minutes, typically 3*60 (3h)
+	$mobiletimeout = 3*60;
 	
 	// Each sunday at 13:00, send backup email
 	// #REQ072
@@ -599,7 +599,7 @@ function sendBackupMail($myfile, $onoff) {
  		global $mail_to;
 		global $oldname;
 		
-  		$subject = $onoff." für ".stringDate(nextSunday(time()))." - ".$oldname;
+  		$subject = $onoff." - ".$oldname;
 		
 		// header
 		$header = "From: FeG Anmeldung <feg@delphino.net>\r\n";
@@ -687,22 +687,24 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 }
 
 
-// Cleans up mobile passwords older than defined hours
-// Return 1 iff a password was deleted, 0 otherwise
+// Cleans up mobile passwords older than defined mimutes
+// Returns the mobile file linked to the deleted file iff a password was deleted, "" otherwise
 // #REQ065
 function cleanupMobilePassword() {
 	global $mobiletimeout; // hours 
 	global $mobilefolder;
-	$pwdeleted = 0;
-	$olderthanxxxweeks = 60*60*$mobiletimeout;
+	$mobileFileLinkedToDeletedPW = "";
+	$olderthanxxxweeks = 60*$mobiletimeout;
 	foreach (glob($mobilefolder."*.txt") as $file) {
  		$diff = time() - filectime($file);
 		if($diff > $olderthanxxxweeks){
-			$pwdeleted = 1;
+			$handle = fopen($file, "r");
+  		    $mobileFileLinkedToDeletedPW = trim(fgets($handle));
+			fclose($handle);
 			unlink($file);
 		}
 	}
-	return $pwdeleted;
+	return $mobileFileLinkedToDeletedPW;
 }
 
 // Create a new mobile password to editing attendance list
