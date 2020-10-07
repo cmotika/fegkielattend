@@ -694,7 +694,7 @@ function cleanupMobilePassword() {
 	global $mobiletimeout; // hours 
 	global $mobilefolder;
 	$pwdeleted = 0;
-	$olderthanxxxweeks = 60*$mobiletimeout;
+	$olderthanxxxweeks = 60*60*$mobiletimeout;
 	foreach (glob($mobilefolder."*.txt") as $file) {
  		$diff = time() - filectime($file);
 		if($diff > $olderthanxxxweeks){
