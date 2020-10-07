@@ -265,6 +265,7 @@ context('Register', () => {
   // Wrong code
   // #REQ012
    it('Submit code wrong', () => {
+    cy.visit('http://www.delphino.net/feg' )
     cy.get('#name').clear()
     cy.get('#name').type('Na me1')
     cy.get('#street').clear()
@@ -691,11 +692,12 @@ context('Waitinglist', () => {
     cy.get('#pw').type('admin')
     cy.get('[name="login"]').click()
 
+    cy.get('#nmaxnum').clear()
     cy.get('#nmaxnum').type('2')
     cy.get('[name="save"]').click()
 
     cy.get('textarea').clear()
-    cy.get('textarea').type('5;ab cd;abc 1;12345 abc;12345;a@b.de{enter}')
+    cy.get('textarea').type('5;ab3 cd;abc 1;12345 abc;12345;a@b.de{enter}')
     cy.get('[name="savefile"]').click()
 
     cy.visit('http://delphino.net/feg/?test=97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$' )
@@ -835,7 +837,8 @@ context('Mobile View', () => {
 
 
   it('Mobile password login', () => {
-    cy.contains('Anmeldeliste für den GoDi am')
+    cy.contains('Anmeldeliste f')
+    cy.contains('r den GoDi am')
   })
 
 
