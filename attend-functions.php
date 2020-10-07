@@ -106,7 +106,9 @@ print('
     <th width="1" scope="col"><div align="left">Strasse und Ort</div></th>
     <th width="1" scope="col"><div align="left">Telefon und E-Mail</div></th>
   </tr>
-  </thead><tbody>');
+  </thead><tbody>
+  <div id="tablestart"></div>
+  ');
 }
 
 
@@ -179,8 +181,14 @@ print('
 
 // Mobile Print a file content - footer part
 function printTableFooterMobile($num) {
+global $mobilehide;
+
 	print('</tbody></table>');
-	print('<script>location.hash = "#'.($num).'"</script>');
+	if ($mobilehide == 1) {
+		print('<script>location.hash = "#tablestart"</script>');
+	} else {
+		print('<script>location.hash = "#'.($num).'"</script>');
+	}
 }
 
 // Check if the name(s) are given corrently. Even if comma separated, they have to be full
