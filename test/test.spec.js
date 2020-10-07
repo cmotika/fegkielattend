@@ -887,8 +887,6 @@ context('Mobile View', () => {
 
 
 
-})
-
 
 })
 
