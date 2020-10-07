@@ -13,6 +13,10 @@
 	// Default time out for mobile passwords is three hours
 	$mobiletimeout = 3;
 	
+	// Each sunday at 13:00, send backup email
+	// #REQ072
+	$mobilebackuptimesunday = 13;
+	
 	// Lock out IP conditiob
 	$lockip_number_of_wrong_password_trials = 10;
 
@@ -319,6 +323,7 @@ function getDateFromFile($csvfile) {
 function fileDate($timestamp) {
 	return date("_Y_m_d", $timestamp);
 }
+
 
 // Retrieve the next sunday from a given (current!) timestamp. If the current timestamp is a sunday and we passed the switchtime, then return the next sunday. If the current timestamp is a sunday and we did not passe the switchtime, then return the current sunday.
 function nextSunday($timestamp) {
@@ -683,16 +688,21 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 
 
 // Cleans up mobile passwords older than defined hours
+// Return 1 iff a password was deleted, 0 otherwise
+// #REQ065
 function cleanupMobilePassword() {
 	global $mobiletimeout; // hours 
 	global $mobilefolder;
+	$pwdeleted = 0;
 	$olderthanxxxweeks = 60*$mobiletimeout;
-	foreach (glob($mobilefolder) as $file) {
+	foreach (glob($mobilefolder."*.txt") as $file) {
  		$diff = time() - filectime($file);
 		if($diff > $olderthanxxxweeks){
+			$pwdeleted = 1;
 			unlink($file);
 		}
 	}
+	return $pwdeleted;
 }
 
 // Create a new mobile password to editing attendance list

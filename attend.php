@@ -47,6 +47,14 @@ if ($test == "") {
  // #REQ015
  require("attend.cfg.php");
  
+ // Delete all old mobile passwords
+// #REQ065
+if (cleanupMobilePassword()) {
+	// #REQ072
+	$oldname = "ANWESENHEITSLISTE";
+	sendBackupMail(currentFile(), "BACKUP ");
+}
+
  // Test if we have a correct mobile password
  // #REQ067
  // #REQ068
@@ -149,8 +157,14 @@ if ($test == "") {
  // #REQ066
  if ($isAdmin && $mobile != "") {
 	$mobilePW = createMobilePassword($csvfile);
+    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
+    print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
+    print(getLinesFile($csvfile)." Personen angemeldet.<BR>");
+    print("<br><br>");
+
+
 	print("<a href='".$baseurl."?pw=".$mobilePW."'>".$baseurl."?pw=".$mobilePW."</a>");
-	print("<BR><BR><BR><H1>Mobile Password: <b>".$mobilePW."</b></H1>");
+	print("<BR><BR><BR><H1>Mobile Password: <b>".$mobilePW."</b></H1></center>");
 	exit;
  }
 
@@ -263,9 +277,6 @@ define("DIV_ALERT_INFO", "<div class='alert alert-info' role='alert'>");
 define("END_DIV", "</div>");
 
 
-// Delete all old mobile passwords
-// #REQ065
-cleanupMobilePassword();
 
 // Delete all captcha files older than 5 minutes (5 minutes * 60 seconds)
 // #REQ009

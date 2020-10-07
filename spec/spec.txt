@@ -225,16 +225,25 @@ Mobile password creation
 If logged in as an admin, the user can click on a mobile button to create a temporary mobile password for the selected file (for the attendence team to edit appearance status of people in the list).
 
 #REQ067
+Mobile View Login
 If a user enters a valid mobile password in the admin password field, the mobile view (#REQ008) shall be displayed.
 
 #REQ068
+Mobile View No Login 
 If a user enters a wrong mobile password, the program shall treat this as a wrong admin password.
 
 #REQ069
+Mobile View Attend
 In the mobile view, if the user clicks a red name, the program shall update the records that this name is attending and display it green.
 
 #REQ070
+Mobile View Unattend
 In the mobile view, if the user clicks a green name, the program shall update the records that this name is not attending and display it red.
 
 #REQ071
+Mobile View Correct
 In the mobile view, if the user clicks an entry, the user shall be able to edit the entry and save it.
+
+#REQ072
+Mobile View Backup
+Every time a mobile password expires, then the program shall send the current (updated) attendance list to the backup e-mail address.
