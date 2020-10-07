@@ -591,7 +591,7 @@ context('Admin functions', () => {
     cy.get('[name="login"]').click()
 
     cy.get('[href="javascript:adminvisible();"]').click()
-    cy.contains('unimplemented')
+    cy.contains('not implemented')
   })
 
 })

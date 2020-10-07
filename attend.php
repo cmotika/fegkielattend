@@ -649,7 +649,7 @@ function adminvisible() {
 	if (!$isAdmin) { 
 		// #REQ055
 		if ($wrongadminpassword) {
-			print("<BR>unimplemented<BR>");
+			print("<BR>not implemented<BR>");
 		}
 		// If not logged in as admin, display login password field
 		// #REQ033
