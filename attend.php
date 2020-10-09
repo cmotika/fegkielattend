@@ -110,6 +110,23 @@ if ($mobileFileCleanedUp != "") {
  	$pw = "";
  }
  
+ 
+if ($isAdmin && $savefile != "") {
+	// On save: Replace the content of the csv file with the content of the textfield
+	$freebefore = $maxnum-getLines();
+	file_put_contents($csvfile, $filecontent);
+	$freeafter = $maxnum-getLines();
+	if (($freebefore == 0) && ($freeafter > 0)) {
+		// send waiting list notification
+		// #REQ063
+		sendWaitingListMails();
+	}
+} else if ($isAdmin) {
+	// On non-save: Open/load the (selected or default) csv file
+	$filecontent = file_get_contents($csvfile);
+}
+
+
 // Testmail enabled for debugging only
 //sendTestMail($mail_to);
 

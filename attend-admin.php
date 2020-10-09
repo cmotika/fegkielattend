@@ -5,13 +5,6 @@ if ($csvfile == "") {
 	$csvfile = currentFile();
 }
 
-if ($savefile != "") {
-	// On save: Replace the content of the csv file with the content of the textfield
-	file_put_contents($csvfile, $filecontent);
-} else {
-	// On non-save: Open/load the (selected or default) csv file
-	$filecontent = file_get_contents($csvfile);
-}
 
 // List all available csv files for display porposes (selection list, see below)
 function csvfiles() {
