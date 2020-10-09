@@ -515,6 +515,9 @@ if ($submit != "" && $err == 0) {
 			fclose($myfile);
 		}
 		
+		// send anmelde info
+		sendConfirmationMail($email, $oldname, $regnumber);
+		
 		// Reset the text fields 
 		// #REQ028
 		// #REQ031
@@ -526,7 +529,7 @@ if ($submit != "" && $err == 0) {
 		
 		// Send a backup mail with the just updated file
 		// #REQ030
-    	sendBackupMail(currentFile(), "Neue Anmeldung für".stringDate(nextSunday(time())));
+    	sendBackupMail(currentFile(), "Neue Anmeldung für ".stringDate(nextSunday(time())));
  }
  
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed
@@ -536,11 +539,11 @@ if ($submit != "" && $err == 0) {
 	 if (!$plural) {
 		 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time()))." angemeldet und zwar unter der Nummer ");
 		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
-		 print("Bitte bringe die Nummer mit zum Gottesdienst. Wir freuen uns auf Dich!</h3>");
+		 print("<b>Bitte bringe die Nummer zum Gottesdienst mit</b>! Wir freuen uns auf Dich!</h3>");
 	 } else {
 		 print("<h3>Hallo ".$oldname."! Ihr seid nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time()))." angemeldet und zwar unter den Nummern ");
 		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
-		 print("Bitte bringt die Nummern mit zum Gottesdienst. Wir freuen uns auf Euch!</h3>");
+		 print("<b>Bitte bringt die Nummern zum Gottesdienst mit!</b> Wir freuen uns auf Euch!</h3>");
 	 }
  }
  
@@ -598,6 +601,13 @@ function waitinglistvisibility() {
  document.getElementById("seccity").style.display="none"; 
  document.getElementById("secphone").style.display="none"; 
 }
+
+function signoffvisibility() {
+ document.getElementById("secname").style.display="inline"; 
+ document.getElementById("secstreet").style.display="inline"; 
+ document.getElementById("seccity").style.display="inline"; 
+ document.getElementById("secphone").style.display="inline"; 
+}
 </script>
 
 
@@ -617,6 +627,8 @@ else {
 function signoffvisible() {
 	var y = document.getElementById("signoffdiv"); 
 	y.style.display="inline";
+	
+	signoffvisibility();
 }
 </script>
 <BR>
