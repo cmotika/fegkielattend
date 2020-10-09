@@ -612,6 +612,28 @@ function isAlreadyRegistered($file, $name, $street, $city, $phone, $email) {
 	}
 }
 
+// Send confirmation emails also for defaulfs
+// #REQ074
+function sendDefaultConfirmationEMails($defaults) {
+	$lines = explode("\n", $defaults);
+	for ($c = 0; $c < count($lines); $c++) {
+	 	$line = $lines[$c];
+		if (trim($line) != "") {
+			$cols = explode(";", $line);
+			$number = "#".$cols[0];
+			$name = $cols[1];
+			$email = $cols[5];
+			
+			print($line."<BR>");
+			print($number."<BR>");
+			print($name."<BR>");
+			print($email."<BR>");
+			
+			sendConfirmationMail($email, $name, $number);
+		}
+	}
+}
+
 // Ensure the current file exits, if not create it and possibly immediately add the defaults
 function ensureCurrentFileExists() {
 	global $default_csv_file;
@@ -622,6 +644,8 @@ function ensureCurrentFileExists() {
 		if (file_exists($default_csv_file)) {
 			$defaults = file_get_contents($default_csv_file);
 			fwrite($myfile, $defaults."\n");
+			
+			sendDefaultConfirmationEMails($defaults);
 		}
 		//fwrite($myfile, "\n");
 		fclose($myfile);

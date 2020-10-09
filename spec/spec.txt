@@ -251,3 +251,7 @@ Every time a mobile password expires, then the program shall send the current (u
 #REQ073
 Mobile View Hide Attending
 In the mobile view, if the user clicks to hide attending entries, then the program shall only display people which have not yet appeared.
+
+#REQ074
+Confirmation Email for Defaults
+If a default file exists and a new sunday CSV file is created, then the program shall also notify each person in the default file about its registration.
