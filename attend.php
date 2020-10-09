@@ -116,7 +116,7 @@ if ($isAdmin && $savefile != "") {
 	$freebefore = $maxnum-getLines();
 	file_put_contents($csvfile, $filecontent);
 	$freeafter = $maxnum-getLines();
-	if (($freebefore == 0) && ($freeafter > 0)) {
+	if ($freebefore < $freeafter) {
 		// send waiting list notification
 		// #REQ063
 		sendWaitingListMails();
@@ -285,7 +285,7 @@ Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Die
 
 <?php  
 
-if ($waitinglist == "") {
+if ($waitinglist != "" || $maxnum-getLines() == 0) {
 	print("<p><b>MOMENTAN NUR WARTELISTE</b></p><p>Momentan sind keine oder nicht ausreichend Sitzpl&auml;tze vor Ort verf&uuml;gbar. Du kannst Dich deshalb momentan nur mit Deiner E-Mail-Adresse auf die Warteliste eintragen. Falls sich jemand wieder vom Live-GoDi abmeldet, wirst Du per E-Mail informiert und kannst Dich dann hier ggf. noch anmelden. <BR><i>Achtung: Ein Platz auf der Warteliste reicht <u>nicht</u> aus, um vor Ort zum GoDi zu kommen!</i></p>");
 }
 
@@ -426,7 +426,7 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 	// Only in submit mode test, if enough seats are available
 	if ($submit != "") {
 		// #REQ060
-		$waitinglistlink = " <a href=\"#waitinglistsection\"> M&ouml;chtest Du bei einem freien Platz benachrichtigt werden?</a>";
+		$waitinglistlink = " <a href=\"#waitinglistsection\"><br>M&ouml;chtest Du bei einem freien Platz benachrichtigt werden? Dann trage unten Deine E-Mail-Addresse ein, um auf die Warteliste zu kommen!</a>";
 		// #REQ023
 		// #REQ024
 		$numpersons = count(explode(",", $name));
@@ -437,7 +437,7 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 				$waitinglistbutton = 1;
 			} else {
 				// #REQ023
-				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend Pl&auml;tze vorhanden." .$waitinglistlink. END_DIV;
+				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend freie Pl&auml;tze vorhanden." .$waitinglistlink. END_DIV;
 				$waitinglistbutton = 1;
 			}
 			// #REQ053 
