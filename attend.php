@@ -111,6 +111,11 @@ if ($mobileFileCleanedUp != "") {
  }
  
  
+ // If no csv file is selected, open the current file/sunday as the default
+if ($csvfile == "") {
+	$csvfile = currentFile();
+}
+ 
 if ($isAdmin && $savefile != "") {
 	// On save: Replace the content of the csv file with the content of the textfield
 	$freebefore = $maxnum-getLines();
@@ -128,7 +133,9 @@ if ($isAdmin && $savefile != "") {
 
 
 // Testmail enabled for debugging only
-//sendTestMail($mail_to);
+sendTestMail("delphino@gmx.de");
+sendTestMail("delphino79@googlemail.com");
+sendTestMail("delphino79@gmail.com");
 
  // If download mode: Then return the requested csv file. Do this only for admins.
  // #REQ006
@@ -488,7 +495,7 @@ if ($waitinglist != "" && $err == 0) {
 	$myfile = fopen(waitingListFile(), "a");
 	fwrite($myfile, $email."\n");
 	fclose($myfile);	
-	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time()))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach. Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
+	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time()))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach (Hinweis: GMX blockiert unsere Mails derzeit leider). Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
 	
 	//send test mail
 	// #REQ064

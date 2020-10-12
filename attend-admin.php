@@ -1,10 +1,5 @@
 <?php
 
-// If no csv file is selected, open the current file/sunday as the default
-if ($csvfile == "") {
-	$csvfile = currentFile();
-}
-
 
 // List all available csv files for display porposes (selection list, see below)
 function csvfiles() {
