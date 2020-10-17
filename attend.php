@@ -134,9 +134,9 @@ if ($isAdmin && $savefile != "") {
 
 
 // Testmail enabled for debugging only
-sendTestMail("delphino@gmx.de");
-sendTestMail("delphino79@googlemail.com");
-sendTestMail("delphino79@gmail.com");
+//sendTestMail("delphino@gmx.de");
+//sendTestMail("delphino79@googlemail.com");
+//sendTestMail("delphino79@gmail.com");
 
  // If download mode: Then return the requested csv file. Do this only for admins.
  // #REQ006
@@ -295,7 +295,7 @@ if ($testmode) {
 	print('<table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#FF0000"><tr><th scope="col"><span class="style1"><center>TEST MODE ONLY - FOR PRODUCTION USE, DISABLE TEST_ENABLED IN CONFIG  </center></span></th></tr></table>');
 }
 if (trim($banner) != "") {
-	print('<table width="100%" border="1" cellpadding="10" cellspacing="0" bgcolor="#00AA00"><tr><th scope="col"><h1 style="font-size:1vw"><br></h1><span class="style1">
+	print('<table width="100%" border="1" cellpadding="10" cellspacing="0" bgcolor="#00AA00"><tr><th scope="col"><p style="font-size:1px"><br></p><span class="style1">
 <center><h4><span class="blink_text">'.$banner.'</span></h4></center></span></th></tr></table>');
 }
 ?>
