@@ -396,7 +396,9 @@ function currentFile() {
 //---------------------------------------------------------------------------------------
 
 function sendConfirmationMail($receipient, $name, $number) {
-  		$subject = "FeG Kiel - Anmeldung ".$number." von ".$name." für GoDi am ".stringDateFull(nextSunday(time()));
+ 	 	$plural = (strpos($regnumber, ",") > -1);
+
+  		$subject = "FeG Kiel - Anmeldung ".$number." von ".$name." fuer GoDi am ".stringDateFull(nextSunday(time()));
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
@@ -404,7 +406,13 @@ function sendConfirmationMail($receipient, $name, $number) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recoverXXX
-		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
+		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
+		
+		if ($plural) {
+		$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart).\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite http://reg.feg-kiel.de geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";		
+		}
+		
+		
     	$retval = mail($receipient, $subject, $nmessage, $header );		
 		return $retval;
 }
@@ -419,7 +427,7 @@ function waitingListFile() {
 }
 
 function sendWaitingListMail($receipient) {
-  		$subject = "FeG Kiel - Freie GoDi Plätze für den ".stringDate(nextSunday(time()))."!";
+  		$subject = "FeG Kiel - Freie GoDi Plätze fuer den ".stringDate(nextSunday(time()))."!";
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
@@ -471,6 +479,7 @@ function writeConfig() {
  	global $adminpw;
  	global $maxnum;
  	global $switchtime;
+ 	global $banner;
 	global $test_enabled;
 	global $mail_to;
 	global $baseurl;
@@ -479,9 +488,10 @@ function writeConfig() {
 	fwrite($myfile, "<?php\n");
 	fwrite($myfile, "$"."baseurl = \"".$baseurl."\";\n");
 	fwrite($myfile, "$"."adminpw = \"".$adminpw."\";\n");
-	fwrite($myfile, "$"."maxnum = ".$maxnum.";\n");
-	fwrite($myfile, "$"."switchtime  = ".$switchtime .";\n");
-	fwrite($myfile, "$"."test_enabled  = ".$test_enabled .";\n");
+	fwrite($myfile, "$"."maxnum = \"".$maxnum."\";\n");
+	fwrite($myfile, "$"."switchtime  = \"".$switchtime ."\";\n");
+	fwrite($myfile, "$"."banner  = \"".$banner."\";\n");
+	fwrite($myfile, "$"."test_enabled  = \"".$test_enabled ."\";\n");
 	fwrite($myfile, "$"."mail_to = \"".$mail_to."\";\n");
 	fwrite($myfile, "?>\n");
 	fclose($myfile);

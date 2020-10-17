@@ -44,6 +44,11 @@ function csvfiles() {
       <td><input name="nswitchtime" type="text" id="nswitchtime" value="<?php print($switchtime);?>"/></td>
     </tr>
     <tr>
+      <td><div align="right">Banner Information</div></td>
+      <td>&nbsp;</td>
+      <td><input name="nbanner" type="text" id="nbanner" value="<?php print($banner);?>"/></td>
+    </tr>
+    <tr>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td><label>

@@ -25,6 +25,7 @@ $filecontent = $_POST['filecontent'];
 
 $nmaxnum = $_POST['nmaxnum'];
 $nswitchtime = $_POST['nswitchtime'];
+$nbanner = $_POST['nbanner'];
 
 $signoff = $_POST['signoff'];
 $number = $_POST['number'];
@@ -257,6 +258,34 @@ sendTestMail("delphino79@gmail.com");
     <style type="text/css">
 <!--
 .style1 {color: #FFFFFF}
+
+.blink_text {
+
+    animation:1s blinker linear infinite;
+    -webkit-animation:1s blinker linear infinite;
+    -moz-animation:1s blinker linear infinite;
+
+     color: white;
+    }
+
+    @-moz-keyframes blinker {  
+     40% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
+    @-webkit-keyframes blinker {  
+     40% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
+    @keyframes blinker {  
+     40% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
 -->
     </style>
 </head>
@@ -264,6 +293,10 @@ sendTestMail("delphino79@gmail.com");
 <?php
 if ($testmode) {
 	print('<table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#FF0000"><tr><th scope="col"><span class="style1"><center>TEST MODE ONLY - FOR PRODUCTION USE, DISABLE TEST_ENABLED IN CONFIG  </center></span></th></tr></table>');
+}
+if (trim($banner) != "") {
+	print('<table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#00AA00"><tr><th scope="col"><span class="style1">
+<center> <h4><span class="blink_text">'.$banner.'</span></h4></center></span></th></tr></table>');
 }
 ?>
 
@@ -361,6 +394,7 @@ if ($save != "" && $isAdmin) {
 	}
 	$maxnum = $nmaxnum;
 	$switchtime = $nswitchtime;
+	$banner = $nbanner;
 	writeConfig();
 	print("Saved");
 }
@@ -540,7 +574,7 @@ if ($submit != "" && $err == 0) {
 		}
 		
 		// send anmelde info
-		sendConfirmationMail($email, $oldname, $regnumber);
+ 		sendConfirmationMail($email, $oldname, $regnumber);
 		
 		// Reset the text fields 
 		// #REQ028
