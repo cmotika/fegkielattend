@@ -354,13 +354,14 @@ foreach (glob("./captcha/*.txt") as $file) {
 $olderthanxxxweeks = 60*60*24*7*5;
 foreach (glob("./data/*.csv") as $file) {
  	$diff = time() - filectime($file);
+//	print("<p style=\"color:white\"> test:".$file." : '".$diff."'</p><BR>");
 	if($diff > $olderthanxxxweeks){
 		$found = ($file == $default_csv_file);
-		//print("unlink test:".$file." : '".$found."'<BR>");
+		//print("<p style=\"color:white\"> unlink test:".$file." : '".$found."'</p><BR>");
 		if (!$found) {
 			// Do not delete the defaults file
 			unlink($file);
-   			//print("unlink:".$file." : ".$diff."<BR>");
+   			//print("<p style=\"color:white\">unlink:".$file." : ".$diff."</p><BR>");
 		}
  	}
 }

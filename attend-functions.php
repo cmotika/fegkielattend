@@ -427,7 +427,7 @@ function waitingListFile() {
 }
 
 function sendWaitingListMail($receipient) {
-  		$subject = "FeG Kiel - Freie GoDi Plätze fuer den ".stringDate(nextSunday(time()))."!";
+  		$subject = "FeG Kiel - Freie GoDi Plaetze fuer den ".stringDate(nextSunday(time()))."!";
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
