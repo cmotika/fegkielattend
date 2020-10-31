@@ -406,10 +406,10 @@ function sendConfirmationMail($receipient, $name, $number) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recoverXXX
-		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
+		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
 		
 		if ($plural) {
-		$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-05-15-aktuelle-infos-zum-gottesdienst-neustart).\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite http://reg.feg-kiel.de geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";		
+		$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite http://reg.feg-kiel.de geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";		
 		}
 		
 		
@@ -441,7 +441,7 @@ function sendWaitingListMail($receipient) {
 }
 
 function sendWaitingListTestMail($receipient) {
-  		$subject = "FeG Kiel - Warteliste für den ".stringDate(nextSunday(time()))."!";
+  		$subject = "FeG Kiel - Warteliste fuer den ".stringDate(nextSunday(time()))."!";
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
