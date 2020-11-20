@@ -255,3 +255,13 @@ In the mobile view, if the user clicks to hide attending entries, then the progr
 #REQ074
 Confirmation Email for Defaults
 If a default file exists and a new sunday CSV file is created, then the program shall also notify each person in the default file about its registration.
+
+#REQ075
+Fixed date site
+For a fixed date, allow a separate list with a security pin only. &d=timestamp&k=securitypin,
+24.12.2020: ?d=1608802628&k=56
+
+#REQ076
+Fixed date site security pin
+The security pin shall be the digit sum of the simple date, e.g. 2020-09-02 = 20+9+2 = 31
+

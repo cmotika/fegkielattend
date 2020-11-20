@@ -3,6 +3,9 @@
 // Static configuration
 	// Default file name
 	$default_csv_file = "./data/defaults.csv";
+
+	// Waiting list file name
+	$waitinglist_csv_file = "./data/waiting.csv";
 	
 	// Default dir for IP logging
 	$ipfolder = "./admin/";
@@ -354,10 +357,42 @@ function fix($text) {
  	$text = trim($text);
 	return $text;
 }
+
+// Just a simple protection against spiders, creating various random files
+// #REQ076
+function secuirtyDatePin($timestamp) {
+  $a =   date("y", $timestamp); // two digit year
+  $b =   date("n", $timestamp); // month no zero
+  $c =   date("j", $timestamp); // day no zero
+  return ($a + $b + $c);
+}
+
+// Return the fixed date if it is entered valid, or 0 if no fixed date is given or invalid
+// #REQ075
+// #REQ076
+function fixedDate() {
+	global $fix_d;
+	global $fix_k;
+	// Special date
+	 if ($fix_d != "" && $fix_k != "") {
+		$vglkey =  secuirtyDatePin($fix_d);
+		if ($vglkey == $fix_k) {
+			// #REQ075
+			// #REQ076
+			// The security PIN is valid for the fixed date... so use this date instead of a regular sunday (*)
+			return $fix_d;
+		}
+	 }
+	 return 0;
+}
+
+
   
 // From a file name get the timestamp in order to dispay it e.g. in print mode 
 function getDateFromFile($csvfile) {
 	$text = basename ($csvfile);
+	$i = strpos ($text, ".");
+	$text = substr($text, 0, $i);
 	$text = str_replace("attend_", "", $text);
 	$text = str_replace(".csv", "", $text);
 	$text = str_replace("_", "-", $text);
@@ -372,18 +407,28 @@ function fileDate($timestamp) {
 
 
 // Retrieve the next sunday from a given (current!) timestamp. If the current timestamp is a sunday and we passed the switchtime, then return the next sunday. If the current timestamp is a sunday and we did not passe the switchtime, then return the current sunday.
+// For a fixed date (#REQ075) return the given timestamp
 function nextSunday($timestamp) {
-     global $switchtime;
+    global $switchtime;
+
+	// Normal sunday (*)
 	 $currenthour = date("H", date($timestamp));
 	 if ($currenthour >= $switchtime) {
 	 	 // if we crossed the switch time on a sunday... pretend it is monday (=> next week)
 	  	 $timestamp += 24*60*60;
 	 }
+
 	 $weekday =  date("w", $timestamp);
   	 while($weekday != 0) {
 	  	 $timestamp += 24*60*60;
 		 $weekday = date("w", $timestamp);
 	 }
+
+ 	 // Special day
+	 if (fixedDate() != 0) {
+	 	$timestamp = fixedDate();
+	 }
+
 	 return $timestamp;
 }
 
@@ -423,7 +468,8 @@ function sendConfirmationMail($receipient, $name, $number) {
 
 // Retrieve the current waiting list 
 function waitingListFile() {
-	return "./data/waiting.csv";
+	global $waitinglist_csv_file;
+	return $waitinglist_csv_file;
 }
 
 function sendWaitingListMail($receipient) {

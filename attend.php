@@ -43,6 +43,17 @@ if ($test == "") {
 	$test = $_GET['test'];
 }
 
+$fix_d = $_POST['d'];
+if ($fix_d == "") {
+	$fix_d = $_GET['d'];
+}
+$fix_k = $_POST['k'];
+if ($fix_k == "") {
+	$fix_k = $_GET['k'];
+}
+
+
+
  // Load helper functions
  require("attend-functions.php");
  // Load configuration
@@ -319,7 +330,24 @@ else {
 }
 ?>
 </h1>
-<p>Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den <?php print(stringDate(nextSunday(time()))); ?></b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.
+<p>
+
+
+
+<?
+if ($waitinglist != "" || $maxnum-getLines() == 0) {
+	print("<p><b>MOMENTAN NUR WARTELISTE</b> (siehe unten)</p>");
+}
+
+if (!fixedDate()) {
+	// normal sunday text
+	print('Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.');
+}
+else {
+	// fixed date text
+	print('Registriere Dich mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.');
+}
+?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
 <p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung für vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
 
@@ -349,21 +377,28 @@ foreach (glob("./captcha/*.txt") as $file) {
  	}
 }
 
+
 // Delete all CSV files that are older than 5 weeks (5 weeks * 7 days * 24 hours * 60 minutes * 60 seconds
 // #REQ010
 $olderthanxxxweeks = 60*60*24*7*5;
 foreach (glob("./data/*.csv") as $file) {
- 	$diff = time() - filectime($file);
-//	print("<p style=\"color:white\"> test:".$file." : '".$diff."'</p><BR>");
+// 	$diff = time() - filectime($file); // OLD from file creation time
+	$diff = time() - getDateFromFile($file); // NEW from file name
+	//print("<br><p style=\"color:white\"> test:".$file." : '".$diff."'</p>");
 	if($diff > $olderthanxxxweeks){
 		$found = ($file == $default_csv_file);
-		//print("<p style=\"color:white\"> unlink test:".$file." : '".$found."'</p><BR>");
+		$found =  $found || ($file == waitingListFile());
+		//print("<p style=\"color:white\"> unlink test:".$file." : '".$found."'</p>");
 		if (!$found) {
 			// Do not delete the defaults file
 			unlink($file);
-   			//print("<p style=\"color:white\">unlink:".$file." : ".$diff."</p><BR>");
+   			//print("<p style=\"color:white\">... UNLINK:".$file." : ".$diff."</p>");
+		} else {
+   			//print("<p style=\"color:white\">... REMAIN:".$file." : ".$diff."</p>");
 		}
- 	}
+ 	} else {
+   			//print("<p style=\"color:white\">... REMAIN:".$file." : ".$diff."</p>");
+	}
 }
 
 // Make sure current file exists
