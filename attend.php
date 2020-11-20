@@ -341,11 +341,11 @@ if ($waitinglist != "" || $maxnum-getLines() == 0) {
 
 if (!fixedDate()) {
 	// normal sunday text
-	print('Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.');
+	print('Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
 }
 else {
 	// fixed date text
-	print('Registriere Dich mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest.');
+	print('Registriere Dich mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
 }
 ?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
