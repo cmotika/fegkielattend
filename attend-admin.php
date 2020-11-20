@@ -56,22 +56,37 @@ function csvfiles() {
       </label></td>
     </tr>
   </table>
-<br>
-<br>
-<?php
+  <p><br>
+    <br>
+    <?php
 print("Aktuelle Datei (f&uuml;r User): ".currentFile()."<BR>");
 ?>
-<br>
-<br>
-<select name="csvfile" id="csvfile" onchange="this.form.submit();">
-  <?php csvfiles() ?>
-</select>
-<input type="submit" name="load" value="Laden" />
-<input type="submit" name="savefile" value="Speichern" />
-<input type="submit" name="download" value="Download" />
-<input type="submit" name="mobile" value="Mobile" />
-<input type="submit" name="print" value="Drucken" />
-<?php print(getLinesFile($csvfile)." Zeilen"); ?>
-<br>
-<textarea name="filecontent" cols="100" rows="18" wrap="no" style="overflow:scroll;"><?php print($filecontent)?></textarea>
-</
+    <br>
+    <br>
+      <select name="csvfile" id="csvfile" onchange="this.form.submit();">
+        <?php csvfiles() ?>
+      </select>
+    <input type="submit" name="load" value="Laden" />
+    <input type="submit" name="savefile" value="Speichern" />
+    <input type="submit" name="download" value="Download" />
+    <input type="submit" name="mobile" value="Mobile" />
+    <input type="submit" name="print" value="Drucken" />
+    <?php print(getLinesFile($csvfile)." Zeilen"); ?>
+    <br>
+      <textarea name="filecontent" cols="100" rows="18" wrap="no" style="overflow:scroll;"><?php print($filecontent)?></textarea>
+  </p>
+  <p>&nbsp;</p>
+  <table width="400" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="212"><div align="right">Spezialtermin </div></td>
+      <td width="17">&nbsp;</td>
+      <td width="171"><input name="d" type="text" id="d" placeholder="24.12.2020" value=""/></td>
+    </tr>
+    <tr>
+      <td><div align="right"></div></td>
+      <td>&nbsp;</td>
+      <td><input name="specialdatesubmit" type="submit" id="specialdatesubmit"  value="Liste Anlegen" /></td>
+    </tr>
+  </table>
+  <p>&nbsp;</p>
+  <p></</p>

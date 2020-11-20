@@ -258,10 +258,9 @@ If a default file exists and a new sunday CSV file is created, then the program 
 
 #REQ075
 Fixed date site
-For a fixed date, allow a separate list with a security pin only. &d=timestamp&k=securitypin,
-24.12.2020: ?d=1608802628&k=56
+For a fixed date, allow a separate list only if an according CSV file exists (see #REQ076). &d=timestamp
+24.12.2020: ?d=1608802628
 
 #REQ076
-Fixed date site security pin
-The security pin shall be the digit sum of the simple date, e.g. 2020-09-02 = 20+9+2 = 31
-
+Fixed date creation
+If the user is logged in as an administrator and enters a special date for a fixed date, then the program shall create an according CVS file and display the according link to the special fixed date.

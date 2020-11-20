@@ -358,30 +358,25 @@ function fix($text) {
 	return $text;
 }
 
-// Just a simple protection against spiders, creating various random files
-// #REQ076
-function secuirtyDatePin($timestamp) {
-  $a =   date("y", $timestamp); // two digit year
-  $b =   date("n", $timestamp); // month no zero
-  $c =   date("j", $timestamp); // day no zero
-  return ($a + $b + $c);
-}
+//// Just a simple protection against spiders, creating various random files
+// OBSOLETE
+//function secuirtyDatePin($timestamp) {
+//  $a =   date("y", $timestamp); // two digit year
+//  $b =   date("n", $timestamp); // month no zero
+//  $c =   date("j", $timestamp); // day no zero
+//  return ($a + $b + $c);
+//}
 
-// Return the fixed date if it is entered valid, or 0 if no fixed date is given or invalid
+
+// Return the fixed date if it is entered valid, or 0 if no fixed date is given or invalid/
+// It is valid if the user is the admin OR if a corresponding CSV file exists (created by the admin panel, #REQ076)
 // #REQ075
-// #REQ076
 function fixedDate() {
-	global $fix_d;
-	global $fix_k;
-	// Special date
-	 if ($fix_d != "" && $fix_k != "") {
-		$vglkey =  secuirtyDatePin($fix_d);
-		if ($vglkey == $fix_k) {
-			// #REQ075
-			// #REQ076
-			// The security PIN is valid for the fixed date... so use this date instead of a regular sunday (*)
-			return $fix_d;
-		}
+	global $specialdate;
+	global $isAdmin;
+ 	// Special date
+	 if ($specialdate != "" && ($isAdmin || file_exists(getCSVFile($specialdate))) ) {
+		return $specialdate;
 	 }
 	 return 0;
 }
@@ -433,8 +428,12 @@ function nextSunday($timestamp) {
 }
 
 // Retrieve the current file to write to (for adding new registrations or as a default for loading the current list) 
+function getCSVFile($timestamp) {
+	return "./data/attend".fileDate($timestamp).".csv";
+}
+
 function currentFile() {
-	return "./data/attend".fileDate(nextSunday(time())).".csv";
+	return getCSVFile(nextSunday(time()));
 }
 
 

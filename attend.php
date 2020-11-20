@@ -43,14 +43,11 @@ if ($test == "") {
 	$test = $_GET['test'];
 }
 
-$fix_d = $_POST['d'];
-if ($fix_d == "") {
-	$fix_d = $_GET['d'];
+$specialdate = $_POST['d'];
+if ($specialdate == "") {
+	$specialdate = $_GET['d'];
 }
-$fix_k = $_POST['k'];
-if ($fix_k == "") {
-	$fix_k = $_GET['k'];
-}
+$specialdatesubmit = $_POST['specialdatesubmit'];
 
 
 
@@ -123,6 +120,35 @@ if ($mobileFileCleanedUp != "") {
  }
  
  
+ 
+// #REQ076
+// Create special date if valid input
+if ($specialdatesubmit != "") {
+		$tmpdate = date_create_from_format('d.m.Y', $specialdate);
+		// Overwrite special date now with timestamp
+		$specialdate = $tmpdate->getTimestamp();
+		// already fill file
+		$csvfile = currentFile();
+
+		if ($specialdate > time()) {
+			// Only if it is in the future, create the CSV file:
+			// As current file is referred to as the $specialdate ("d"-parameter) if (a) the file already exists or (b) the user is the admin
+			// here the user is the admin (b) and the file will be created. 
+			// After that, the succeding link is usable by non-administrators. 
+			ensureCurrentFileExists();
+			
+			// Display the link.
+		    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den Spezialtermin am<BR>");
+		    print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
+		    print("<br><br>Nutze den folgenden Link f&uuml;r diesen Termin:<br><br>");
+
+			print("<b><a href='".$baseurl."?d=".$specialdate."'>".$baseurl."?d=".$specialdate."</a></b>");
+			print("</H1></center>");
+			exit;
+		}
+}
+ 
+ 
  // If no csv file is selected, open the current file/sunday as the default
 if ($csvfile == "") {
 	$csvfile = currentFile();
@@ -190,6 +216,8 @@ if ($isAdmin && $savefile != "") {
    exit;
  }	
 ?>
+
+
 
 <?php
  // If mobile button from admin is pressed, a mobile admin code is created
@@ -334,7 +362,7 @@ else {
 
 
 
-<?
+<?php
 if ($waitinglist != "" || $maxnum-getLines() == 0) {
 	print("<p><b>MOMENTAN NUR WARTELISTE</b> (siehe unten)</p>");
 }
