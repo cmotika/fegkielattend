@@ -396,7 +396,7 @@ else {
 }
 ?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
-<p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung f&uml;r vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
+<p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung f&uuml;r vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
 
 <?php  
 
