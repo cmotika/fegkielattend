@@ -202,11 +202,11 @@ If not enought seats are left for the current user, then the program shall displ
 
 #REQ061
 Waiting list entry
-If waitinglist button is visible due to space limitations and a valid email is provided by the user, then the program shall append the email to the waitinglist and clear the fields and inform the user upon successfull entry.
+If waitinglist button is visible due to space limitations and a valid email is provided by the user, then the program shall append the email to the waitinglist of that sunday/day and clear the fields and inform the user upon successfull entry.
 
 #REQ062 -- not tested
 Waiting list clear
-If a new list is created, them the program shall clear the old waiting list.
+The program shall clear old waiting lists which are older than a certain number of weeks.
 
 #REQ063 -- not tested
 Waiting list notification

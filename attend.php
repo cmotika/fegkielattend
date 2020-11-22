@@ -47,7 +47,11 @@ $specialdate = $_POST['d'];
 if ($specialdate == "") {
 	$specialdate = $_GET['d'];
 }
+// special day initial setting (will go to config file)
 $specialdatesubmit = $_POST['specialdatesubmit'];
+$dmax = $_POST['dmax'];
+$dday = $_POST['dday'];
+$dtime = $_POST['dtime'];
 
 
 
@@ -128,14 +132,24 @@ if ($specialdatesubmit != "") {
 		// Overwrite special date now with timestamp
 		$specialdate = $tmpdate->getTimestamp();
 		// already fill file
-		$csvfile = currentFile();
+		if ($csvfile == "") {
+			$csvfile = currentFile();
+		}
 
-		if ($specialdate > time()) {
+// XXX
+		$tmpdate2 = date_create_from_format('d.m.Y H:i', $dday." ".$dtime);
+		$dday = $tmpdate2->getTimestamp();
+
+		if (($specialdate > time()) && ($dday > time()) && ($dmax >= 1)) {
+//		if ($specialdate > time()) {
 			// Only if it is in the future, create the CSV file:
 			// As current file is referred to as the $specialdate ("d"-parameter) if (a) the file already exists or (b) the user is the admin
 			// here the user is the admin (b) and the file will be created. 
 			// After that, the succeding link is usable by non-administrators. 
 			ensureCurrentFileExists();
+			
+			// Write additional config file
+			writeConfigFile($dmax, $dday);
 			
 			// Display the link.
 		    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den Spezialtermin am<BR>");
@@ -156,13 +170,14 @@ if ($csvfile == "") {
  
 if ($isAdmin && $savefile != "") {
 	// On save: Replace the content of the csv file with the content of the textfield
-	$freebefore = $maxnum-getLines();
+	$freebefore = getCurrentMaxNum()-getLines();
 	file_put_contents($csvfile, $filecontent);
-	$freeafter = $maxnum-getLines();
+	$freeafter = getCurrentMaxNum()-getLines();
 	if ($freebefore < $freeafter) {
-		// send waiting list notification
+		// send waiting list notification (corresponding to the CSV file modified)
 		// #REQ063
-		sendWaitingListMails();
+		$timestamp = getDateFromFile($csvfile);
+		sendWaitingListMails($timestamp);
 	}
 } else if ($isAdmin) {
 	// On non-save: Open/load the (selected or default) csv file
@@ -343,7 +358,7 @@ if (trim($banner) != "") {
 <div class="container">
 <h1>Anmeldung f&uuml;r <b><?php print(stringDate(nextSunday(time()))); ?></b> 
 <?php
-$freeseats = $maxnum-getLines();
+$freeseats = getCurrentMaxNum()-getLines();
 if ($freeseats > 1) {
 	// #REQ054
 	print('<span class="badge badge-success">Noch '.$freeseats.' Pl&auml;tze frei</span>');
@@ -363,7 +378,7 @@ else {
 
 
 <?php
-if ($waitinglist != "" || $maxnum-getLines() == 0) {
+if ($waitinglist != "" || getCurrentMaxNum()-getLines() == 0) {
 	print("<p><b>MOMENTAN NUR WARTELISTE</b> (siehe unten)</p>");
 }
 
@@ -373,7 +388,11 @@ if (!fixedDate()) {
 }
 else {
 	// fixed date text
-	print('Registriere Dich mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
+	$deadline = "";
+	if ($dday > time()) {
+		$deadline = "<b>(bis zum ".stringDateTimeSimple($dday)." Uhr )</b> ";
+	}
+	print('Registriere Dich '.$deadline.'mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
 }
 ?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
@@ -381,7 +400,7 @@ Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Die
 
 <?php  
 
-if ($waitinglist != "" || $maxnum-getLines() == 0) {
+if ($waitinglist != "" || getCurrentMaxNum()-getLines() == 0) {
 	print("<p><b>MOMENTAN NUR WARTELISTE</b></p><p>Momentan sind keine oder nicht ausreichend Sitzpl&auml;tze vor Ort verf&uuml;gbar. Du kannst Dich deshalb momentan nur mit Deiner E-Mail-Adresse auf die Warteliste eintragen. Falls sich jemand wieder vom Live-GoDi abmeldet, wirst Du per E-Mail informiert und kannst Dich dann hier ggf. noch anmelden. <BR><i>Achtung: Ein Platz auf der Warteliste reicht <u>nicht</u> aus, um vor Ort zum GoDi zu kommen!</i></p>");
 }
 
@@ -407,7 +426,8 @@ foreach (glob("./captcha/*.txt") as $file) {
 
 
 // Delete all CSV files that are older than 5 weeks (5 weeks * 7 days * 24 hours * 60 minutes * 60 seconds
-// #REQ010
+// #REQ010 
+// #REQ062 (include old waiing lists)
 $olderthanxxxweeks = 60*60*24*7*5;
 foreach (glob("./data/*.csv") as $file) {
 // 	$diff = time() - filectime($file); // OLD from file creation time
@@ -415,7 +435,6 @@ foreach (glob("./data/*.csv") as $file) {
 	//print("<br><p style=\"color:white\"> test:".$file." : '".$diff."'</p>");
 	if($diff > $olderthanxxxweeks){
 		$found = ($file == $default_csv_file);
-		$found =  $found || ($file == waitingListFile());
 		//print("<p style=\"color:white\"> unlink test:".$file." : '".$found."'</p>");
 		if (!$found) {
 			// Do not delete the defaults file
@@ -431,7 +450,6 @@ foreach (glob("./data/*.csv") as $file) {
 
 // Make sure current file exists
 // #REQ011
-// #REQ062
 ensureCurrentFileExists();
 
 // Captcha verification of last captcha 
@@ -535,8 +553,8 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 		// #REQ023
 		// #REQ024
 		$numpersons = count(explode(",", $name));
-		if (($maxnum-getLines()-$numpersons) < 0) {
-			if ($maxnum-getLines() == 0) {
+		if ((getCurrentMaxNum()-getLines()-$numpersons) < 0) {
+			if (getCurrentMaxNum()-getLines() == 0) {
 				// #REQ024
 				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider schon alle Pl&auml;tze vergeben." .$waitinglistlink. END_DIV;
 				$waitinglistbutton = 1;
@@ -571,10 +589,11 @@ if ($signoff != "" && $err == 0) {
 			print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
 			
 			// #REQ063
-			sendWaitingListMails();
+			// Notfiy the wainting list corresponding to the current csvfile (normally the next sunday or a special fixed day)
+			$timestamp = getDateFromFile($csvfile);
+			sendWaitingListMails($timestamp);
 		
 			// Reset the text fields 
-			// #REQXXX
 			$name = "";
 			$street = "";
 			$city = "";
@@ -588,9 +607,14 @@ if ($signoff != "" && $err == 0) {
 	}
 }
 
+
+
 if ($waitinglist != "" && $err == 0) {
 	// #REQ061
-	$myfile = fopen(waitingListFile(), "a");
+	// Add to the waitinglist corresponding to the current csvfile (normally the next sunday or a special fixed day)
+	$timestamp = getDateFromFile($csvfile);
+	$waitinglistFile = getCSVWaitinglistFile($timestamp);
+	$myfile = fopen($waitinglistFile, "a");
 	fwrite($myfile, $email."\n");
 	fclose($myfile);	
 	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time()))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach (Hinweis: GMX blockiert unsere Mails derzeit leider). Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);

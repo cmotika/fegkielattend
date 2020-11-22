@@ -4,9 +4,6 @@
 	// Default file name
 	$default_csv_file = "./data/defaults.csv";
 
-	// Waiting list file name
-	$waitinglist_csv_file = "./data/waiting.csv";
-	
 	// Default dir for IP logging
 	$ipfolder = "./admin/";
 
@@ -342,6 +339,12 @@ function stringDateFull($timestamp) {
 	return date("d.m.Y", $timestamp);
 }
 
+// Geta simple day with time  (day, month, year and hour, minutes)
+function stringDateTimeSimple($timestamp) {
+	return date("d.m.Y, H:i", $timestamp);
+}
+
+
 // Geta printable day with time  (day, month, year and hour, minutes, seconds)
 function stringDateTime($timestamp) {
 	return date("d.m.Y, H:i:s", $timestamp);
@@ -436,6 +439,80 @@ function currentFile() {
 	return getCSVFile(nextSunday(time()));
 }
 
+// Retrieve the optional configuration file 
+function getCSVConfigFile($timestamp) {
+	return "./data/attend".fileDate($timestamp).".config.csv";
+}
+
+function currentConfigFile() {
+	return getCSVConfigFile(nextSunday(time()));
+}
+
+// Write the special day config file
+// XXX
+function writeConfigFile($dmax, $dday) {
+	$configFile = currentConfigFile();
+
+	$handle = fopen($configFile, "w");
+	fwrite($handle, $dmax."\n");
+	fwrite($handle, $dday."\n");
+	fclose($handle);
+}
+
+// Read the special day config file, if it exists, set dmax and dday accordingly and return true, otherwise return false
+// XXX
+function readConfigFile() {
+	global $dmax;
+	global $dday;
+	$configFile = currentConfigFile();
+	if (file_exists($configFile)) {
+		$handle = fopen($configFile, "r");
+		$line1 = fgets($handle);
+		$line2 = fgets($handle);
+		fclose($handle);
+		// Validity check
+		if (($line1 >= 1) && ($line2 > time()))  {
+			$dmax = $line1;
+			$dday = $line2;
+			return true;
+		}
+	}
+	return false;
+}
+
+
+// Retrieve the optional configuration file 
+function getCSVWaitinglistFile($timestamp) {
+	return "./data/attend".fileDate($timestamp).".waiting.csv";
+}
+
+function currentWaitinglistFile() {
+	return getCSVWaitinglistFile(nextSunday(time()));
+}
+
+
+// Get the maxnum general value from general config, or if special fixed day and special config exists, then this more specific one
+// Also consider the possibly defined deadline here and return maxnum of zero, if the deadline has passed
+function getCurrentMaxNum() {
+	global $maxnum;
+	global $dmax;
+	global $dday;
+	if (fixedDate()) {
+		readConfigFile();
+		if ($dmax >= 1) {
+			// check deadline
+			if ($dday > 0) {
+				if (time() > $dday) {
+					// No seats available after deadline!
+					return 0;
+				}
+			}
+			return $dmax;
+		}
+	}
+	return $maxnum;
+}
+
 
 //---------------------------------------------------------------------------------------
 
@@ -449,7 +526,7 @@ function sendConfirmationMail($receipient, $name, $number) {
 		$header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
-		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recoverXXX
+		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
 		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
 		
 		if ($plural) {
@@ -465,11 +542,6 @@ function sendConfirmationMail($receipient, $name, $number) {
 //                   W A I T I N G L I S T
 //---------------------------------------------------------------------------------------
 
-// Retrieve the current waiting list 
-function waitingListFile() {
-	global $waitinglist_csv_file;
-	return $waitinglist_csv_file;
-}
 
 function sendWaitingListMail($receipient) {
   		$subject = "FeG Kiel - Freie GoDi Plaetze fuer den ".stringDate(nextSunday(time()))."!";
@@ -503,9 +575,11 @@ function sendWaitingListTestMail($receipient) {
 
 // Send a mail to each waiting list member and delete the waitin list file
 // #REQ063
-function sendWaitingListMails() {
-   if (file_exists(waitingListFile())) {
-		$handle = fopen(waitingListFile(), "r");
+function sendWaitingListMails($timestamp) {
+	$waitinglistFile = getCSVWaitinglistFile($timestamp);
+
+   if (file_exists($waitinglistFile)) {
+		$handle = fopen($waitinglistFile, "r");
 		while(!feof($handle) && $found == 0){
 		  $line = fgets($handle);
 		  if (trim($line) != "") {
@@ -679,10 +753,10 @@ function sendDefaultConfirmationEMails($defaults) {
 			$name = $cols[1];
 			$email = $cols[5];
 			
-			print($line."<BR>");
-			print($number."<BR>");
-			print($name."<BR>");
-			print($email."<BR>");
+//			print($line."<BR>");
+//			print($number."<BR>");
+//			print($name."<BR>");
+//			print($email."<BR>");
 			
 			sendConfirmationMail($email, $name, $number);
 		}
@@ -704,9 +778,6 @@ function ensureCurrentFileExists() {
 		}
 		//fwrite($myfile, "\n");
 		fclose($myfile);
-		//Waive current waiting list
-		// #REQ062
-		unlink(waitinglistFile());		
 	}
 }
 
@@ -787,7 +858,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 
 	// Create a backup here	(will be overridden and expires)
 	unlink($file.".BACKUP.csv");
-	copy($file, $file.".BACKUP.csv");
+	//copy($file, $file.".BACKUP.csv"); // no longer needed, system appears to be safe, 22. Nov 2020
 
 	if (file_exists($file)) {
 		$handle = fopen($file, "r");
