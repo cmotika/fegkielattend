@@ -96,7 +96,7 @@ print("Aktuelle Datei (f&uuml;r User): ".currentFile()."<BR>");
     <tr>
       <td><div align="right"></div></td>
       <td>&nbsp;</td>
-      <td><input name="specialdatesubmit" type="submit" id="specialdatesubmit"  value="Liste anlegen" /></td>
+      <td><input name="specialdatesubmit" type="submit" id="specialdatesubmit"  value="Liste anlegen/&auml;ndern" /></td>
     </tr>
   </table>
   <p>&nbsp;</p>
