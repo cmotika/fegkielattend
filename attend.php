@@ -390,7 +390,7 @@ else {
 	// fixed date text
 	$deadline = "";
 	if ($dday > time()) {
-		$deadline = "<b>(bis zum ".stringDateTimeSimple($dday)." Uhr )</b> ";
+		$deadline = "<b>(bis zum ".stringDateTimeSimple($dday)." Uhr)</b> ";
 	}
 	print('Registriere Dich '.$deadline.'mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
 }
