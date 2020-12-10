@@ -81,7 +81,7 @@ print("Aktuelle Datei (f&uuml;r User): ".currentFile()."<BR>");
     <tr>
       <td width="212"><div align="right">Datum des Termins</div></td>
       <td width="17">&nbsp;</td>
-      <td width="171"><input name="d" type="text" id="d" placeholder="24.12.2020" value=""/></td>
+      <td width="171"><input name="d" type="text" id="d" placeholder="25.12.2020" value=""/></td>
     </tr>
     <tr>
       <td width="212"><div align="right">Maximale Personen</div></td>
@@ -92,6 +92,16 @@ print("Aktuelle Datei (f&uuml;r User): ".currentFile()."<BR>");
       <td width="212"><div align="right">Anmeldung bis Datum <br>und Uhrzeit</div></td>
       <td width="17">&nbsp;</td>
       <td width="171"><input name="dday" type="text" id="dday" placeholder="23.12.2020" value=""/> <input name="dtime" type="text" id="dtime" placeholder="23:00" value=""/></td>
+    </tr>
+    <tr>
+      <td width="212"><div align="right">Titel</div></td>
+      <td width="17">&nbsp;</td>
+      <td width="171"><input name="dtitle" type="text" id="dtitle" placeholder="Weihnachts-GODI um 15:30 Uhr" value=""/></td>
+    </tr>
+    <tr>
+      <td width="212"><div align="right">Sichtbares Datum und Uhrzeit (Joker)</div></td>
+      <td width="17">&nbsp;</td>
+      <td width="171"><input name="djoker" type="text" id="djoker" placeholder="24.12.2020 15:30" value=""/></td>
     </tr>
     <tr>
       <td><div align="right"></div></td>

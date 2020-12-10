@@ -52,6 +52,9 @@ $specialdatesubmit = $_POST['specialdatesubmit'];
 $dmax = $_POST['dmax'];
 $dday = $_POST['dday'];
 $dtime = $_POST['dtime'];
+$dtitle = $_POST['dtitle'];
+$djoker = $_POST['djoker']; //joker date to override real date
+
 
 
 
@@ -149,7 +152,7 @@ if ($specialdatesubmit != "") {
 			ensureCurrentFileExists();
 			
 			// Write additional config file
-			writeConfigFile($dmax, $dday);
+			writeConfigFile($dmax, $dday, $dtitle, $djoker);
 			
 			// Display the link.
 		    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den Spezialtermin am<BR>");
@@ -299,6 +302,8 @@ if ($isAdmin && $savefile != "") {
    print("</body>");
    exit;
  }	
+ 
+ readConfigFile();
 ?>
 
 
@@ -356,7 +361,9 @@ if (trim($banner) != "") {
 
 <p>&nbsp;</p>
 <div class="container">
-<h1>Anmeldung f&uuml;r <b><?php print(stringDate(nextSunday(time()))); ?></b> 
+<h1>Anmeldung f&uuml;r <b><?php
+print(stringDate(nextSunday(time(), true))); 
+ ?></b> 
 <?php
 $freeseats = getCurrentMaxNum()-getLines();
 if ($freeseats > 1) {
@@ -378,13 +385,16 @@ else {
 
 
 <?php
+if(trim($dtitle) != "") {
+	print("".$dtitle."<BR><BR>");
+}
 if ($waitinglist != "" || getCurrentMaxNum()-getLines() == 0) {
 	print("<p><b>MOMENTAN NUR WARTELISTE</b> (siehe unten)</p>");
 }
 
 if (!fixedDate()) {
 	// normal sunday text
-	print('Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
+	print('Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time(), false))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
 }
 else {
 	// fixed date text
@@ -392,7 +402,8 @@ else {
 	if ($dday > time()) {
 		$deadline = "<b>(bis zum ".stringDateTimeSimple($dday)." Uhr)</b> ";
 	}
-	print('Registriere Dich '.$deadline.'mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time()))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
+	print('Registriere Dich '.$deadline.'mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time(),true))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
+	
 }
 ?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
@@ -515,7 +526,7 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 	if ($submit != "") { 
 		$num = isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email);
 		if ($num > 0) {
-			$errTextGeneral .= DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time()))." schon unter #".$num." angemeldet!" . END_DIV;
+			$errTextGeneral .= DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time(),true))." schon unter #".$num." angemeldet!" . END_DIV;
 			$err = 1;
 		}
 	}
@@ -585,7 +596,7 @@ if ($signoff != "" && $err == 0) {
 		if ($success) {
 			$oldname = $name;
 			// #REQ057
-		   	sendBackupMail(currentFile(), "ABMELDUNG fuer ".stringDate(nextSunday(time())));
+		   	sendBackupMail(currentFile(), "ABMELDUNG fuer ".stringDate(nextSunday(time(),true)));
 			print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
 			
 			// #REQ063
@@ -617,7 +628,7 @@ if ($waitinglist != "" && $err == 0) {
 	$myfile = fopen($waitinglistFile, "a");
 	fwrite($myfile, $email."\n");
 	fclose($myfile);	
-	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time()))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach (Hinweis: GMX blockiert unsere Mails derzeit leider). Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
+	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time(),true))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach (Hinweis: GMX blockiert unsere Mails derzeit leider). Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
 	
 	//send test mail
 	// #REQ064
@@ -675,7 +686,7 @@ if ($submit != "" && $err == 0) {
 		
 		// Send a backup mail with the just updated file
 		// #REQ030
-    	sendBackupMail(currentFile(), "Neue Anmeldung fuer ".stringDate(nextSunday(time())));
+    	sendBackupMail(currentFile(), "Neue Anmeldung fuer ".stringDate(nextSunday(time(),true)));
  }
  
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed
@@ -683,11 +694,11 @@ if ($submit != "" && $err == 0) {
  if ($regnumber != "") {
  	 $plural = (strpos($regnumber, ",") > -1);
 	 if (!$plural) {
-		 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time()))." angemeldet und zwar unter der Nummer ");
+		 print("<h3>Hallo ".$oldname."! Du bist nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time(),true))." angemeldet und zwar unter der Nummer ");
 		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
 		 print("<b>Bitte bringe die Nummer zum Gottesdienst mit</b>! Wir freuen uns auf Dich!</h3>");
 	 } else {
-		 print("<h3>Hallo ".$oldname."! Ihr seid nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time()))." angemeldet und zwar unter den Nummern ");
+		 print("<h3>Hallo ".$oldname."! Ihr seid nun erfolgreich f&uuml;r den GoDi am ".stringDate(nextSunday(time(),true))." angemeldet und zwar unter den Nummern ");
 		 print("<span class='badge badge-success'>".$regnumber."</span>. ");
 		 print("<b>Bitte bringt die Nummern zum Gottesdienst mit!</b> Wir freuen uns auf Euch!</h3>");
 	 }
@@ -759,7 +770,7 @@ function signoffvisibility() {
 
 <?php 
 if ($waitinglistbutton == 0 && $freeseats > 0) {
-	print ('<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am '.stringDate(nextSunday(time())).'" />');
+	print ('<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am '.stringDate(nextSunday(time(),true)).'" />');
 }
 else {
 	print("<div id='waitinglistsection'></div>");
@@ -790,7 +801,7 @@ function signoffvisible() {
     <tr>
       <td>&nbsp;</td>
       <td><label>
-        <input class="btn btn-primary" type="submit" name="signoff" value="Abmelden vom Gottesdienst am <?php print(stringDate(nextSunday(time()))); ?>" />
+        <input class="btn btn-primary" type="submit" name="signoff" value="Abmelden vom Gottesdienst am <?php print(stringDate(nextSunday(time(),true))); ?>" />
       </label></td>
     </tr>
   </table>

@@ -264,3 +264,7 @@ For a fixed date, allow a separate list only if an according CSV file exists (se
 #REQ076
 Fixed date creation
 If the user is logged in as an administrator and enters a special date for a fixed date, then the program shall create an according CVS file and display the according link to the special fixed date.
+
+#REQ077
+Joker date/time override
+If the user is logged in as an administrator and enters a special joker date/time with a fixed date, then - instead of the fixed date - the joker special date/time is presented to the user but the original fixed date is used of storing the list and accessing the special event site (link URL).

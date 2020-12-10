@@ -328,21 +328,29 @@ function isValidPhoneNumnber($phone) {
 	 }
 	 return 0;
  }
+ 
+// Geta simple day with time  (day, month, year and hour, minutes)
+function stringDateTimeSimple($timestamp) {
+	return date("d.m.Y, H:i", $timestamp);
+}
+
 
 // Get a printable date in short format (only day and month)
 function stringDate($timestamp) {
+	if (isJoker()) {
+		return stringDateTimeSimple($timestamp);
+	}
 	return date("d.m.", $timestamp);
 }
 
 // Get a printable date in long format (day, month, and year)
 function stringDateFull($timestamp) {
+	if (isJoker()) {
+		return stringDateTimeSimple($timestamp);
+	}
 	return date("d.m.Y", $timestamp);
 }
 
-// Geta simple day with time  (day, month, year and hour, minutes)
-function stringDateTimeSimple($timestamp) {
-	return date("d.m.Y, H:i", $timestamp);
-}
 
 
 // Geta printable day with time  (day, month, year and hour, minutes, seconds)
@@ -370,6 +378,24 @@ function fix($text) {
 //  return ($a + $b + $c);
 //}
 
+// #REQ077:
+// Return a joker timestamp according to the optionally defined joker field (iff defined)
+function isJoker() {
+	global $djoker;
+	return (trim($djoker) != "");
+}
+
+function getJokerTimeStamp() {
+	global $djoker;
+	if (isJoker()) {
+		$jokerdate = date_create_from_format('d.m.Y H:i', trim($djoker));
+		$jokertimestamp = $jokerdate->getTimestamp();
+		return $jokertimestamp;
+	}
+	return "";
+}
+
+
 
 // Return the fixed date if it is entered valid, or 0 if no fixed date is given or invalid/
 // It is valid if the user is the admin OR if a corresponding CSV file exists (created by the admin panel, #REQ076)
@@ -379,6 +405,7 @@ function fixedDate() {
 	global $isAdmin;
  	// Special date
 	 if ($specialdate != "" && ($isAdmin || file_exists(getCSVFile($specialdate))) ) {
+	 	//possibly apply joker
 		return $specialdate;
 	 }
 	 return 0;
@@ -405,8 +432,9 @@ function fileDate($timestamp) {
 
 
 // Retrieve the next sunday from a given (current!) timestamp. If the current timestamp is a sunday and we passed the switchtime, then return the next sunday. If the current timestamp is a sunday and we did not passe the switchtime, then return the current sunday.
-// For a fixed date (#REQ075) return the given timestamp
-function nextSunday($timestamp) {
+// For a fixed date (#REQ075) return the given timestamp.
+// #REQ077: If a joker field exists and $allowJokerOverride for visible date parts such as title, text and email, then use this joker date/time definition instead
+function nextSunday($timestamp, $allowJokerOverride) {
     global $switchtime;
 
 	// Normal sunday (*)
@@ -426,6 +454,14 @@ function nextSunday($timestamp) {
 	 if (fixedDate() != 0) {
 	 	$timestamp = fixedDate();
 	 }
+	 // #REQ077
+	 if ($allowJokerOverride) {
+	 	// Do joker override only if there is a joker field defined
+		$jokertimestamp = getJokerTimeStamp();
+		if ($jokertimestamp != "") {
+			$timestamp = $jokertimestamp;
+		}	 	
+	 } 
 
 	 return $timestamp;
 }
@@ -436,7 +472,7 @@ function getCSVFile($timestamp) {
 }
 
 function currentFile() {
-	return getCSVFile(nextSunday(time()));
+	return getCSVFile(nextSunday(time(),false));
 }
 
 // Retrieve the optional configuration file 
@@ -445,35 +481,45 @@ function getCSVConfigFile($timestamp) {
 }
 
 function currentConfigFile() {
-	return getCSVConfigFile(nextSunday(time()));
+	return getCSVConfigFile(nextSunday(time(),false));
 }
 
 // Write the special day config file
 // XXX
-function writeConfigFile($dmax, $dday) {
+function writeConfigFile($dmax, $dday, $dtitle, $djoker) {
 	$configFile = currentConfigFile();
 
 	$handle = fopen($configFile, "w");
 	fwrite($handle, $dmax."\n");
 	fwrite($handle, $dday."\n");
+	fwrite($handle, $dtitle."\n");
+	fwrite($handle, $djoker."\n");
 	fclose($handle);
 }
+
+
 
 // Read the special day config file, if it exists, set dmax and dday accordingly and return true, otherwise return false
 // XXX
 function readConfigFile() {
 	global $dmax;
 	global $dday;
+	global $dtitle;
+	global $djoker;
 	$configFile = currentConfigFile();
 	if (file_exists($configFile)) {
 		$handle = fopen($configFile, "r");
 		$line1 = fgets($handle);
 		$line2 = fgets($handle);
+		$line3 = fgets($handle);
+		$line4 = fgets($handle);
 		fclose($handle);
 		// Validity check
-		if (($line1 >= 1) && ($line2 > time()))  {
+		if (($line1 >= 1) && ($line2 > time() ))  {
 			$dmax = $line1;
 			$dday = $line2;
+			$dtitle = $line3;
+			$djoker = $line4;
 			return true;
 		}
 	}
@@ -487,7 +533,7 @@ function getCSVWaitinglistFile($timestamp) {
 }
 
 function currentWaitinglistFile() {
-	return getCSVWaitinglistFile(nextSunday(time()));
+	return getCSVWaitinglistFile(nextSunday(time(),false));
 }
 
 
@@ -519,7 +565,7 @@ function getCurrentMaxNum() {
 function sendConfirmationMail($receipient, $name, $number) {
  	 	$plural = (strpos($regnumber, ",") > -1);
 
-  		$subject = "FeG Kiel - Anmeldung ".$number." von ".$name." fuer GoDi am ".stringDateFull(nextSunday(time()));
+  		$subject = "FeG Kiel - Anmeldung ".$number." von ".$name." fuer GoDi am ".stringDateFull(nextSunday(time(),true));
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
@@ -527,10 +573,10 @@ function sendConfirmationMail($receipient, $name, $number) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
+		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time(),true))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite http://reg.feg-kiel.de tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
 		
 		if ($plural) {
-		$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time()))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite http://reg.feg-kiel.de geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";		
+		$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time(),true))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20).\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite http://reg.feg-kiel.de geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";		
 		}
 		
 		
@@ -544,7 +590,7 @@ function sendConfirmationMail($receipient, $name, $number) {
 
 
 function sendWaitingListMail($receipient) {
-  		$subject = "FeG Kiel - Freie GoDi Plaetze fuer den ".stringDate(nextSunday(time()))."!";
+  		$subject = "FeG Kiel - Freie GoDi Plaetze fuer den ".stringDate(nextSunday(time(),true))."!";
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
@@ -558,7 +604,7 @@ function sendWaitingListMail($receipient) {
 }
 
 function sendWaitingListTestMail($receipient) {
-  		$subject = "FeG Kiel - Warteliste fuer den ".stringDate(nextSunday(time()))."!";
+  		$subject = "FeG Kiel - Warteliste fuer den ".stringDate(nextSunday(time(),true))."!";
 		// header
 		$header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
@@ -566,7 +612,7 @@ function sendWaitingListTestMail($receipient) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "Diese Mail bestaetigt nur, dass Du fuer die Warteliste fuer den ".stringDate(nextSunday(time()))." eingetragen bist.\n\nSobald es (wieder) freie Plaetze geben sollte, wirst Du per E-Mail benachrichtigt. Du musst Dich dann aber noch fuer den Gottesdienst anmelden! \n\nSollte es keine freien Plaetze geben, hoffen wir, dass wir mit Dir ueber  http://youtube.feg-kiel.de zusammen online Gottesdienst feiern koennen und dass Du bald an einem der naechsten Sonntage wieder live vor Ort bist!";		
+		$nmessage = "Diese Mail bestaetigt nur, dass Du fuer die Warteliste fuer den ".stringDate(nextSunday(time(),true))." eingetragen bist.\n\nSobald es (wieder) freie Plaetze geben sollte, wirst Du per E-Mail benachrichtigt. Du musst Dich dann aber noch fuer den Gottesdienst anmelden! \n\nSollte es keine freien Plaetze geben, hoffen wir, dass wir mit Dir ueber  http://youtube.feg-kiel.de zusammen online Gottesdienst feiern koennen und dass Du bald an einem der naechsten Sonntage wieder live vor Ort bist!";		
     	$retval = mail($receipient, $subject, $nmessage, $header );		
 		return $retval;
 }
@@ -785,7 +831,8 @@ function ensureCurrentFileExists() {
 function sendTestMail($email) {
   		$subject = "FeG Anmeldeseite Testmail";
 		// header
-		$header = "From: FeG Anmeldung <feg@delphino.net>\r\n";
+		$header = "From: FeG Anmeldung <noreply@feg-kiel.de>\r\n";
+//		$header = "From: FeG Anmeldung <feg@delphino.net>\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
 		$header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
