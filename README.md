@@ -22,7 +22,9 @@ Die Anmeldelisten werden nach 5 Wochen automatisch gelöscht. Damit ist sicherges
 
 Die Sourcen sind für die FeG Kiel ausgelegt. Sie können mit wenig Aufwand für andere Gemeinden angepaßt werden:
 * attend.php: Hier müssen die meisten Anpassungen für die Benutzer-Ansicht der Webseite gemacht werden
-* attend-functions.php: Hier müssen vor allem Anpassungen bzgl. der E-Mails gemacht werden (Text und E-Mail-Absender!)
+* attend-functions.php: 
+** Hier müssen vor allem Anpassungen bzgl. der E-Mails gemacht werden (Text und E-Mail-Absender!)
+** Die meisten Änderungen können am Anfang der Datei gemacht werden: Hier können ein Youtube-Link, ein Corona-Bestimmungen-Info-Link und die E-Mail-Absender-Adressen eingestellt werden.
 * attend-cfg.php: 
 ** Hier muß die Basis-URL der Gemeindewebseite angepaßt werden. 
 ** Als Initialpasswort ist hier "admin" einzutragen und dann zu ändern
@@ -47,7 +49,7 @@ Für die meisten Requirements existieren auch End-to-End-Tests: https://github.co
 ** GMX und Web.de erfordern einen gültigen SPF-Eintrag und nehmen den Spamschutz hier sehr genau!
 ** SPF-Eintrag prüfen, z.B. mit https://www.spf-record.de/spf-lookup
 ** PHP.ini Einstellung zu E-Mails prüfen, https://www.google.com/search?q=php.ini+email+configuration
-** Sind in der attend-functions.php die Absender-Header der E-Mail-Funktionen korrekt? Einträge der folgenden Art müssen angepaßt werden: $header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n"; 
+** Sind in der attend-functions.php die Absender-Header (mail_from_header, ganz oben) der E-Mail-Funktionen korrekt? Einträge der folgenden Art müssen angepaßt werden: $header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n"; 
 
 * Keine Backup-Mails: 
 ** attend-cfg.php-Eintragung "mail_to" muß angepaßt werden. Evtl. kommen auch die Backupmails nicht an, weil der SPF-Eintrag falsch ist (s.o.).

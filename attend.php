@@ -155,7 +155,7 @@ if ($specialdatesubmit != "") {
 			writeConfigFile($dmax, $dday, $dtitle, $djoker);
 			
 			// Display the link.
-		    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den Spezialtermin am<BR>");
+		    print("<center>".$mail_from_title."<BR>Anmeldeliste f&uuml;r den Spezialtermin am<BR>");
 		    print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
 		    print("<br><br>Nutze den folgenden Link f&uuml;r diesen Termin:<br><br>");
 
@@ -209,7 +209,7 @@ if ($isAdmin && $savefile != "") {
  // If print mode: Print the requested csv file. Do this only for admins.
  // #REQ007
  if ($isAdmin && $print != "") {
-   print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
+   print("<center>".$mail_from_title."<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
    print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
    print(getLinesFile($csvfile)." Personen angemeldet.<BR>Stand vom ".stringDateTime(time()).".");
    print("<br><br>");
@@ -242,7 +242,7 @@ if ($isAdmin && $savefile != "") {
  // #REQ066
  if ($isAdmin && $mobile != "") {
 	$mobilePW = createMobilePassword($csvfile);
-    print("<center>FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
+    print("<center>".$mail_from_title."<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
     print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
     print(getLinesFile($csvfile)." Personen angemeldet.<BR>");
     print("<br><br>");
@@ -279,7 +279,7 @@ if ($isAdmin && $savefile != "") {
 	print('<meta name="viewport" content="width=600">');
 	print('</head>');
 	print('<body>');
-   print("<div class=\"text-center\">FeG Kiel<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
+   print("<div class=\"text-center\">".$mail_from_title."<BR>Anmeldeliste f&uuml;r den GoDi am<BR>");
    print("<font size=7>".stringDateFull(getDateFromFile($mobileFile))."</font><br>");
    print(getLinesFile($mobileFile)." Personen angemeldet.<BR>");
    print(getAttendeesFile($mobileFile)." Personen erschienen.<BR>Stand vom ".stringDateTime(time()).".");
@@ -406,7 +406,7 @@ else {
 	
 }
 ?>
-Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="http://youtube.feg-kiel.de">youtube.feg-kiel.de</a>.</p>
+Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="<?php print($coronalink);?>" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="<?php print($youtube_link);?>"><?php print($youtube_link);?></a>.</p>
 <p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung f&uuml;r vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
 
 <?php  
@@ -628,7 +628,7 @@ if ($waitinglist != "" && $err == 0) {
 	$myfile = fopen($waitinglistFile, "a");
 	fwrite($myfile, $email."\n");
 	fclose($myfile);	
-	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time(),true))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>noreply@feg-kiel.de</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach (Hinweis: GMX blockiert unsere Mails derzeit leider). Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
+	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time(),true))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>".$mail_from_name."</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach. Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
 	
 	//send test mail
 	// #REQ064
