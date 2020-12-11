@@ -23,13 +23,13 @@ Die Anmeldelisten werden nach 5 Wochen automatisch gelÃ¶scht. Damit ist sicherge
 Die Sourcen sind für die FeG Kiel ausgelegt. Sie können mit wenig Aufwand für andere Gemeinden angepaßt werden:
 * attend.php: Hier müssen die meisten Anpassungen für die Benutzer-Ansicht der Webseite gemacht werden
 * attend-functions.php: 
-** Hier müssen vor allem Anpassungen bzgl. der E-Mails gemacht werden (Text und E-Mail-Absender!)
-** Die meisten Änderungen können am Anfang der Datei gemacht werden: Hier können ein Youtube-Link, ein Corona-Bestimmungen-Info-Link und die E-Mail-Absender-Adressen eingestellt werden.
+  * Hier müssen vor allem Anpassungen bzgl. der E-Mails gemacht werden (Text und E-Mail-Absender!)
+  * Die meisten Änderungen können am Anfang der Datei gemacht werden: Hier können ein Youtube-Link, ein Corona-Bestimmungen-Info-Link und die E-Mail-Absender-Adressen eingestellt werden.
 * attend-cfg.php: 
-** Hier muÃŸ die Basis-URL der Gemeindewebseite angepaÃŸt werden. 
-** Als Initialpasswort ist hier "admin" einzutragen und dann zu Ã¤ndern
-** Ein Backup-E-Mail-Konto sollte unter mail_to hinterlegt werden. Hier werden zu Backup-Zwecken alle Ã„nderungen der Anwesenheitsliste geschickt. Aus DatenschutzgrÃ¼nden sollten die E-Mails nach einer gewissen Zeit mit einer Regel automatisch gelÃ¶scht werden (idR 4 Wochen). Es empfiehlt sich, ein eigenes E-Mail-Konto fÃ¼r die Backup-Emails anzulegen, z.B. kostenlos bei www.mail.de.
-** Test_enabled sollte fÃ¼r den Produktionsmodus deaktiviert sein. Im Testmodus wird das Captcha deaktiviert, so daÃŸ automatische End-to-End-Tests mÃ¶glich sind.
+  * Hier muÃŸ die Basis-URL der Gemeindewebseite angepaÃŸt werden. 
+  * Als Initialpasswort ist hier "admin" einzutragen und dann zu Ã¤ndern
+  * Ein Backup-E-Mail-Konto sollte unter mail_to hinterlegt werden. Hier werden zu Backup-Zwecken alle Ã„nderungen der Anwesenheitsliste geschickt. Aus DatenschutzgrÃ¼nden sollten die E-Mails nach einer gewissen Zeit mit einer Regel automatisch gelÃ¶scht werden (idR 4 Wochen). Es empfiehlt sich, ein eigenes E-Mail-Konto fÃ¼r die Backup-Emails anzulegen, z.B. kostenlos bei www.mail.de.
+  * Test_enabled sollte fÃ¼r den Produktionsmodus deaktiviert sein. Im Testmodus wird das Captcha deaktiviert, so daÃŸ automatische End-to-End-Tests mÃ¶glich sind.
 
 ## Deployment
 
@@ -46,11 +46,11 @@ FÃ¼r die meisten Requirements existieren auch End-to-End-Tests: https://github.c
 ## FAQs
 
 * E-Mails kommen nicht an:
-** GMX und Web.de erfordern einen gültigen SPF-Eintrag und nehmen den Spamschutz hier sehr genau!
-** SPF-Eintrag prüfen, z.B. mit https://www.spf-record.de/spf-lookup
-** PHP.ini Einstellung zu E-Mails prüfen, https://www.google.com/search?q=php.ini+email+configuration
-** Sind in der attend-functions.php die Absender-Header (mail_from_header, ganz oben) der E-Mail-Funktionen korrekt? Einträge der folgenden Art müssen angepaßt werden: $header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n"; 
+  * GMX und Web.de erfordern einen gültigen SPF-Eintrag und nehmen den Spamschutz hier sehr genau!
+  * SPF-Eintrag prüfen, z.B. mit https://www.spf-record.de/spf-lookup
+  * PHP.ini Einstellung zu E-Mails prüfen, https://www.google.com/search?q=php.ini+email+configuration
+  * Sind in der attend-functions.php die Absender-Header (mail_from_header, ganz oben) der E-Mail-Funktionen korrekt? Einträge der folgenden Art müssen angepaßt werden: $header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n"; 
 
 
 * Keine Backup-Mails: 
-** attend-cfg.php-Eintragung "mail_to" muÃŸ angepaÃŸt werden. Evtl. kommen auch die Backupmails nicht an, weil der SPF-Eintrag falsch ist (s.o.).
+  * attend-cfg.php-Eintragung "mail_to" muÃŸ angepaÃŸt werden. Evtl. kommen auch die Backupmails nicht an, weil der SPF-Eintrag falsch ist (s.o.).
