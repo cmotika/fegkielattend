@@ -31,7 +31,7 @@ Die Sourcen sind für die FeG Kiel ausgelegt. Sie können mit wenig Aufwand für an
   * Ein Backup-E-Mail-Konto sollte unter mail_to hinterlegt werden. Hier werden zu Backup-Zwecken alle Änderungen der Anwesenheitsliste geschickt. Aus Datenschutzgründen sollten die E-Mails nach einer gewissen Zeit mit einer Regel automatisch gelöscht werden (idR 4 Wochen). Es empfiehlt sich, ein eigenes E-Mail-Konto für die Backup-Emails anzulegen, z.B. kostenlos bei www.mail.de.
   * Test_enabled sollte für den Produktionsmodus deaktiviert sein. Im Testmodus wird das Captcha deaktiviert, so daß automatische End-to-End-Tests möglich sind.
 
-# Deployment
+## Deployment
 
 Eine Anleitung zum Deployment der Webseite findet sich hier: https://github.com/cmotika/fegkielattend/blob/master/deploy.txt
 
