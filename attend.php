@@ -63,7 +63,7 @@ $djoker = $_POST['djoker']; //joker date to override real date
  // Load configuration
  // #REQ015
  require("attend.cfg.php");
- 
+
  // Delete all old mobile passwords
 // #REQ065
 $mobileFileCleanedUp = cleanupMobilePassword();
@@ -83,19 +83,19 @@ if ($mobileFileCleanedUp != "") {
 	$mobileCode = $pw; // save this for FORM POST
  	$pw = ""; // clear pw so that we do not run into locking us up ... it has not been the admin mode
  }
- 
+
  // Test if we are the admin, i.e., if the entered password corresponds to the admin pw
- // #REQ001 
+ // #REQ001
  // #REQ002
  $isAdmin = (md5($pw) == $adminpw) || ($pw == $adminpw && $adminpw == "admin");
- 
+
  $testmode = false;
  // Notify viewer about test mode
  if ($test == $test_secret && $test_enabled == 1) {
  		$testmode = true;
  }
 
- 
+
  $ip = $_SERVER['REMOTE_ADDR'];
  if ($pw == "" || $isAdmin) {
 	 // Cleanup old trials after one hour
@@ -122,12 +122,12 @@ if ($mobileFileCleanedUp != "") {
 	 // #REQ006
 	resetWrongLogins($ip);
  }
- if (!$isAdmin) {	
+ if (!$isAdmin) {
  	$pw = "";
  }
- 
- 
- 
+
+
+
 // #REQ076
 // Create special date if valid input
 if ($specialdatesubmit != "") {
@@ -147,13 +147,13 @@ if ($specialdatesubmit != "") {
 //		if ($specialdate > time()) {
 			// Only if it is in the future, create the CSV file:
 			// As current file is referred to as the $specialdate ("d"-parameter) if (a) the file already exists or (b) the user is the admin
-			// here the user is the admin (b) and the file will be created. 
-			// After that, the succeding link is usable by non-administrators. 
+			// here the user is the admin (b) and the file will be created.
+			// After that, the succeding link is usable by non-administrators.
 			ensureCurrentFileExists();
-			
+
 			// Write additional config file
 			writeConfigFile($dmax, $dday, $dtitle, $djoker);
-			
+
 			// Display the link.
 		    print("<center>".$mail_from_title."<BR>Anmeldeliste f&uuml;r den Spezialtermin am<BR>");
 		    print("<font size=7>".stringDateFull(getDateFromFile($csvfile))."</font><br>");
@@ -164,13 +164,13 @@ if ($specialdatesubmit != "") {
 			exit;
 		}
 }
- 
- 
+
+
  // If no csv file is selected, open the current file/sunday as the default
 if ($csvfile == "") {
 	$csvfile = currentFile();
 }
- 
+
 if ($isAdmin && $savefile != "") {
 	// On save: Replace the content of the csv file with the content of the textfield
 	$freebefore = getCurrentMaxNum()-getLines();
@@ -205,7 +205,7 @@ if ($isAdmin && $savefile != "") {
     print(file_get_contents($csvfile));
     exit;
  }
- 
+
  // If print mode: Print the requested csv file. Do this only for admins.
  // #REQ007
  if ($isAdmin && $print != "") {
@@ -232,7 +232,7 @@ if ($isAdmin && $savefile != "") {
      	print("<script>window.print()</script>");
    }
    exit;
- }	
+ }
 ?>
 
 
@@ -256,7 +256,7 @@ if ($isAdmin && $savefile != "") {
 // #REQ071
  if ($isMobilePrint && $mobiletext != "") {
  	// save changed
-	//setValue($file, $number, $col, $val) 
+	//setValue($file, $number, $col, $val)
 	setValue($mobileFile, $mobileval, $mobilecmd, $mobiletext);
  }
 
@@ -284,7 +284,7 @@ if ($isAdmin && $savefile != "") {
    print(getLinesFile($mobileFile)." Personen angemeldet.<BR>");
    print(getAttendeesFile($mobileFile)." Personen erschienen.<BR>Stand vom ".stringDateTime(time()).".");
 
-   
+
    print("<br><br></div>");
    printTableHeaderMobile();
    if (file_exists($mobileFile)) {
@@ -301,8 +301,8 @@ if ($isAdmin && $savefile != "") {
    printTableFooterMobile($mobileval); // $mobileval is the num element to scroll to
    print("</body>");
    exit;
- }	
- 
+ }
+
  readConfigFile();
 ?>
 
@@ -327,19 +327,19 @@ if ($isAdmin && $savefile != "") {
      color: white;
     }
 
-    @-moz-keyframes blinker {  
+    @-moz-keyframes blinker {
      40% { opacity: 1.0; }
      50% { opacity: 0.0; }
      100% { opacity: 1.0; }
      }
 
-    @-webkit-keyframes blinker {  
+    @-webkit-keyframes blinker {
      40% { opacity: 1.0; }
      50% { opacity: 0.0; }
      100% { opacity: 1.0; }
      }
 
-    @keyframes blinker {  
+    @keyframes blinker {
      40% { opacity: 1.0; }
      50% { opacity: 0.0; }
      100% { opacity: 1.0; }
@@ -362,8 +362,8 @@ if (trim($banner) != "") {
 <p>&nbsp;</p>
 <div class="container">
 <h1>Anmeldung f&uuml;r <b><?php
-print(stringDate(nextSunday(time(), true))); 
- ?></b> 
+print(stringDate(nextSunday(time(), true)));
+ ?></b>
 <?php
 $freeseats = getCurrentMaxNum()-getLines();
 if ($freeseats > 1) {
@@ -403,13 +403,16 @@ else {
 		$deadline = "<b>(bis zum ".stringDateTimeSimple($dday)." Uhr)</b> ";
 	}
 	print('Registriere Dich '.$deadline.'mit dem untenstehenden Formular, wenn Du am <b>'.(stringDate(nextSunday(time(),true))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
-	
+
 }
 ?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="<?php print($coronalink);?>" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="<?php print($youtube_link);?>"><?php print($youtube_link);?></a>.</p>
-<p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung f&uuml;r vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden können. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
+<?php // Aussen-GODI schlechtwetterabsgae disclaimer ?>
+<p><font color=#FF0000>ACHTUNG : Sollte sich die Wetterlage verschlechtern, behalten wir uns vor, den OpenAir-Gottesdienst abzusagen! Das erf&auml;hrst Du jeweils bis sp&auml;testens um 12:00 Uhr am Samstag auf unserer Homepage. Falls wir den OpenAir-Gottesdienst absagen m&uuml;ssen, brauchst Du NICHT zur Gemeinde zu kommen, da wir dann nur einen Livestream-Gottesdienst feiern.</font></p>
 
-<?php  
+<p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung f&uuml;r vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden k&iuml;nnen. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
+
+<?php
 
 if ($waitinglist != "" || getCurrentMaxNum()-getLines() == 0) {
 	print("<p><b>MOMENTAN NUR WARTELISTE</b></p><p>Momentan sind keine oder nicht ausreichend Sitzpl&auml;tze vor Ort verf&uuml;gbar. Du kannst Dich deshalb momentan nur mit Deiner E-Mail-Adresse auf die Warteliste eintragen. Falls sich jemand wieder vom Live-GoDi abmeldet, wirst Du per E-Mail informiert und kannst Dich dann hier ggf. noch anmelden. <BR><i>Achtung: Ein Platz auf der Warteliste reicht <u>nicht</u> aus, um vor Ort zum GoDi zu kommen!</i></p>");
@@ -437,7 +440,7 @@ foreach (glob("./captcha/*.txt") as $file) {
 
 
 // Delete all CSV files that are older than 5 weeks (5 weeks * 7 days * 24 hours * 60 minutes * 60 seconds
-// #REQ010 
+// #REQ010
 // #REQ062 (include old waiing lists)
 $olderthanxxxweeks = 60*60*24*7*5;
 foreach (glob("./data/*.csv") as $file) {
@@ -463,11 +466,11 @@ foreach (glob("./data/*.csv") as $file) {
 // #REQ011
 ensureCurrentFileExists();
 
-// Captcha verification of last captcha 
+// Captcha verification of last captcha
 // #REQ012
 $codecorrect = verifyCode($code, $verify);
 $oldcode = $code;
- 
+
 // On every loading of the page, create a new captcha and save it in apropriate directory
 // #REQ013
 $z1 = rand(1, 300);
@@ -521,9 +524,9 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
     $email = fix($email);
 	// Display any errors in red to the user, so he or she can correct it
     $err = 0;
-	
+
 	// #REQ017
-	if ($submit != "") { 
+	if ($submit != "") {
 		$num = isAlreadyRegistered(currentFile(), $name, $street, $city, $phone, $email);
 		if ($num > 0) {
 			$errTextGeneral .= DIV_ALERT_DANGER . "Du bist f&uuml;r den ".stringDateFull(nextSunday(time(),true))." schon unter #".$num." angemeldet!" . END_DIV;
@@ -574,7 +577,7 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 				$errTextGeneral .= DIV_ALERT_DANGER . "Es sind leider nicht gen&uuml;gend freie Pl&auml;tze vorhanden." .$waitinglistlink. END_DIV;
 				$waitinglistbutton = 1;
 			}
-			// #REQ053 
+			// #REQ053
 			$err = 1;
 		}
 	}
@@ -598,13 +601,13 @@ if ($signoff != "" && $err == 0) {
 			// #REQ057
 		   	sendBackupMail(currentFile(), "ABMELDUNG fuer ".stringDate(nextSunday(time(),true)));
 			print(DIV_ALERT_SUCCESS . $oldname." erfolgreich abgemeldet." . END_DIV);
-			
+
 			// #REQ063
 			// Notfiy the wainting list corresponding to the current csvfile (normally the next sunday or a special fixed day)
 			$timestamp = getDateFromFile($csvfile);
 			sendWaitingListMails($timestamp);
-		
-			// Reset the text fields 
+
+			// Reset the text fields
 			$name = "";
 			$street = "";
 			$city = "";
@@ -627,18 +630,18 @@ if ($waitinglist != "" && $err == 0) {
 	$waitinglistFile = getCSVWaitinglistFile($timestamp);
 	$myfile = fopen($waitinglistFile, "a");
 	fwrite($myfile, $email."\n");
-	fclose($myfile);	
+	fclose($myfile);
 	print(DIV_ALERT_SUCCESS . "'".$email."' erfolgreich auf der Warteliste f&uuml;r den ".stringDate(nextSunday(time(),true))." eingetragen!<br><br>Eine Testmail wurde an die Adresse geschickt. Bitte sorge daf&uuml;r, da&szlig; <i>".$mail_from_name."</i> in Deiner Whitelist ist oder schaue in Deinem Spam-Ordner nach. Falls diese Testmail nicht ankam, wird auch eine evtl. Benachrichtigung nicht ankommen." . END_DIV);
-	
+
 	//send test mail
 	// #REQ064
 	sendWaitingListTestMail($email);
-	
+
 	// delete current captcha, prevent re-submission if "reload"/F5
 	// #REQ025
 	unlink("./captcha/".$oldcode.".txt");
-			
-	// Reset the text fields 
+
+	// Reset the text fields
 	$name = "";
 	$street = "";
 	$city = "";
@@ -663,7 +666,7 @@ if ($submit != "" && $err == 0) {
 		foreach ($names as $name) {
 			if (strlen($regnumber) > 0) {
 		 		$regnumber .= ", ";
-			} 
+			}
 			$curregnumber = ($curregnumber + 1);
 			// #REQ027
 			$regnumber .= "#".$curregnumber;
@@ -671,11 +674,11 @@ if ($submit != "" && $err == 0) {
 			fwrite($myfile, $curregnumber.";".$name."; ".$street."; ".$city."; ".$phone."; ".$email."\n");
 			fclose($myfile);
 		}
-		
+
 		// send anmelde info
  		sendConfirmationMail($email, $oldname, $regnumber);
-		
-		// Reset the text fields 
+
+		// Reset the text fields
 		// #REQ028
 		// #REQ031
 		$name = "";
@@ -683,12 +686,12 @@ if ($submit != "" && $err == 0) {
 		$city = "";
 		$phone = "";
 		$email = "";
-		
+
 		// Send a backup mail with the just updated file
 		// #REQ030
     	sendBackupMail(currentFile(), "Neue Anmeldung fuer ".stringDate(nextSunday(time(),true)));
  }
- 
+
  // On successfull registration, print the name (backup is in oldname) and the current new registration number under which he or she is listed
  // #REQ027
  if ($regnumber != "") {
@@ -703,8 +706,8 @@ if ($submit != "" && $err == 0) {
 		 print("<b>Bitte bringt die Nummern zum Gottesdienst mit!</b> Wir freuen uns auf Euch!</h3>");
 	 }
  }
- 
-  
+
+
 // The following are the raw input fields and the administration pan or password entry (if not logged in as admin)
 // #REQ031
 // Old entries are printed if not cleared
@@ -746,29 +749,29 @@ if ($submit != "" && $err == 0) {
 if($testmode) {
 	print('<input name="test" type="hidden" id="code" value="'.$test.'"/>');
 }
-?>	
-	
+?>
+
 	<input class="form-control" name="verify" type="text" autocomplete="off" id="verify"  placeholder="Hier Ergebnis der Rechenaufgabe eintragen"/>
 </div>
 
 <script>
 function waitinglistvisibility() {
- document.getElementById("secname").style.display="none"; 
- document.getElementById("secstreet").style.display="none"; 
- document.getElementById("seccity").style.display="none"; 
- document.getElementById("secphone").style.display="none"; 
+ document.getElementById("secname").style.display="none";
+ document.getElementById("secstreet").style.display="none";
+ document.getElementById("seccity").style.display="none";
+ document.getElementById("secphone").style.display="none";
 }
 
 function signoffvisibility() {
- document.getElementById("secname").style.display="inline"; 
- document.getElementById("secstreet").style.display="inline"; 
- document.getElementById("seccity").style.display="inline"; 
- document.getElementById("secphone").style.display="inline"; 
+ document.getElementById("secname").style.display="inline";
+ document.getElementById("secstreet").style.display="inline";
+ document.getElementById("seccity").style.display="inline";
+ document.getElementById("secphone").style.display="inline";
 }
 </script>
 
 
-<?php 
+<?php
 if ($waitinglistbutton == 0 && $freeseats > 0) {
 	print ('<input class="btn btn-primary" type="submit" name="submit" value="Anmelden zum Gottesdienst am '.stringDate(nextSunday(time(),true)).'" />');
 }
@@ -782,9 +785,9 @@ else {
 
 <script>
 function signoffvisible() {
-	var y = document.getElementById("signoffdiv"); 
+	var y = document.getElementById("signoffdiv");
 	y.style.display="inline";
-	
+
 	signoffvisibility();
 }
 </script>
@@ -811,14 +814,14 @@ function signoffvisible() {
 
 <script>
 function adminvisible() {
-	var y = document.getElementById("admin"); 
+	var y = document.getElementById("admin");
 	y.style.display="inline";
 }
 </script>
 <a class="btn btn-outline-secondary mt-5" href='javascript:adminvisible();'>Admin</a>
 <div id="admin">
-<?php 
-	if (!$isAdmin) { 
+<?php
+	if (!$isAdmin) {
 		// #REQ055
 		if ($wrongadminpassword) {
 			print("<BR>not implemented<BR>");
@@ -832,11 +835,11 @@ function adminvisible() {
 		require("attend-admin.php");
 	}
 ?>
-	
+
 </div>
 
 <p>
-  <?php 
+  <?php
   // #REQ034
   if (!$isAdmin) { print("<script>var x = document.getElementById(\"admin\");x.style.display = \"none\";</script>"); } ?>
 </p>

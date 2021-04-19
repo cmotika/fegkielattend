@@ -16,20 +16,20 @@
 
 	// Default dir for mobile passwords
 	$mobilefolder = "./mobile/";
-	
+
 	// Default time out for mobile passwords in minutes, typically 3*60 (3h)
 	$mobiletimeout = 3*60;
-	
+
 	// Each sunday at 13:00, send backup email
 	// #REQ072
 	$mobilebackuptimesunday = 13;
-	
+
 	// Lock out IP conditiob
 	$lockip_number_of_wrong_password_trials = 10;
 
 	// Call site with test_secret to deactivate captcha
     $test_secret = "97y2o3lrnewdsa0AS8UAPOIHKNF3R9PHAOSD@!$$";
-                 	
+
 	// Disable this for production use
 	$test_enabled = false;
 
@@ -71,29 +71,29 @@ global $mobileCode;
 global $mobilehide;
 
 // #REQ073
-$button =  "<button name=\"btnmobilehide\" class=\"btn btn-primary\" type=\"button\" onclick=\"submit()\"  >Anwesende ausblenden</button>"; 
-$button .= '<input name="mobilehide" type="hidden" id="mobilehide" value="1"/>';  
+$button =  "<button name=\"btnmobilehide\" class=\"btn btn-primary\" type=\"button\" onclick=\"submit()\"  >Anwesende ausblenden</button>";
+$button .= '<input name="mobilehide" type="hidden" id="mobilehide" value="1"/>';
 if ($mobilehide == 1) {
-	$button =  "<button name=\"btnmobilehide\" class=\"btn btn-primary\" type=\"button\" onclick=\"submit()\"  >Alle einblenden</button>"; 
-	$button .= '<input name="mobilehide" type="hidden" id="mobilehide" value="0"/>';  
+	$button =  "<button name=\"btnmobilehide\" class=\"btn btn-primary\" type=\"button\" onclick=\"submit()\"  >Alle einblenden</button>";
+	$button .= '<input name="mobilehide" type="hidden" id="mobilehide" value="0"/>';
 }
 
 
 print('
   <script>
-  
+
   function edit(val) {
-  	 document.getElementById("edit"+val).style.display="inline"; 
-  	 document.getElementById("view"+val).style.display="none"; 
+  	 document.getElementById("edit"+val).style.display="inline";
+  	 document.getElementById("view"+val).style.display="none";
   }
 
   function view(val, defaultval) {
-  	 document.getElementById("edit"+val).style.display="none"; 
-  	 document.getElementById("view"+val).style.display="inline"; 
+  	 document.getElementById("edit"+val).style.display="none";
+  	 document.getElementById("view"+val).style.display="inline";
 
   	 document.getElementById("mobiletext"+val).value = defaultval;
   }
-  
+
   </script>
 
 
@@ -131,9 +131,9 @@ global $mobilehide;
 		$returnvalue .= '<input name="pw" type="hidden" id="pw"" value="'.$mobileCode.'"/>';
 		$returnvalue .= '<input name="mobileval" type="hidden" id="mobileval" value="'.$num.'"/>';
 		$returnvalue .= '<input name="mobilehide" type="hidden" id="mobilehide" value="'.$mobilehide.'"/>';
-		$returnvalue .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="'.$col.'"/>'; 
+		$returnvalue .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="'.$col.'"/>';
 		$returnvalue .= '<input name="mobiletext" type="text" id="mobiletext'.$num.'-'.$col.'" value="'.$value.'"/>';
-		$returnvalue .= '<div class="btn-group"><button class="btn btn-primary" type="button" name="mobileedit'.$num.'-'.$col.'" onclick="submit()" value="" />Speichern</button>'; 
+		$returnvalue .= '<div class="btn-group"><button class="btn btn-primary" type="button" name="mobileedit'.$num.'-'.$col.'" onclick="submit()" value="" />Speichern</button>';
 		$returnvalue .= '<button class="btn btn-warning" type="button" onclick="view(\''.$num.'-'.$col.'\', \''.$value.'\')" />Abbrechen</button></div>';
 		$returnvalue .= '</form></div>';
 		$returnvalue .= '<script>';
@@ -149,13 +149,13 @@ global $mobilehide;
 // #REQ069
 $nametr =  "<button name=\"btnred".$num."\" class=\"btn btn-danger\" type=\"button\" onclick=\"submit()\"  >".$name."</button>"; // red button if not present
 $nametr .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="1"/>';   // action: attend, make green
-$nametr .= '<input name="mobileattend" type="hidden" id="mobileattend" value="1"/>';   
+$nametr .= '<input name="mobileattend" type="hidden" id="mobileattend" value="1"/>';
 $nametr .= '<input name="mobilehide" type="hidden" id="mobilehide" value="'.$mobilehide.'"/>';
 if ($attended == 1) {
 	// #REQ070
 	$nametr =  "<button name=\"btngreen".$num."\" class=\"btn btn-success\" type=\"button\" onclick=\"submit()\"  >".$name."</button>"; // green button if preset
 	$nametr .= '<input name="mobilecmd" type="hidden" id="mobilecmd" value="0"/>';   // action:  notattend, make red
-	$nametr .= '<input name="mobileattend" type="hidden" id="mobileattend" value="1"/>';   
+	$nametr .= '<input name="mobileattend" type="hidden" id="mobileattend" value="1"/>';
 	$nametr .= '<input name="mobilehide" type="hidden" id="mobilehide" value="'.$mobilehide.'"/>';
 }
 
@@ -205,25 +205,25 @@ function isValidName($name) {
 	// #REQ47
 	if (strpos($name, "+") > -1) {
 		return 0;
-	}	
+	}
 	// #REQ48
 	if (strpos(strtoupper($name), " UND ") > -1) {
 		return 0;
-	}	
+	}
 	// #REQ035
-	if (strlen($name) < 5) {	
+	if (strlen($name) < 5) {
 		return 0;
 	}
 	$names = explode(",", $name);
 	foreach ($names as $name) {
 		$name =	trim($name);
  		// #REQ036
-		if (strlen($name) < 5) {	
+		if (strlen($name) < 5) {
 			return 0;
 		}
 		if (strpos($name, " ") <= 0) {
 			return 0;
-		}		
+		}
 	}
 	return 1;
 }
@@ -233,16 +233,16 @@ function isValidName($name) {
 function isValidStreet($value) {
 	$value = trim($value);
 	// #REQ019
-	if (strlen($value) < 5) {	
+	if (strlen($value) < 5) {
 		return 0;
 	}
 	// At least two parts, #REQ050
 	if (strpos($value, " ") <= 0) {
 		return 0;
-	}		
+	}
 	$parts = explode(" ", $value);
 	$foundnumber = 0;
-	
+
 	for ($c = 0; $c < count($parts); $c++)  {
 		$number = preg_replace("/[^0-9]/", '', $parts[$c]);
 		if (strlen($number) > 0) {
@@ -262,13 +262,13 @@ function isValidStreet($value) {
 function isValidCity($value) {
 	$value = trim($value);
 	// #REQ020
-	if (strlen($value) < 5) {	
+	if (strlen($value) < 5) {
 		return 0;
 	}
 	// At least two parts, #REQ050
 	if (strpos($value, " ") <= 0) {
 		return 0;
-	}		
+	}
 	$parts = explode(" ", $value);
 	//#REQ050
 	if (strlen($parts[1]) < 3) {
@@ -290,17 +290,17 @@ function isValidCity($value) {
 function isValidEmail($value) {
 	$value = trim($value);
 	// #REQ020
-	if (strlen($value) < 5) {	
+	if (strlen($value) < 5) {
 		return 0;
 	}
 	// At least an @
 	if (strpos($value, "@") <= 0) {
 		return 0;
-	}		
+	}
 	// At least a .
 	if (strpos($value, ".") <= 0) {
 		return 0;
-	}		
+	}
 	// Explore host
 	$parts = explode("@", $value);
 	$name = $parts[0];
@@ -308,7 +308,7 @@ function isValidEmail($value) {
 	// Host must contain .
 	if (strpos($host, ".") <= 0) {
 		return 0;
-	}		
+	}
 	$hostparts = explode(".", $host);
 	if (strlen(trim($hostparts[0])) < 1) {
 		return 0;
@@ -335,7 +335,7 @@ function isValidPhoneNumnber($phone) {
 	 }
 	 return 0;
  }
- 
+
 // Geta simple day with time  (day, month, year and hour, minutes)
 function stringDateTimeSimple($timestamp) {
 	return date("d.m.Y, H:i", $timestamp);
@@ -364,7 +364,7 @@ function stringDateFull($timestamp) {
 function stringDateTime($timestamp) {
 	return date("d.m.Y, H:i:s", $timestamp);
 }
- 
+
 // Erase ';' from a string which is gonna be part of a CSV file row,
 // Thise prevents false-injection and coding corrpuption due to additional unwanted columns.
 function fix($text) {
@@ -419,8 +419,8 @@ function fixedDate() {
 }
 
 
-  
-// From a file name get the timestamp in order to dispay it e.g. in print mode 
+
+// From a file name get the timestamp in order to dispay it e.g. in print mode
 function getDateFromFile($csvfile) {
 	$text = basename ($csvfile);
 	$i = strpos ($text, ".");
@@ -432,7 +432,7 @@ function getDateFromFile($csvfile) {
 	return $text;
 }
 
-// Get a printable date from file to be used as the file name suffix (format: _Year_Month_day) 
+// Get a printable date from file to be used as the file name suffix (format: _Year_Month_day)
 function fileDate($timestamp) {
 	return date("_Y_m_d", $timestamp);
 }
@@ -467,13 +467,13 @@ function nextSunday($timestamp, $allowJokerOverride) {
 		$jokertimestamp = getJokerTimeStamp();
 		if ($jokertimestamp != "") {
 			$timestamp = $jokertimestamp;
-		}	 	
-	 } 
+		}
+	 }
 
 	 return $timestamp;
 }
 
-// Retrieve the current file to write to (for adding new registrations or as a default for loading the current list) 
+// Retrieve the current file to write to (for adding new registrations or as a default for loading the current list)
 function getCSVFile($timestamp) {
 	return "./data/attend".fileDate($timestamp).".csv";
 }
@@ -482,7 +482,7 @@ function currentFile() {
 	return getCSVFile(nextSunday(time(),false));
 }
 
-// Retrieve the optional configuration file 
+// Retrieve the optional configuration file
 function getCSVConfigFile($timestamp) {
 	return "./data/attend".fileDate($timestamp).".config.csv";
 }
@@ -534,7 +534,7 @@ function readConfigFile() {
 }
 
 
-// Retrieve the optional configuration file 
+// Retrieve the optional configuration file
 function getCSVWaitinglistFile($timestamp) {
 	return "./data/attend".fileDate($timestamp).".waiting.csv";
 }
@@ -574,13 +574,13 @@ function sendConfirmationMail($receipient, $name, $number) {
 		global $coronalink;
 		global $mail_from_header;
 		global $mail_from_title;
-		
+
 		// Possibly add fixed date to url
 		$url = $baseurl;
 		if (fixedDate()) {
 			$url = $url."?d=".nextSunday(time(),false);
 		}
-		
+
  	 	$plural = (strpos($regnumber, ",") > -1);
 
   		$subject = $mail_from_title." - Anmeldung ".$number." von ".$name." fuer GoDi am ".stringDateFull(nextSunday(time(),true));
@@ -591,14 +591,17 @@ function sendConfirmationMail($receipient, $name, $number) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time(),true))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. ".$coronalink.").\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite ".$url." tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";		
-		
+		$nmessage = "Hallo ".$name.",\n\nDu bist mit der Anmeldenummer\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time(),true))."\n\nregistriert.\n\nBitte bringe diese Nummer mit zum GoDi! Sie erleichtert die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denke auch an die aktuellen Covid19-Bestimmungen (s. ".$coronalink.").\n\nWir freuen uns auf Deinen Besuch! :-)\n\nPS: Du brauchst die obige Nummer auch, solltest Du Dich wieder vom GoDi abmelden muessen. Dies kannst Du ebenfalls ueber die Webseite ".$url." tun. Dort gibst Du zur Abmeldung alle Deine Daten ein plus dieser Anmeldenummer und klickst auf den Button 'Abmelden vom Gottesdienst...'.";
+
 		if ($plural) {
-		$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time(),true))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. ".$coronalink.").\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite ".$url." geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";		
+			$nmessage = "Hallo ".$name.",\n\Ihr seid mit den Anmeldenummern\n\n     ".$number."\n\nfuer den Gottesdienst in der Freien Evangelischen Gemeinde Kiel am\n\n     ".stringDateFull(nextSunday(time(),true))."\n\nregistriert.\n\nBitte bringt alle diese Nummern mit zum GoDi! Sie erleichtern die Anmeldung vor Ort vom Begruessungsteam erheblich. Bitte denkt auch an die aktuellen Covid19-Bestimmungen (s. ".$coronalink.").\n\nWir freuen uns auf Euren Besuch! :-)\n\nPS: Ihr  braucht die obigen Nummern auch, sollte sich einer von Euch wieder vom GoDi abmelden muessen. Dies kann ebenfalls ueber die Webseite ".$url." geschehen. Dort gebt Ihr zur Abmeldung alle Deine Daten einer Person ein plus dessen Anmeldenummer und klickt auf den Button 'Abmelden vom Gottesdienst...'. Jeder Person muss sich einzeln abmelden.";
 		}
-		
-		
-    	$retval = mail($receipient, $subject, $nmessage, $header );		
+
+
+		// Aussen-GODI schlechtwetterabsgae disclaimer
+	    $nmessage .= "\n\nACHTUNG : Sollte sich die Wetterlage verschlechtern, behalten wir uns vor, den OpenAir-Gottesdienst abzusagen! Das erfaehrst Du jeweils bis spaetestens um 12:00 Uhr am Samstag auf unserer Homepage. Falls wir den OpenAir-Gottesdienst absagen muessen, brauchst Du NICHT zur Gemeinde zu kommen, da wir dann nur einen Livestream-Gottesdienst feiern.";
+
+    	$retval = mail($receipient, $subject, $nmessage, $header );
 		return $retval;
 }
 
@@ -611,7 +614,7 @@ function sendWaitingListMail($receipient) {
 		global $baseurl;
 		global $mail_from_header;
 		global $mail_from_title;
-		
+
 		$url = $baseurl;
 		if (fixedDate()) {
 			$url = $url."?d=".nextSunday(time(),false);
@@ -625,15 +628,15 @@ function sendWaitingListMail($receipient) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "Hallo, \n\nes gibt gute Neuigkeiten fuer Dich!\nDurch eine Abmeldung sind neue Sitzplaetze frei geworden.\n\nSei schnell und melde Dich unter\n\n    ".$url." \n\nfuer den Gottesdiest vor Ort an :-).";		
-    	$retval = mail($receipient, $subject, $nmessage, $header );		
+		$nmessage = "Hallo, \n\nes gibt gute Neuigkeiten fuer Dich!\nDurch eine Abmeldung sind neue Sitzplaetze frei geworden.\n\nSei schnell und melde Dich unter\n\n    ".$url." \n\nfuer den Gottesdiest vor Ort an :-).";
+    	$retval = mail($receipient, $subject, $nmessage, $header );
 		return $retval;
 }
 
 function sendWaitingListTestMail($receipient) {
 		global $mail_from_header;
 		global $mail_from_title;
-		
+
   		$subject = $mail_from_title." - Warteliste fuer den ".stringDate(nextSunday(time(),true))."!";
 		// header
 		$header = $mail_from_header;
@@ -642,8 +645,8 @@ function sendWaitingListTestMail($receipient) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "Diese Mail bestaetigt nur, dass Du fuer die Warteliste fuer den ".stringDate(nextSunday(time(),true))." eingetragen bist.\n\nSobald es (wieder) freie Plaetze geben sollte, wirst Du per E-Mail benachrichtigt. Du musst Dich dann aber noch fuer den Gottesdienst anmelden! \n\nSollte es keine freien Plaetze geben, hoffen wir, dass wir mit Dir ueber  http://youtube.feg-kiel.de zusammen online Gottesdienst feiern koennen und dass Du bald an einem der naechsten Sonntage wieder live vor Ort bist!";		
-    	$retval = mail($receipient, $subject, $nmessage, $header );		
+		$nmessage = "Diese Mail bestaetigt nur, dass Du fuer die Warteliste fuer den ".stringDate(nextSunday(time(),true))." eingetragen bist.\n\nSobald es (wieder) freie Plaetze geben sollte, wirst Du per E-Mail benachrichtigt. Du musst Dich dann aber noch fuer den Gottesdienst anmelden! \n\nSollte es keine freien Plaetze geben, hoffen wir, dass wir mit Dir ueber  http://youtube.feg-kiel.de zusammen online Gottesdienst feiern koennen und dass Du bald an einem der naechsten Sonntage wieder live vor Ort bist!";
+    	$retval = mail($receipient, $subject, $nmessage, $header );
 		return $retval;
 }
 
@@ -678,7 +681,7 @@ function writeConfig() {
 	global $test_enabled;
 	global $mail_to;
 	global $baseurl;
-	
+
 	$myfile = fopen("attend.cfg.php", "w");
 	fwrite($myfile, "<?php\n");
 	fwrite($myfile, "$"."baseurl = \"".$baseurl."\";\n");
@@ -707,7 +710,7 @@ function verifyCode($code, $verify) {
 		} else {
 		}
 		fclose($handle);
-	} 	
+	}
 	return $returnValue;
 }
 
@@ -731,13 +734,13 @@ function getMaxNum($file) {
 		}
 		fclose($handle);
 	}
-	return $maxnum; 
+	return $maxnum;
 }
 
 
 // Retrieve the number of lines which corresponds to the number of registered people (for a given file/sunday)
 function getLinesFile($file) {
-	$linecount = 0;	
+	$linecount = 0;
 	if (file_exists($file)) {
 		$handle = fopen($file, "r");
 		while(!feof($handle)){
@@ -748,13 +751,13 @@ function getLinesFile($file) {
 		}
 		fclose($handle);
 	}
-	return $linecount; 
+	return $linecount;
 }
 
 
 // Retrieve the number of lines corresponding to persons which attended
 function getAttendeesFile($file) {
-	$linecount = 0;	
+	$linecount = 0;
 	if (file_exists($file)) {
 		$handle = fopen($file, "r");
 		while(!feof($handle)){
@@ -766,7 +769,7 @@ function getAttendeesFile($file) {
 		}
 		fclose($handle);
 	}
-	return $linecount; 
+	return $linecount;
 }
 
 
@@ -779,7 +782,7 @@ function getLines() {
 // Test if a person is already registered for a given file/sunday.
 // This test only succeeeds, iff the name, street, city, phone, and email is the same
 function isAlreadyRegistered($file, $name, $street, $city, $phone, $email) {
-	$found = 0;	
+	$found = 0;
 	$num = 0;
 	if (file_exists($file)) {
 		$handle = fopen($file, "r");
@@ -810,7 +813,7 @@ function isAlreadyRegistered($file, $name, $street, $city, $phone, $email) {
 		fclose($handle);
 	}
 	if ($found > 4) {
-		return $num; 
+		return $num;
 	}
 	else {
 		return -1;
@@ -828,12 +831,12 @@ function sendDefaultConfirmationEMails($defaults) {
 			$number = "#".$cols[0];
 			$name = $cols[1];
 			$email = $cols[5];
-			
+
 //			print($line."<BR>");
 //			print($number."<BR>");
 //			print($name."<BR>");
 //			print($email."<BR>");
-			
+
 			sendConfirmationMail($email, $name, $number);
 		}
 	}
@@ -849,7 +852,7 @@ function ensureCurrentFileExists() {
 		if (file_exists($default_csv_file)) {
 			$defaults = file_get_contents($default_csv_file);
 			fwrite($myfile, $defaults."\n");
-			
+
 			sendDefaultConfirmationEMails($defaults);
 		}
 		//fwrite($myfile, "\n");
@@ -868,8 +871,8 @@ function sendTestMail($email) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "Testmail";		
-    	$retval = mail($email, $subject, $nmessage, $header );		
+		$nmessage = "Testmail";
+    	$retval = mail($email, $subject, $nmessage, $header );
 		return $retval;
 }
 
@@ -893,9 +896,9 @@ function sendBackupMail($myfile, $onoff) {
  		global $mail_to;
 		global $oldname;
 		global $mail_from_header;
-		
+
   		$subject = $onoff." - ".$oldname;
-		
+
 		// header
 		$header = $mail_from_header;
 		$header .= "MIME-Version: 1.0\r\n";
@@ -903,7 +906,7 @@ function sendBackupMail($myfile, $onoff) {
 		$header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
 
 		// content - add the file tabbed for readability and afterwards add the csv raw data for enabling easy recover
-		$nmessage = "";		
+		$nmessage = "";
 		$content = "";
    		if (file_exists($myfile)) {
 			$handle = fopen($myfile, "r");
@@ -916,9 +919,9 @@ function sendBackupMail($myfile, $onoff) {
 			  	}
 			}
 			fclose($handle);
-	   	}		
+	   	}
   	   	$nmessage .= "\n\n\n\n\nCSV File (raw):\n\n".$content;
-    	$retval = mail($mail_to, $subject, $nmessage, $header );		
+    	$retval = mail($mail_to, $subject, $nmessage, $header );
 		return $retval;
 }
 
@@ -929,7 +932,7 @@ function sendBackupMail($myfile, $onoff) {
 function signOff($file, $name, $street, $city, $phone, $email, $number) {
 	$content = "";
 	$globalfound = 0;
-	
+
 	if (strlen(trim($number)) == 0) {
 		return 0;
 	}
@@ -961,7 +964,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 		  if (strpos($line, trim($email)) > -1) {
 		  	  $found++;
 		  }
-		  
+
 		  if ($found == 6) {
 		  		// Remove
 				$globalfound = 1;
@@ -978,7 +981,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 		fclose($myfile);
 	}
 
-	return $globalfound; 
+	return $globalfound;
 }
 
 
@@ -986,7 +989,7 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 // Returns the mobile file linked to the deleted file iff a password was deleted, "" otherwise
 // #REQ065
 function cleanupMobilePassword() {
-	global $mobiletimeout; // hours 
+	global $mobiletimeout; // hours
 	global $mobilefolder;
 	$mobileFileLinkedToDeletedPW = "";
 	$olderthanxxxweeks = 60*$mobiletimeout;
@@ -1008,7 +1011,7 @@ function createMobilePassword($file) {
 	$mobilePW = rand(1000, 9999);
     $ipfile = fopen($mobilefolder.$mobilePW.".txt", "w");
 	fwrite($ipfile, $file."\n");
-	fclose($ipfile);	
+	fclose($ipfile);
 	return $mobilePW;
 }
 
@@ -1045,13 +1048,13 @@ function setValue($file, $number, $col, $val) {
 		  // Remove line break
 		  $line = str_replace("\n", "", $line);
  		  $line = str_replace("\r", "", $line);
-		  
+
 		  $cols = explode(";", $line);
-		  
+
 		  if (trim($cols[0]) == $number && $line != "") {
 			   	$globalfound = 1;
 		  		// number found, edit entry
-				
+
 				// Fill up, if additional columns are needed
 				while(count($cols) < $col) {
 					$line .= ";";
@@ -1071,7 +1074,7 @@ function setValue($file, $number, $col, $val) {
 		$myfile = fopen($file, "w");
 		fwrite($myfile, $content);
 		fclose($myfile);
-		
+
 	}
 	return $globalfound;
 }
@@ -1087,7 +1090,7 @@ function addWrongLogin($ip) {
     $ipfile = fopen($ipfolder.$ip.".txt", "a");
 	$line =	stringDateTime(time());
 	fwrite($ipfile, $line."\n");
-	fclose($ipfile);	
+	fclose($ipfile);
 }
 
 // Count already wrong passwords (within the last hour)
@@ -1106,14 +1109,14 @@ function resetWrongLogins($ip) {
 function cleanupWrongLogins() {
 	global $ipfolder;
 	// Delete all wrong IP files older than 60 minutes (60 minutes * 60 seconds)
-	$olderthanxxxseconds = 60*60; 
+	$olderthanxxxseconds = 60*60;
 	foreach (glob($ipfolder."*.txt") as $file) {
  		$diff = time() - filectime($file);
 		if($diff > $olderthanxxxseconds){
 			unlink($file);
    			//print("unlink:".$file." : ".$diff."<BR>");
  		} else {
-			//print("NOT unlink:".$file." : ".$diff."<BR>");		
+			//print("NOT unlink:".$file." : ".$diff."<BR>");
 		}
 	}
 }
