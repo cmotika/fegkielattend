@@ -1,7 +1,6 @@
 <?php
 
 // Static configurations for FeG Kiel
-	$coronalink = "https://feg-kiel.de/2020-10-30-neue-corona-richtlinien-fuer-unsere-gottesdienste-11-20";
 	$mail_from_name = "noreply@feg-kiel.de";
 	$mail_from_header = "From: FeG Kiel <noreply@feg-kiel.de>\r\n";
 	$mail_from_title = "FeG Kiel";
@@ -678,6 +677,7 @@ function writeConfig() {
  	global $maxnum;
  	global $switchtime;
  	global $banner;
+ 	global $coronalink;
 	global $test_enabled;
 	global $mail_to;
 	global $baseurl;
@@ -691,6 +691,7 @@ function writeConfig() {
 	fwrite($myfile, "$"."banner  = \"".$banner."\";\n");
 	fwrite($myfile, "$"."test_enabled  = \"".$test_enabled ."\";\n");
 	fwrite($myfile, "$"."mail_to = \"".$mail_to."\";\n");
+	fwrite($myfile, "$"."coronalink  = \"".$coronalink."\";\n");
 	fwrite($myfile, "?>\n");
 	fclose($myfile);
 }

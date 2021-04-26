@@ -49,6 +49,11 @@ function csvfiles() {
       <td><input name="nbanner" type="text" id="nbanner" value="<?php print($banner);?>"/></td>
     </tr>
     <tr>
+      <td><div align="right">Covid Regeln Link</div></td>
+      <td>&nbsp;</td>
+      <td><input name="ncoronalink" type="text" id="ncoronalink" value="<?php print($coronalink);?>"/></td>
+    </tr>
+    <tr>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td><label>

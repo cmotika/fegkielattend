@@ -26,6 +26,7 @@ $filecontent = $_POST['filecontent'];
 $nmaxnum = $_POST['nmaxnum'];
 $nswitchtime = $_POST['nswitchtime'];
 $nbanner = $_POST['nbanner'];
+$ncoronalink = $_POST['ncoronalink'];
 
 $signoff = $_POST['signoff'];
 $number = $_POST['number'];
@@ -57,12 +58,12 @@ $djoker = $_POST['djoker']; //joker date to override real date
 
 
 
-
- // Load helper functions
- require("attend-functions.php");
  // Load configuration
  // #REQ015
  require("attend.cfg.php");
+
+ // Load helper functions
+ require("attend-functions.php");
 
  // Delete all old mobile passwords
 // #REQ065
@@ -491,6 +492,7 @@ if ($save != "" && $isAdmin) {
 	$maxnum = $nmaxnum;
 	$switchtime = $nswitchtime;
 	$banner = $nbanner;
+	$coronalink = $ncoronalink;
 	writeConfig();
 	print("Saved");
 }
@@ -592,7 +594,7 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 if ($signoff != "" && $err == 0) {
 	if (strlen(trim($number)) == 0) {
 		// #REQ059
-		print(DIV_ALERT_WARNING . "Zur Abmeldung gib bitte Deine Registrirungsnummer an!" . END_DIV);
+		print(DIV_ALERT_WARNING . "Zur Abmeldung gib bitte Deine Registrierungsnummer an!" . END_DIV);
 	}
 	else {
 		$success = signOff(currentFile(), $name, $street, $city, $phone, $email, $number);
