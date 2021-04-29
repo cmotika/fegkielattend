@@ -395,7 +395,7 @@ if ($waitinglist != "" || getCurrentMaxNum()-getLines() == 0) {
 
 if (!fixedDate()) {
 	// normal sunday text
-	print('Registriere Dich <b>(bis sp&auml;testens sonntags um 10:00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time(), false))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
+	print('Registriere Dich <b>(bis sp&auml;testens sonntags um '.$switchtime.':00 Uhr)</b> mit dem untenstehenden Formular, wenn Du kommenden <b>Sonntag, den '.(stringDate(nextSunday(time(), false))).'</b>, vor Ort am Gottesdienst teilnehmen m&ouml;chtest. ');
 }
 else {
 	// fixed date text
