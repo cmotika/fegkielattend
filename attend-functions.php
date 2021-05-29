@@ -598,7 +598,7 @@ function sendConfirmationMail($receipient, $name, $number) {
 
 
 		// Aussen-GODI schlechtwetterabsgae disclaimer
-	    $nmessage .= "\n\nACHTUNG : Sollte sich die Wetterlage verschlechtern, behalten wir uns vor, den OpenAir-Gottesdienst abzusagen! Das erfaehrst Du jeweils bis spaetestens um 12:00 Uhr am Samstag auf unserer Homepage. Falls wir den OpenAir-Gottesdienst absagen muessen, brauchst Du NICHT zur Gemeinde zu kommen, da wir dann nur einen Livestream-Gottesdienst feiern.";
+	    $nmessage .= "\n\nACHTUNG : Sollte sich die Wetterlage verschlechtern, behalten wir uns vor, den OpenAir-Gottesdienst abzusagen! Das erfaehrst Du jeweils bis spaetestens um 18:00 Uhr am Samstag auf unserer Homepage. Falls wir den OpenAir-Gottesdienst absagen muessen, brauchst Du NICHT zur Gemeinde zu kommen, da wir dann nur einen Livestream-Gottesdienst feiern.";
 
     	$retval = mail($receipient, $subject, $nmessage, $header );
 		return $retval;

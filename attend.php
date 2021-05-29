@@ -409,7 +409,7 @@ else {
 ?>
 Du stimmst damit zu, Dich an die g&uuml;ltigen Corona-Richtlinien zu halten. Diese findest Du auf unserer <a href="<?php print($coronalink);?>" target="_blank">Website</a>. Alternativ bist Du eingeladen, den Gottesdienst auf unserem Youtube-Kanal zu verfolgen unter <a href="<?php print($youtube_link);?>"><?php print($youtube_link);?></a>.</p>
 <?php // Aussen-GODI schlechtwetterabsgae disclaimer ?>
-<p><font color=#FF0000>ACHTUNG : Sollte sich die Wetterlage verschlechtern, behalten wir uns vor, den OpenAir-Gottesdienst abzusagen! Das erf&auml;hrst Du jeweils bis sp&auml;testens um 12:00 Uhr am Samstag auf unserer Homepage. Falls wir den OpenAir-Gottesdienst absagen m&uuml;ssen, brauchst Du NICHT zur Gemeinde zu kommen, da wir dann nur einen Livestream-Gottesdienst feiern.</font></p>
+<p><font color=#FF0000>ACHTUNG : Sollte sich die Wetterlage verschlechtern, behalten wir uns vor, den OpenAir-Gottesdienst abzusagen! Das erf&auml;hrst Du jeweils bis sp&auml;testens um <b>18:00 Uhr</b> am Samstag auf unserer Homepage. Falls wir den OpenAir-Gottesdienst absagen m&uuml;ssen, brauchst Du NICHT zur Gemeinde zu kommen, da wir dann nur einen Livestream-Gottesdienst feiern.</font></p>
 
 <p>Mit Deiner Registrierung erkl&auml;rst Du Dich au&szlig;erdem einverstanden, da&szlig; Deine pers&ouml;nlichen Daten im Rahmen der Corona-Landesverordnung f&uuml;r vier Wochen gespeichert werden und nur von berechtigten Personen zu administrativen Zwecken eingesehen werden k&iuml;nnen. Nach Ablauf der vier Wochen werden Deine Daten automatisch gel&ouml;scht.</p>
 
