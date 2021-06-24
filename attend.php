@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ERROR);
+
 $pw = $_POST['pw'];
 if ($pw == "") {
 	$pw = $_GET['pw'];
@@ -516,8 +518,6 @@ $errTextEmail = "";
 $errTextCaptcha = "";
 $waitinglistbutton = 0; // if != 0 then display this instead of submit button
 
-
-// If the sumbit or signoff button was pressed
 if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 	// Prevent any attacks by fixing the fields
 	// #REQ016
@@ -543,26 +543,30 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 			$errTextName .= DIV_ALERT_WARNING . "Gib Deinen Vor- UND Nachnamen an." . END_DIV;
 			$err = 1;
 		}
-		// #REQ019
-	 	if (!isValidStreet($street)) {
-			$errTextStreet .= DIV_ALERT_WARNING . "Gib Deine Stra&szlig;e und Hausnummer an." . END_DIV;
-			$err = 1;
-		}
-		// #REQ020
-	 	if (!isValidCity($city)) {
-			$errTextCity .=  DIV_ALERT_WARNING . "Gib Deine Postleitzahl und Stadt an." . END_DIV;
-			$err = 1;
-		}
-		// #REQ021
-	 	if (!isValidPhoneNumnber($phone)) {
-			$errTextPhone .= DIV_ALERT_WARNING . "Gib Deine Telefonnummer an." . END_DIV;
-			$err = 1;
+		if ($signoff == "") { // skip these checks for signoff, signoff just requires name plus regnumber
+			// #REQ019
+		 	if (!isValidStreet($street)) {
+				$errTextStreet .= DIV_ALERT_WARNING . "Gib Deine Stra&szlig;e und Hausnummer an." . END_DIV;
+				$err = 1;
+			}
+			// #REQ020
+		 	if (!isValidCity($city)) {
+				$errTextCity .=  DIV_ALERT_WARNING . "Gib Deine Postleitzahl und Stadt an." . END_DIV;
+				$err = 1;
+			}
+			// #REQ021
+		 	if (!isValidPhoneNumnber($phone)) {
+				$errTextPhone .= DIV_ALERT_WARNING . "Gib Deine Telefonnummer an." . END_DIV;
+				$err = 1;
+			}
 		}
 	}
-	// #REQ022
- 	if (!isValidEmail($email)) {
-		$errTextEmail .= DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV;
-		$err = 1;
+	if ($signoff == "") { // skip these checks for signoff, signoff just requires name plus regnumber
+		// #REQ022
+	 	if (!isValidEmail($email)) {
+			$errTextEmail .= DIV_ALERT_WARNING . "Gib Deine E-Mail-Adresse an." . END_DIV;
+			$err = 1;
+		}
 	}
 	// Only in submit mode test, if enough seats are available
 	if ($submit != "") {
@@ -596,10 +600,10 @@ if ($submit != "" || $signoff != "" ||  $waitinglist != "") {
 if ($signoff != "" && $err == 0) {
 	if (strlen(trim($number)) == 0) {
 		// #REQ059
-		print(DIV_ALERT_WARNING . "Zur Abmeldung gib bitte Deine Registrierungsnummer an!" . END_DIV);
+		print(DIV_ALERT_WARNING . "Zur Abmeldung gib bitte Deinen vollst&auml;ndigen Namen und Deine Registrierungsnummer an!" . END_DIV);
 	}
 	else {
-		$success = signOff(currentFile(), $name, $street, $city, $phone, $email, $number);
+		$success = signOff(currentFile(), $name, $number);
 		if ($success) {
 			$oldname = $name;
 			// #REQ057

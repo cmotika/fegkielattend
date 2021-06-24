@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR);
+
 
 // Static configurations for FeG Kiel
 	$mail_from_name = "noreply@feg-kiel.de";
@@ -324,13 +326,9 @@ function isValidEmail($value) {
  // #REQ 021
 function isValidPhoneNumnber($phone) {
 	 $phone = preg_replace("/[^0-9]/", '', $phone);
-	 $phone2 = $phone + 1;
-	 $phone2 = $phone2 - 1;
-	 if ($phone == $phone2) {
-	  	// #REQ49
-	    if (strlen($phone2) >= 5) {
-			return 1;
-		}
+	 // #REQ49
+	 if (strlen($phone) >= 5) {
+		return 1;
 	 }
 	 return 0;
  }
@@ -930,7 +928,7 @@ function sendBackupMail($myfile, $onoff) {
 
 // Remove a person from the file.
 // Do this only if all information matches, including the registration number.
-function signOff($file, $name, $street, $city, $phone, $email, $number) {
+function signOff($file, $name, $number) {
 	$content = "";
 	$globalfound = 0;
 
@@ -953,20 +951,20 @@ function signOff($file, $name, $street, $city, $phone, $email, $number) {
 		  if (strpos($line, trim($name)) > -1) {
 		  	  $found++;
 		  }
-		  if (strpos($line, trim($street)) > -1) {
-		  	  $found++;
-		  }
-		  if (strpos($line, trim($city)) > -1) {
-		  	  $found++;
-		  }
-		  if (strpos($line, trim($phone)) > -1) {
-		  	  $found++;
-		  }
-		  if (strpos($line, trim($email)) > -1) {
-		  	  $found++;
-		  }
+		  //if (strpos($line, trim($street)) > -1) {
+		  //	  $found++;
+		  //}
+		  //if (strpos($line, trim($city)) > -1) {
+		  //	  $found++;
+		  //}
+		  //if (strpos($line, trim($phone)) > -1) {
+		  //	  $found++;
+		  //}
+		  //if (strpos($line, trim($email)) > -1) {
+		  //	  $found++;
+		  //}
 
-		  if ($found == 6) {
+		  if ($found == 2) {
 		  		// Remove
 				$globalfound = 1;
 		  } else {
