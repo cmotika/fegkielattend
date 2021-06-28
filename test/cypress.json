@@ -1,2 +1,5 @@
 {  "chromeWebSecurity": false,
-   "integrationFolder" : "" }
+   "integrationFolder" : ".",
+   "fixturesFolder": false,
+   "supportFile": false,
+   "testFiles": "test*.js" }
