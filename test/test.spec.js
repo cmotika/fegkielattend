@@ -1,6 +1,6 @@
 /// Regressions tests for append.php
 
-context('Input field tests', () => {
+context('Input field t ests', () => {
   beforeEach(() => {
     cy.visit('http://www.delphino.net/feg' )
     cy.get('[href="javascript:adminvisible();"]').click()
